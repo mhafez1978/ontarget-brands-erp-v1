@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE `users` ADD COLUMN `addressLine1` VARCHAR(255) NULL,
+    ADD COLUMN `addressLine2` VARCHAR(255) NULL,
+    ADD COLUMN `birthDate` DATETIME(3) NULL,
+    ADD COLUMN `city` VARCHAR(100) NULL,
+    ADD COLUMN `country` VARCHAR(100) NULL,
+    ADD COLUMN `phone` VARCHAR(20) NULL,
+    ADD COLUMN `postalCode` VARCHAR(20) NULL,
+    ADD COLUMN `state` VARCHAR(100) NULL;

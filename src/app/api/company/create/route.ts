@@ -1,0 +1,125 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { userInfo } from "os";
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const {
+      name,
+      slogan,
+      category,
+      type,
+      logo,
+      domain,
+      phone,
+      supportEmail,
+      salesEmail,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      zipCode,
+      country,
+      subscriptionPlanId,
+      ownerId,
+      users,
+    } = body;
+
+    console.log("########### Fired API to create company ...");
+
+    if (!name || !subscriptionPlanId || !ownerId) {
+      return NextResponse.json(
+        {
+          error:
+            "Missing required fields: name, subscriptionPlanId, or ownerId",
+        },
+        { status: 400 }
+      );
+    }
+
+    const ownerExists = await prisma.user.findUnique({
+      where: { id: ownerId },
+    });
+    if (!ownerExists) {
+      return NextResponse.json({ error: "Owner not found" }, { status: 404 });
+    }
+
+    const planExists = await prisma.subscriptionPlan.findUnique({
+      where: { id: subscriptionPlanId },
+    });
+    if (!planExists) {
+      return NextResponse.json(
+        { error: "Subscription plan not found" },
+        { status: 404 }
+      );
+    }
+
+    if (domain) {
+      const existingDomain = await prisma.company.findUnique({
+        where: { domain },
+      });
+      if (existingDomain) {
+        return NextResponse.json(
+          { error: "Domain already in use" },
+          { status: 400 }
+        );
+      }
+    }
+
+    console.log("########### About to create company ...");
+
+    const newCompany = await prisma.company.create({
+      data: {
+        name,
+        slogan: slogan || null,
+        category: category || null,
+        type: type || null,
+        logo: logo || null,
+        domain: domain || null,
+        phone: phone || null,
+        supportEmail: supportEmail || null,
+        salesEmail: salesEmail || null,
+        addressLine1: addressLine1 || null,
+        addressLine2: addressLine2 || null,
+        city: city || null,
+        state: state || null,
+        zipCode: zipCode || null,
+        country: country || null,
+        owner: { connect: { id: ownerId } },
+        subscriptionPlan: { connect: { id: subscriptionPlanId } },
+        users: users?.length
+          ? { connect: users }
+          : { connect: [{ id: ownerId }] },
+      },
+    });
+
+    console.log("########### Company created successfully:", newCompany);
+
+    // lets promote user to admin on company creation
+    const promotedUser = await prisma.user.update({
+      where: {
+        id: ownerId,
+      },
+      data: {
+        role: "ADMIN",
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Company created successfully",
+        companyId: newCompany.id,
+        owner: ownerId,
+        ownerRole: promotedUser.role,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Company creation failed:", error);
+    return NextResponse.json(
+      { error: "Failed to create company" },
+      { status: 500 }
+    );
+  }
+}

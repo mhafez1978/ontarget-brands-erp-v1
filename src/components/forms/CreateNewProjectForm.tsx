@@ -1,164 +1,267 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Label } from "../ui/label";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
-interface Props {
+type UserOption = { id: string; name: string };
+
+type Props = {
   companyId: string;
   managerId: string;
-  onSuccess?: () => void;
+  onSuccess: () => void;
   close: () => void;
-}
-
-const statusOptions = [
-  "PLANNING",
-  "IN_PROGRESS",
-  "ON_HOLD",
-  "COMPLETED",
-  "CANCELED",
-] as const;
+  staff: UserOption[];
+  customers: UserOption[];
+};
 
 export const CreateProjectForm = ({
   companyId,
   managerId,
   onSuccess,
   close,
+  staff,
+  customers,
 }: Props) => {
-  const { data: session } = useSession();
+  const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: "",
     description: "",
     status: "PLANNING",
     startDate: "",
     endDate: "",
+    budget: "",
+    isActive: false,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
+  const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
 
-  if (!session || !session.user) {
-    return redirect("/auth");
-  }
-
-  const handleChange = (key: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSelectChange = (name: string, value: string) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const toggleUser = (
+    id: string,
+    list: string[],
+    setter: (val: string[]) => void
+  ) => {
+    setter(list.includes(id) ? list.filter((i) => i !== id) : [...list, id]);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
-    try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          companyId,
-          managerId,
-        }),
-      });
+    const res = await fetch(`/api/projects/${companyId}/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...form,
+        budget: form.budget ? parseFloat(form.budget) : null,
+        startDate: form.startDate ? new Date(form.startDate) : null,
+        endDate: form.endDate ? new Date(form.endDate) : null,
+        companyId,
+        managerId,
+        staff: selectedStaff,
+        customers: selectedCustomers,
+      }),
+    });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to create project");
-
-      onSuccess?.();
+    if (res.ok) {
+      onSuccess();
       close();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      router.refresh();
+    } else {
+      alert("Failed to create project");
     }
   };
 
   return (
-    <div className="relative w-full max-w-2xl bg-white p-6 border rounded-xl shadow-sm">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <h2 className="text-lg font-semibold">Create New Project</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 p-6 bg-white rounded-xl shadow max-w-xl mx-auto"
+    >
+      <div>
+        <Label htmlFor="name">Project Name</Label>
+        <Input name="name" required value={form.name} onChange={handleChange} />
+      </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+      <div>
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+        />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <Label htmlFor="name">Project Name</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              required
-            />
-          </div>
+      <div>
+        <Label htmlFor="status">Status</Label>
+        <Select
+          value={form.status}
+          onValueChange={(val) => handleSelectChange("status", val)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select status" />
+          </SelectTrigger>
+          <SelectContent>
+            {[
+              "PLANNING",
+              "ACTIVE",
+              "ON_HOLD",
+              "COMPLETED",
+              "CANCELED",
+              "ARCHIVED",
+            ].map((status) => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="status">Status</Label>
-            <Select
-              value={formData.status}
-              onValueChange={(val) => handleChange("status", val)}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="startDate">Start Date</Label>
+          <Input
+            type="date"
+            name="startDate"
+            value={form.startDate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <Label htmlFor="endDate">End Date</Label>
+          <Input
+            type="date"
+            name="endDate"
+            value={form.endDate}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="budget">Budget (USD)</Label>
+        <Input
+          name="budget"
+          type="number"
+          step="0.01"
+          value={form.budget}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          checked={form.isActive}
+          onCheckedChange={(checked) =>
+            setForm((prev) => ({ ...prev, isActive: checked }))
+          }
+        />
+        <Label>Active</Label>
+      </div>
+
+      <div>
+        <Label>Assign Staff (optional)</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start"
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statusOptions.map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status.replace(/_/g, " ")}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+              {selectedStaff.length > 0
+                ? `${selectedStaff.length} selected`
+                : "Select staff members"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full max-h-64 overflow-auto">
+            {staff.map((user) => (
+              <div key={user.id} className="flex items-center space-x-2 py-1">
+                <Checkbox
+                  id={`staff-${user.id}`}
+                  checked={selectedStaff.includes(user.id)}
+                  onCheckedChange={() =>
+                    toggleUser(user.id, selectedStaff, setSelectedStaff)
+                  }
+                />
+                <Label htmlFor={`staff-${user.id}`}>{user.name}</Label>
+              </div>
+            ))}
+          </PopoverContent>
+        </Popover>
+      </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="startDate">Start Date</Label>
-            <Input
-              id="startDate"
-              type="date"
-              value={formData.startDate}
-              onChange={(e) => handleChange("startDate", e.target.value)}
-            />
-          </div>
+      <div>
+        <Label>Assign Customers (optional)</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start"
+            >
+              {selectedCustomers.length > 0
+                ? `${selectedCustomers.length} selected`
+                : "Select customers"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full max-h-64 overflow-auto">
+            {customers.map((user) => (
+              <div key={user.id} className="flex items-center space-x-2 py-1">
+                <Checkbox
+                  id={`cust-${user.id}`}
+                  checked={selectedCustomers.includes(user.id)}
+                  onCheckedChange={() =>
+                    toggleUser(user.id, selectedCustomers, setSelectedCustomers)
+                  }
+                />
+                <Label htmlFor={`cust-${user.id}`}>{user.name}</Label>
+              </div>
+            ))}
+          </PopoverContent>
+        </Popover>
+      </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="endDate">End Date</Label>
-            <Input
-              id="endDate"
-              type="date"
-              value={formData.endDate}
-              onChange={(e) => handleChange("endDate", e.target.value)}
-            />
-          </div>
-
-          <div className="md:col-span-2 space-y-1">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              rows={4}
-              value={formData.description}
-              onChange={(e) => handleChange("description", e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <Button type="submit" disabled={loading}>
-            {loading ? "Saving ..." : "Save Project"}
-          </Button>
-        </div>
-      </form>
-    </div>
+      <div className="flex gap-2">
+        <Button type="submit" className="flex-1">
+          Create Project
+        </Button>
+        <Button type="button" variant="ghost" onClick={close}>
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 };

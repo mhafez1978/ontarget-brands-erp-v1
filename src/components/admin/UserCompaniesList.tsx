@@ -7,6 +7,10 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { EditCompanyForm } from "../forms/EditCompanyForm";
 import { Company as PrismaCompany } from "../../../generated/prisma";
 import Link from "next/link";
+import { OffCanvasBtn } from "../OffCanvasBtn";
+import { CreateCompanyForm } from "../forms/CreateCompanyForm";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 type Company = PrismaCompany & {
   subscriptionPlan?: { name?: string };
@@ -24,6 +28,16 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [companyId2Edit, setCompanyId2Edit] = useState("");
+  const { data: session } = useSession();
+
+  if (
+    !session ||
+    !session.user ||
+    !["ADMIN", "SUPER_ADMIN", "CUSTOMER", "MANAGER"].includes(session.user.role)
+  ) {
+    // Access denied
+    return redirect("/auth");
+  }
 
   const fetchCompanies = async () => {
     setLoading(true);
@@ -104,17 +118,45 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   };
 
   if (loading) return <p className="text-gray-500">Loading companies...</p>;
-  if (error) return <p className="text-red-500">❌ {error}</p>;
+  if (error)
+    return (
+      <p id="err21" className="text-red-500">
+        Error: ERR21 ❌ {error}
+      </p>
+    );
   if (companies.length === 0)
-    return <p className="text-gray-500 italic">No companies found.</p>;
+    return (
+      <div className="w-full min-h-[60vh] flex justify-center items-center bg-gray-50">
+        <div className="flex flex-col gap-6">
+          <p className="text-gray-500 italic text-xl">
+            Sorry, but we cannot find any companies linked to your account.
+          </p>
+          <div className="w-1/4">
+            <OffCanvasBtn
+              formName={"Create New Company"}
+              buttonText={"Create Company"}
+            >
+              {(close) => (
+                <CreateCompanyForm
+                  userId={session.user.id}
+                  close={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              )}
+            </OffCanvasBtn>
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <>
-      <div className="border border-green-500 w-full flex flex-col gap-4 lg:flex-row ">
+      <div className="w-full flex flex-col gap-4 lg:flex-row ">
         {companies.map((company) => (
           <div
             key={company.id}
-            className="w-full bg-white border border-purple-500 rounded-xl shadow-md p-6 hover:shadow-lg transition-all lg:w-1/3"
+            className="w-full bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all lg:w-1/3"
           >
             <div className="w-full flex items-start justify-between mb-4">
               <div>
@@ -145,9 +187,9 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
               </div>
             </div>
 
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700">
+            <dl className="flex flex-col gap-4 text-sm text-gray-700">
               <div>
-                <dt className="font-medium text-gray-600">Domain</dt>
+                <dt className="font-black text-gray-600">Domain</dt>
                 <dd>
                   <Link
                     href={`http://${company.domain || ""}`}
@@ -159,35 +201,42 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Owner</dt>
+                <dt className="font-black text-gray-600">Owner</dt>
                 <dd>{company.owner?.name ?? "—"}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Plan</dt>
+                <dt className="font-black text-gray-600">Plan</dt>
                 <dd>{company.subscriptionPlan?.name ?? "—"}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Type</dt>
-                <dd>{company.type ?? "—"}</dd>
+                <dt className="font-black text-gray-600">Type</dt>
+                <dd>
+                  {company.type
+                    ? company.type
+                        .replace(/_/g, " ")
+                        .toLowerCase()
+                        .replace(/\b\w/g, (c) => c.toUpperCase())
+                    : "—"}
+                </dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Category</dt>
+                <dt className="font-black text-gray-600">Category</dt>
                 <dd>{company.category ?? "—"}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Phone</dt>
+                <dt className="font-black text-gray-600">Phone</dt>
                 <dd>{company.phone ?? "—"}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Sales Email</dt>
+                <dt className="font-black text-gray-600">Sales Email</dt>
                 <dd>{company.salesEmail ?? "—"}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-600">Support Email</dt>
+                <dt className="font-black text-gray-600">Support Email</dt>
                 <dd>{company.supportEmail ?? "—"}</dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="font-medium text-gray-600">Main Address</dt>
+                <dt className="font-black text-gray-600">Main Address</dt>
                 <dd>
                   {[company.addressLine1, company.addressLine2]
                     .filter(Boolean)
@@ -212,7 +261,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
       <Sheet open={!!selectedCompany} onOpenChange={handleClose}>
         <SheetContent
           side="right"
-          className="w-full max-w-xl px-4 overflow-y-auto"
+          className="w-full px-4 overflow-y-auto lg:min-w-[30vw]"
         >
           {selectedCompany && (
             <EditCompanyForm
@@ -221,6 +270,10 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
               onSuccess={() => {
                 setSelectedCompany(null);
                 fetchCompanies();
+              }}
+              userId={""}
+              close={function (): void {
+                throw new Error("Function not implemented.");
               }}
             />
           )}

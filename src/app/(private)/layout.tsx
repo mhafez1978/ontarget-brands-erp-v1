@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SessionProvider } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import "../../app/globals.css";
 
 export default function PortalLayout({
@@ -13,8 +14,9 @@ export default function PortalLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = useSession();
   return (
-    <SessionProvider>
+    <SessionProvider session={session.data}>
       <TooltipProvider>
         <div className="min-h-screen bg-gray-50 flex">
           <Toaster />

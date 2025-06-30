@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "../../../../../generated/prisma";
 import { prisma } from "@/lib/prisma";
-import { userInfo } from "os";
 
 export async function POST(req: NextRequest) {
   try {
@@ -117,6 +117,24 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Company creation failed:", error);
+
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      const target = error.meta?.target;
+
+      let message = "A unique constraint failed.";
+      if (Array.isArray(target)) {
+        if (target.includes("domain")) message = "Domain is already in use.";
+        else if (target.includes("supportEmail"))
+          message = "Support email is already registered.";
+        else if (target.includes("salesEmail"))
+          message = "Sales email is already registered.";
+      }
+
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
     return NextResponse.json(
       { error: "Failed to create company" },
       { status: 500 }

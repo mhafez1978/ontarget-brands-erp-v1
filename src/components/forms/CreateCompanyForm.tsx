@@ -153,8 +153,13 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
         body: JSON.stringify({ ...formData, ownerId: userId }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Error");
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create company");
+      }
+
       setSuccess("Company created successfully");
+
       setFormData({
         name: "",
         slogan: "",
@@ -172,9 +177,10 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
         type: "" as BusinessType,
         subscriptionPlanId: "",
       });
+
       onSuccess?.();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -185,7 +191,10 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
-      <form onSubmit={handleSubmit} className="w-full flex flex-col px-6 gap-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full min-h-screen flex flex-col px-6 gap-6"
+      >
         {/* Company Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
@@ -341,20 +350,26 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Subscription
           </h3>
-          <Label>Plan</Label>
+          <Label htmlFor="subscriptionPlan">Plan</Label>
           <Select
-            value={formData.subscriptionPlanId}
+            value={formData.subscriptionPlanId || ""} // ✅ Prevents uncontrolled warning
             onValueChange={(val) => handleChange("subscriptionPlanId", val)}
           >
-            <SelectTrigger className="w-full h-9">
+            <SelectTrigger className="w-full h-9" id="subscriptionPlan">
               <SelectValue placeholder="Select Plan" />
             </SelectTrigger>
             <SelectContent>
-              {subscriptionPlans.map((plan) => (
-                <SelectItem key={plan.id} value={plan.id}>
-                  {plan.name} (${plan.pricePerMonth}/mo)
-                </SelectItem>
-              ))}
+              {subscriptionPlans.length > 0 ? (
+                subscriptionPlans.map((plan) => (
+                  <SelectItem key={plan.id} value={plan.id}>
+                    {plan.name} (${Number(plan.pricePerMonth).toFixed(2)}/mo)
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="p-2 text-sm text-muted-foreground">
+                  No plans available
+                </div>
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -376,8 +391,8 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
               <li>
                 <strong>Projects:</strong> {selectedPlan.maxProjects}
               </li>
-              {selectedPlan.features.map((f) => (
-                <li key={f.id}>{f.label}</li>
+              {selectedPlan.features.map((f, index) => (
+                <li key={index}>{f.label}</li>
               ))}
             </ul>
           </div>

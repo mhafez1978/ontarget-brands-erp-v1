@@ -136,7 +136,7 @@ export const CreateProjectForm = ({
           <SelectContent>
             {[
               "PLANNING",
-              "ACTIVE",
+              "IN_PROGRESS",
               "ON_HOLD",
               "COMPLETED",
               "CANCELED",

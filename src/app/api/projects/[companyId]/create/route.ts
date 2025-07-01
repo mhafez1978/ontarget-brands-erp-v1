@@ -38,11 +38,11 @@ export async function POST(
     const {
       name,
       description,
-      status = "PLANNING",
+      status,
       startDate,
       endDate,
       budget,
-      isActive = false,
+      isActive,
       managerId = userId,
       staff = [],
       customers = [],
@@ -54,6 +54,7 @@ export async function POST(
         { status: 400 }
       );
     }
+    console.log("#####Request body:", JSON.stringify(body, null, 2));
 
     const createdProject = await prisma.project.create({
       data: {

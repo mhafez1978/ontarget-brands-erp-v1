@@ -120,3 +120,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Tailwind additions */
+input[type="range"]::-webkit-slider-thumb {
+  background-color: hsl(135, 91%, 60%); /* Tailwind's bg-blue-500 */
+}
+
+/* WebKit (Chrome, Safari) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #22c55e; /* Tailwind green-500 */
+  width: 14px;
+  height: 14px;
+  border-radius: 2px; /* rectangular */
+  cursor: pointer;
+  margin-top: -6px; /* align thumb with track */
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  background-color: #22c55e;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+}

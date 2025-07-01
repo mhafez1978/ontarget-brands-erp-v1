@@ -20,6 +20,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const user = await prisma.user.findUnique({
           where: { email: email as string },
+          select: {
+            // --- Select the User fields you need for the session ---
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            image: true,
+            password: true,
+            // --- Now, select the related active company and its plan ---
+            company: {
+              select: {
+                id: true, // The active company's ID
+                name: true, // The active company's name
+                subscriptionPlan: {
+                  select: {
+                    id: true, // The subscription plan's ID
+                    name: true, // The subscription plan's name
+                  },
+                },
+              },
+            },
+          },
         });
 
         if (!user || !user.password) {
@@ -44,6 +66,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           image: user.image ?? "",
           role: user.role,
+          company: user.company ?? null,
+          plan: user.company?.subscriptionPlan?.name ?? null,
         };
       },
     }),
@@ -62,27 +86,62 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 60 * 60 * 24 * 7,
   },
 
+  // callbacks: {
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       token.id = user.id;
+  //       token.email = user.email;
+  //       token.name = user.name;
+  //       token.image = user.image ?? null;
+  //       token.role = user.role;
+  //     }
+  //     return token;
+  //   },
+
+  //   async session({ session, token }) {
+  //     session.user = {
+  //       id: token.id as string,
+  //       email: token.email as string,
+  //       name: token.name as string,
+  //       image: token.image as string | null,
+  //       role: token.role as string,
+  //       emailVerified: null, // or token.emailVerified if available
+  //     };
+  //     return session;
+  //   },
+  // },
+  // In your [...nextauth] route file
+
   callbacks: {
     async jwt({ token, user }) {
+      // On initial sign-in, the `user` object from the `authorize` function is available.
       if (user) {
         token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
-        token.image = user.image ?? null;
         token.role = user.role;
+        token.company = user.company; // Add company object to token
+        token.plan = user.plan; // Add plan name to token
+        // Standard JWT claims like name, email, and picture are often handled automatically,
+        // but explicitly setting them is fine too.
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
       }
       return token;
     },
 
     async session({ session, token }) {
-      session.user = {
-        id: token.id as string,
-        email: token.email as string,
-        name: token.name as string,
-        image: token.image as string | null,
-        role: token.role as string,
-        emailVerified: null, // or token.emailVerified if available
-      };
+      // The `session` callback receives the token with our custom data.
+      // We transfer it to the session.user object to send to the client.
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role; // Add role
+        session.user.company = token.company; // Add company
+        session.user.plan = token.plan; // Add plan
+        // Ensure other properties are also passed if needed
+        session.user.name = token.name ?? "";
+        session.user.email = token.email ?? "";
+        session.user.image = token.image as string | null;
+      }
       return session;
     },
   },

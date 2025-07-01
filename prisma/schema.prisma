@@ -222,7 +222,7 @@ enum BusinessType {
 
 enum ProjectStatus {
   PLANNING
-  ACTIVE
+  IN_PROGRESS
   ON_HOLD
   COMPLETED
   CANCELED

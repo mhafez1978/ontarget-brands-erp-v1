@@ -63,13 +63,13 @@ export async function GET(
         },
         customerName: project.customer?.user?.name ?? null,
         assignedAdminsOrManagers,
-        products: 0, // Placeholder if you want to expand
+        products: 0,
         services: 0,
         timeEntries: 0,
         tasks: [],
       };
     });
-    console.log(JSON.stringify(projects, null, 2));
+
     return NextResponse.json({ projects: formattedProjects }, { status: 200 });
   } catch (error) {
     console.error("Error fetching projects:", error);

@@ -65,6 +65,7 @@ interface Project {
   services: number;
   timeEntries: number;
   tasks: { id: string }[];
+  isActive: boolean;
 }
 
 export const ProjectsManagement = () => {
@@ -147,6 +148,17 @@ export const ProjectsManagement = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const fetchProjects = async () => {
+    try {
+      const res = await fetch(`/api/projects/${companyId}/list`);
+      if (!res.ok) throw new Error("Failed to fetch projects");
+      const data = await res.json();
+      setProjects(data.projects || []);
+    } catch (err) {
+      console.error("Failed to refetch updated project list", err);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -162,8 +174,8 @@ export const ProjectsManagement = () => {
             <CreateProjectForm
               companyId={companyId}
               managerId={managerId}
-              onSuccess={() => console.log("Project created!")}
-              close={() => setEditProjectForm(false)}
+              close={close} // ✅ Actually closes the drawer
+              onSuccess={fetchProjects} // ✅ Refreshes the table
               staff={staff}
               customers={customers}
             />
@@ -209,13 +221,14 @@ export const ProjectsManagement = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Project</TableHead>
+                  <TableHead>Project Name</TableHead>
                   <TableHead>Customer</TableHead>
-                  <TableHead>Project Lead</TableHead>
-                  <TableHead>Team</TableHead>
+                  <TableHead>Project Manager</TableHead>
+                  <TableHead>Staff Assigned</TableHead>
                   <TableHead>Progress</TableHead>
                   <TableHead>Budget</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Active</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -272,6 +285,9 @@ export const ProjectsManagement = () => {
                       <Badge variant="secondary">{project.status}</Badge>
                     </TableCell>
                     <TableCell>
+                      {project.isActive ? "Active" : "Inactive"}
+                    </TableCell>
+                    <TableCell>
                       <div className="flex items-center gap-2">
                         <Button variant="ghost" size="sm">
                           <Eye className="w-4 h-4" />
@@ -307,13 +323,18 @@ export const ProjectsManagement = () => {
             startDate: projectBeingEdited.startDate,
             endDate: projectBeingEdited.endDate,
             budget: projectBeingEdited.budget,
-            isActive: true,
+            isActive: projectBeingEdited.isActive,
             assignedStaffIds: projectBeingEdited.assignedAdminsOrManagers.map(
               (u) => u.id
             ),
             customerIds: [],
           }}
           onCancel={() => {
+            setEditProjectForm(false);
+            setProjectBeingEdited(null);
+          }}
+          onSuccess={() => {
+            fetchProjects(); // ✅ Refresh the project list
             setEditProjectForm(false);
             setProjectBeingEdited(null);
           }}

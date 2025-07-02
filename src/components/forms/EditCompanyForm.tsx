@@ -9,7 +9,7 @@ import {
   CompanyCategory,
   BusinessType,
   Company as PrismaCompany,
-} from "../../../generated/prisma";
+} from "@/generated/prisma";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

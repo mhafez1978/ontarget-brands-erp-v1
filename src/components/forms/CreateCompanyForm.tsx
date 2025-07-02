@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
-import { CompanyCategory, BusinessType } from "../../../generated/prisma";
+import { CompanyCategory, BusinessType } from "@/generated/prisma";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import { allCountries } from "country-region-data";

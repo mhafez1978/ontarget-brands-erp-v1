@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid()) @map("userId")
+  name         String?   @db.VarChar(255)
+  email        String    @unique
+  image        String?   @db.VarChar(255)
+  phone        String?   @db.VarChar(20)
+  birthDate    DateTime?
+  password     String    @db.VarChar(255)
+  addressLine1 String?   @db.VarChar(255)
+  addressLine2 String?   @db.VarChar(255)
+  city         String?   @db.VarChar(100)
+  state        String?   @db.VarChar(100)
+  zipCode      String?   @db.VarChar(20)
+  country      String?   @db.VarChar(100)
+
+  // Multi-company ownership
+  ownedCompanies Company[] @relation("CompanyOwner")
+
+  // All companies the user is linked to
+  companies Company[] @relation("CompanyUsers")
+
+  // Active company context
+  companyId String?
+  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id])
+
+  isActive        Boolean           @default(true)
+  role            Role              @default(CUSTOMER)
+  lastLogin       DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  ProjectCustomer ProjectCustomer[]
+  ProjectStaff    ProjectStaff[]
+  Project         Project[]
+
+  @@map("users")
+}
+
+model Company {
+  id           String           @id @default(uuid()) @map("companyId")
+  name         String           @unique @db.VarChar(255)
+  slogan       String?          @db.VarChar(255)
+  category     CompanyCategory?
+  type         BusinessType?
+  logo         String?          @db.VarChar(255)
+  domain       String?          @unique @db.VarChar(255)
+  phone        String?          @db.VarChar(20)
+  supportEmail String?          @unique @db.VarChar(255)
+  salesEmail   String?          @unique @db.VarChar(255)
+  addressLine1 String?          @db.VarChar(255)
+  addressLine2 String?          @db.VarChar(255)
+  city         String?          @db.VarChar(100)
+  state        String?          @db.VarChar(100)
+  zipCode      String?          @db.VarChar(20)
+  country      String?          @db.VarChar(100)
+
+  isActive           Boolean @default(true)
+  gmailConnected     Boolean @default(false)
+  office365Connected Boolean @default(false)
+
+  // Owner relation
+  ownerId String
+  owner   User   @relation("CompanyOwner", fields: [ownerId], references: [id])
+
+  // Active users (reverse relation of `User.company`)
+  activeUsers User[] @relation("UserActiveCompany")
+
+  // All users linked to this company
+  users User[] @relation("CompanyUsers")
+
+  subscriptionPlanId String
+  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Project   Project[]
+
+  @@map("companies")
+}
+
+model SubscriptionPlan {
+  id            String  @id @default(uuid()) @map("planId")
+  name          String  @unique @db.VarChar(100)
+  pricePerMonth Decimal @default(0.0)
+  description   String? @db.VarChar(500)
+
+  maxUsers       Int @default(1)
+  maxAdmins      Int @default(1)
+  maxManagers    Int @default(0)
+  maxCustomers   Int @default(10)
+  storageLimitMB Int @default(100)
+  maxProjects    Int @default(3)
+
+  features  Feature[] @relation("PlanFeatures")
+  companies Company[]
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("subscription_plans")
+}
+
+model Feature {
+  id    String @id @default(uuid()) @map("featureId")
+  key   String @unique @db.VarChar(100)
+  label String @db.VarChar(100)
+
+  plans    SubscriptionPlan[] @relation("PlanFeatures")
+  isActive Boolean            @default(true)
+
+  @@map("features")
+}
+
+model Project {
+  id          String        @id @default(uuid()) @map("projectId")
+  name        String        @db.VarChar(255)
+  description String?       @db.Text
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime?
+  endDate     DateTime?
+
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  budget    Decimal?
+  progress  Int?
+  managerId String
+  manager   User     @relation(fields: [managerId], references: [id])
+
+  customerid String?
+  customer   ProjectCustomer? @relation("ProjectToCustomer")
+
+  staff    ProjectStaff[]
+  isActive Boolean        @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("projects")
+}
+
+model ProjectStaff {
+  id        String @id @default(uuid()) @map("projectStaffId")
+  projectId String
+  userId    String
+
+  project Project @relation(fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  assignedAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@map("project_staff")
+}
+
+model ProjectCustomer {
+  id        String @id @default(uuid()) @map("projectCustomerId")
+  projectId String @unique
+  userId    String
+
+  project Project @relation("ProjectToCustomer", fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  role    String?  @db.VarChar(100)
+  notes   String?  @db.Text
+  addedAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@map("project_customers")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  STAFF
+  CUSTOMER
+  GUEST
+}
+
+enum CompanyCategory {
+  AGRICULTURE
+  AUTOMOTIVE
+  CONSTRUCTION
+  CONSULTING
+  EDUCATION
+  ENERGY
+  ENTERTAINMENT
+  FINANCE
+  FOOD_AND_BEVERAGE
+  GOVERNMENT
+  HEALTHCARE
+  HOSPITALITY
+  INTERIOR_DESIGN
+  MANUFACTURING
+  MARKETING
+  NON_PROFIT
+  PHARMACEUTICAL
+  REAL_ESTATE
+  RETAIL
+  TECHNOLOGY
+  TELECOMMUNICATIONS
+  TRANSPORTATION
+}
+
+enum BusinessType {
+  SERVICES
+  PRODUCTS
+  SERVICES_AND_PRODUCTS
+  OTHER
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELED
+  ARCHIVED
+}

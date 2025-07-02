@@ -5,7 +5,7 @@ import { Pencil, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { EditCompanyForm } from "../forms/EditCompanyForm";
-import { Company as PrismaCompany } from "../../../generated/prisma";
+import { Company as PrismaCompany } from "@/generated/prisma";
 import Link from "next/link";
 import { OffCanvasBtn } from "../OffCanvasBtn";
 import { CreateCompanyForm } from "../forms/CreateCompanyForm";

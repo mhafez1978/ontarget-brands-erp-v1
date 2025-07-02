@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+      "Access-Control-Allow-Headers": "*",
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -37,6 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       user: { id: user.id, email: user.email },
+      headers: { "Access-Control-Allow-Origin": "*" },
     });
   } catch (err) {
     console.error("Registration error:", err);

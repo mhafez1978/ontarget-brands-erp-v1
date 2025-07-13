@@ -49,10 +49,10 @@ export async function GET(
         },
       },
     });
-    console.log(projects);
+    //console.log(projects);
     return NextResponse.json(projects);
   } catch (error) {
-    console.error("[GET_PROJECTS_BY_COMPANY]", error);
+    //console.error("[GET_PROJECTS_BY_COMPANY]", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

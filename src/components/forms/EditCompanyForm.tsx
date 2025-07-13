@@ -20,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showToast } from "@/hooks/toast";
+import { json } from "stream/consumers";
 
 // Initialize i18n-iso-countries
 countries.registerLocale(enLocale);
@@ -200,6 +202,7 @@ export const EditCompanyForm = ({
     setSuccess("");
 
     try {
+      console.log("Submitting form data:", JSON.stringify(formData, null, 2));
       const res = await fetch(`/api/admin/company/${companyId}/update`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -210,9 +213,11 @@ export const EditCompanyForm = ({
       if (!res.ok) throw new Error(data.error || "Error");
 
       setSuccess("Company updated successfully");
+      showToast("success", "Company updated successfully");
       onSuccess?.();
     } catch (err: any) {
       setError(err.message);
+      showToast("error", err.message || "An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -223,8 +228,14 @@ export const EditCompanyForm = ({
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
-      <form onSubmit={handleSubmit} className="w-full flex flex-col px-6 gap-4">
+      <form onSubmit={handleSubmit} className="w-full flex flex-col px-6">
         {/* Company Details */}
+        <div className="w-full flex flex-col items-start justify-center">
+          <h2 className="text-2xl font-bold">Edit Company</h2>
+          <p className="text-sm text-muted-foreground">
+            Update your company details below.
+          </p>
+        </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="min-h-20 md:col-span-2"></div>
           {(["name", "slogan", "domain", "phone"] as const).map((field) => (

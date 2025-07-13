@@ -1,44 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { companyId: string } }
+  { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const companyId = params.companyId;
-  console.log("PATCH /api/admin/company/[companyId]/update", params);
+  const session = await auth();
+  const { companyId } = await params;
+  const body = await req.json();
 
   try {
-    const data = await req.json();
-
-    const updated = await prisma.company.update({
+    const res = await prisma.company.update({
       where: { id: companyId },
       data: {
-        name: data.name,
-        slogan: data.slogan,
-        category: data.category,
-        type: data.type,
-        logo: data.logo,
-        domain: data.domain,
-        phone: data.phone,
-        supportEmail: data.supportEmail,
-        salesEmail: data.salesEmail,
-        addressLine1: data.addressLine1,
-        addressLine2: data.addressLine2,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode,
-        country: data.country,
-        subscriptionPlanId: data.subscriptionPlanId,
+        name: body.name,
+        slogan: body.slogan,
+        category: body.category,
+        type: body.type,
+        logo: body.logo,
+        domain: body.domain,
+        phone: body.phone,
+        supportEmail: body.supportEmail,
+        salesEmail: body.salesEmail,
+        addressLine1: body.addressLine1,
+        addressLine2: body.addressLine2,
+        city: body.city,
+        state: body.state,
+        zipCode: body.zipCode,
+        country: body.country,
+        isActive: body.isActive,
+        gmailConnected: body.gmailConnected,
+        office365Connected: body.office365Connected,
+        ownerId: body.ownerId,
+        subscriptionPlanId: body.subscriptionPlanId,
       },
     });
-    console.log(updated);
-    return NextResponse.json(updated);
-  } catch (err) {
-    console.error("Company update failed:", err);
-    return NextResponse.json(
-      { error: "Failed to update company" },
-      { status: 500 }
+
+    return new Response(
+      JSON.stringify({ message: "Company updated successfully" }),
+      { status: 200 }
     );
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      status: 500,
+    });
   }
 }

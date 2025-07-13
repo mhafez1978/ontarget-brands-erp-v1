@@ -7,38 +7,14 @@ import { CreatePlanForm } from "@/components/forms/CreatePlanForm";
 import { UserPasswordResetManager } from "@/components/superadmin/UserPasswordResetManager";
 import AllCompaniesSearch from "./AllCompaniesSearch";
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      image?: string | null;
-      role: string;
-    };
-  }
-
-  interface User {
-    id: string;
-    name: string;
-    email: string;
-    image?: string | null;
-    role: string;
-  }
-
-  interface JWT {
-    id: string;
-    name: string;
-    email: string;
-    image?: string | null;
-    role: string;
-  }
-}
-
 export const SuperAdminModelsManager = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  if (!session || !session.user || session.user.role !== "SUPER_ADMIN") {
+  if (
+    !session ||
+    !session.user ||
+    !["SUPER_ADMIN", "ADMIN"].includes(session.user.role)
+  ) {
     router.replace("/auth");
     return null;
   }

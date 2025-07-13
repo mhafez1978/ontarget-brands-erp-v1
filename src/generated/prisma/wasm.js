@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.10.1
- * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+ * Prisma Client JS version: 6.11.1
+ * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
  */
 Prisma.prismaVersion = {
-  client: "6.10.1",
-  engine: "9b628578b3b7cae625e8c927178f15a170e74a9c"
+  client: "6.11.1",
+  engine: "f40f79ec31188888a2e33acda0ecc8fd10a853a9"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -124,6 +124,7 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  emailVerified: 'emailVerified',
   image: 'image',
   phone: 'phone',
   birthDate: 'birthDate',
@@ -139,7 +140,8 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   lastLogin: 'lastLogin',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.CompanyScalarFieldEnum = {
@@ -150,6 +152,8 @@ exports.Prisma.CompanyScalarFieldEnum = {
   type: 'type',
   logo: 'logo',
   domain: 'domain',
+  subdomain: 'subdomain',
+  isCustomDomain: 'isCustomDomain',
   phone: 'phone',
   supportEmail: 'supportEmail',
   salesEmail: 'salesEmail',
@@ -165,14 +169,17 @@ exports.Prisma.CompanyScalarFieldEnum = {
   ownerId: 'ownerId',
   subscriptionPlanId: 'subscriptionPlanId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.SubscriptionPlanScalarFieldEnum = {
   id: 'id',
+  key: 'key',
   name: 'name',
-  pricePerMonth: 'pricePerMonth',
   description: 'description',
+  pricePerMonth: 'pricePerMonth',
+  billingCycle: 'billingCycle',
   maxUsers: 'maxUsers',
   maxAdmins: 'maxAdmins',
   maxManagers: 'maxManagers',
@@ -181,14 +188,18 @@ exports.Prisma.SubscriptionPlanScalarFieldEnum = {
   maxProjects: 'maxProjects',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.FeatureScalarFieldEnum = {
   id: 'id',
   key: 'key',
   label: 'label',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -205,7 +216,8 @@ exports.Prisma.ProjectScalarFieldEnum = {
   customerid: 'customerid',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ProjectStaffScalarFieldEnum = {
@@ -256,6 +268,7 @@ exports.Prisma.CompanyOrderByRelevanceFieldEnum = {
   slogan: 'slogan',
   logo: 'logo',
   domain: 'domain',
+  subdomain: 'subdomain',
   phone: 'phone',
   supportEmail: 'supportEmail',
   salesEmail: 'salesEmail',
@@ -271,6 +284,7 @@ exports.Prisma.CompanyOrderByRelevanceFieldEnum = {
 
 exports.Prisma.SubscriptionPlanOrderByRelevanceFieldEnum = {
   id: 'id',
+  key: 'key',
   name: 'name',
   description: 'description'
 };
@@ -342,6 +356,15 @@ exports.BusinessType = exports.$Enums.BusinessType = {
   PRODUCTS: 'PRODUCTS',
   SERVICES_AND_PRODUCTS: 'SERVICES_AND_PRODUCTS',
   OTHER: 'OTHER'
+};
+
+exports.BillingCycle = exports.$Enums.BillingCycle = {
+  ONE_TIME: 'ONE_TIME',
+  NET_7: 'NET_7',
+  NET_15: 'NET_15',
+  MONTHLY: 'MONTHLY',
+  QUARTERLY: 'QUARTERLY',
+  ANNUALLY: 'ANNUALLY'
 };
 
 exports.ProjectStatus = exports.$Enums.ProjectStatus = {

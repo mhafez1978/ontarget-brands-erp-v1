@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -9,19 +9,20 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid()) @map("userId")
-  name         String?   @db.VarChar(255)
-  email        String    @unique
-  image        String?   @db.VarChar(255)
-  phone        String?   @db.VarChar(20)
-  birthDate    DateTime?
-  password     String    @db.VarChar(255)
-  addressLine1 String?   @db.VarChar(255)
-  addressLine2 String?   @db.VarChar(255)
-  city         String?   @db.VarChar(100)
-  state        String?   @db.VarChar(100)
-  zipCode      String?   @db.VarChar(20)
-  country      String?   @db.VarChar(100)
+  id            String    @id @default(uuid()) @map("userId")
+  name          String?   @db.VarChar(255)
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?   @db.VarChar(255)
+  phone         String?   @db.VarChar(20)
+  birthDate     DateTime?
+  password      String    @db.VarChar(255)
+  addressLine1  String?   @db.VarChar(255)
+  addressLine2  String?   @db.VarChar(255)
+  city          String?   @db.VarChar(100)
+  state         String?   @db.VarChar(100)
+  zipCode       String?   @db.VarChar(20)
+  country       String?   @db.VarChar(100)
 
   // Multi-company ownership
   ownedCompanies Company[] @relation("CompanyOwner")
@@ -31,13 +32,14 @@ model User {
 
   // Active company context
   companyId String?
-  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id])
+  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull) // Clear active company if company is deleted
 
   isActive        Boolean           @default(true)
   role            Role              @default(CUSTOMER)
   lastLogin       DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime? // Added for soft deletes
   ProjectCustomer ProjectCustomer[]
   ProjectStaff    ProjectStaff[]
   Project         Project[]
@@ -46,22 +48,24 @@ model User {
 }
 
 model Company {
-  id           String           @id @default(uuid()) @map("companyId")
-  name         String           @unique @db.VarChar(255)
-  slogan       String?          @db.VarChar(255)
-  category     CompanyCategory?
-  type         BusinessType?
-  logo         String?          @db.VarChar(255)
-  domain       String?          @unique @db.VarChar(255)
-  phone        String?          @db.VarChar(20)
-  supportEmail String?          @unique @db.VarChar(255)
-  salesEmail   String?          @unique @db.VarChar(255)
-  addressLine1 String?          @db.VarChar(255)
-  addressLine2 String?          @db.VarChar(255)
-  city         String?          @db.VarChar(100)
-  state        String?          @db.VarChar(100)
-  zipCode      String?          @db.VarChar(20)
-  country      String?          @db.VarChar(100)
+  id             String           @id @default(uuid()) @map("companyId")
+  name           String           @unique @db.VarChar(255)
+  slogan         String?          @db.VarChar(255)
+  category       CompanyCategory?
+  type           BusinessType?
+  logo           String?          @db.VarChar(255)
+  domain         String?          @unique @db.VarChar(255)
+  subdomain      String?          @unique @db.VarChar(255)
+  isCustomDomain Boolean?         @default(false)
+  phone          String?          @db.VarChar(20)
+  supportEmail   String?          @unique @db.VarChar(255)
+  salesEmail     String?          @unique @db.VarChar(255)
+  addressLine1   String?          @db.VarChar(255)
+  addressLine2   String?          @db.VarChar(255)
+  city           String?          @db.VarChar(100)
+  state          String?          @db.VarChar(100)
+  zipCode        String?          @db.VarChar(20)
+  country        String?          @db.VarChar(100)
 
   isActive           Boolean @default(true)
   gmailConnected     Boolean @default(false)
@@ -69,7 +73,7 @@ model Company {
 
   // Owner relation
   ownerId String
-  owner   User   @relation("CompanyOwner", fields: [ownerId], references: [id])
+  owner   User   @relation("CompanyOwner", fields: [ownerId], references: [id], onDelete: NoAction) // Prevent owner deletion to maintain company ownership
 
   // Active users (reverse relation of `User.company`)
   activeUsers User[] @relation("UserActiveCompany")
@@ -78,50 +82,54 @@ model Company {
   users User[] @relation("CompanyUsers")
 
   subscriptionPlanId String
-  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
+  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction) // Prevent plan deletion if companies exist
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Added for soft deletes
   Project   Project[]
 
   @@map("companies")
 }
 
 model SubscriptionPlan {
-  id            String  @id @default(uuid()) @map("planId")
-  name          String  @unique @db.VarChar(100)
-  pricePerMonth Decimal @default(0.0)
-  description   String? @db.VarChar(500)
-
-  maxUsers       Int @default(1)
-  maxAdmins      Int @default(1)
-  maxManagers    Int @default(0)
-  maxCustomers   Int @default(10)
-  storageLimitMB Int @default(100)
-  maxProjects    Int @default(3)
-
-  features  Feature[] @relation("PlanFeatures")
-  companies Company[]
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id             String       @id @default(uuid()) @map("planId")
+  key            String       @unique @db.VarChar(50)
+  name           String       @unique @db.VarChar(100)
+  description    String?      @db.VarChar(500)
+  pricePerMonth  Decimal      @default(0.0)
+  billingCycle   BillingCycle
+  maxUsers       Int          @default(1)
+  maxAdmins      Int          @default(1)
+  maxManagers    Int          @default(0)
+  maxCustomers   Int          @default(10)
+  storageLimitMB Int          @default(100)
+  maxProjects    Int          @default(3)
+  features       Feature[]    @relation("PlanFeatures")
+  companies      Company[]
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime? // soft delete
 
   @@map("subscription_plans")
 }
 
 model Feature {
-  id    String @id @default(uuid()) @map("featureId")
-  key   String @unique @db.VarChar(100)
-  label String @db.VarChar(100)
-
-  plans    SubscriptionPlan[] @relation("PlanFeatures")
-  isActive Boolean            @default(true)
+  id        String             @id @default(uuid()) @map("featureId")
+  key       String             @unique @db.VarChar(100)
+  label     String             @db.VarChar(100)
+  plans     SubscriptionPlan[] @relation("PlanFeatures")
+  isActive  Boolean            @default(true)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  deletedAt DateTime? // Added for soft deletes
 
   @@map("features")
 }
 
 model Project {
-  id          String        @id @default(uuid()) @map("projectId")
+  id          String        @id @default(uuid())
   name        String        @db.VarChar(255)
   description String?       @db.Text
   status      ProjectStatus @default(PLANNING)
@@ -129,20 +137,20 @@ model Project {
   endDate     DateTime?
 
   companyId String
-  company   Company  @relation(fields: [companyId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade) // Delete projects if company is deleted
   budget    Decimal?
   progress  Int?
-  managerId String
-  manager   User     @relation(fields: [managerId], references: [id])
+  managerId String?
+  manager   User?    @relation(fields: [managerId], references: [id], onDelete: SetNull) // Allow projects to persist without a manager
 
   customerid String?
   customer   ProjectCustomer? @relation("ProjectToCustomer")
 
-  staff    ProjectStaff[]
-  isActive Boolean        @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  staff     ProjectStaff[]
+  isActive  Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  deletedAt DateTime? // Added for soft deletes
 
   @@map("projects")
 }
@@ -152,8 +160,8 @@ model ProjectStaff {
   projectId String
   userId    String
 
-  project Project @relation(fields: [projectId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade) // Delete staff assignments if project is deleted
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Delete staff assignments if user is deleted
 
   assignedAt DateTime @default(now())
 
@@ -166,8 +174,8 @@ model ProjectCustomer {
   projectId String @unique
   userId    String
 
-  project Project @relation("ProjectToCustomer", fields: [projectId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation("ProjectToCustomer", fields: [projectId], references: [id], onDelete: Cascade) // Delete customer assignment if project is deleted
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Delete customer assignment if user is deleted
 
   role    String?  @db.VarChar(100)
   notes   String?  @db.Text
@@ -216,6 +224,15 @@ enum BusinessType {
   PRODUCTS
   SERVICES_AND_PRODUCTS
   OTHER
+}
+
+enum BillingCycle {
+  ONE_TIME
+  NET_7
+  NET_15
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
 }
 
 enum ProjectStatus {

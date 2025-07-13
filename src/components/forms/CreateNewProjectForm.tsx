@@ -20,6 +20,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { showToast } from "@/hooks/toast";
 
 type UserOption = { id: string; name: string };
 
@@ -97,11 +98,24 @@ export const CreateProjectForm = ({
     });
 
     if (res.ok) {
+      showToast("success", "Project created successfully");
+      setForm({
+        name: "",
+        description: "",
+        status: "PLANNING",
+        startDate: "",
+        endDate: "",
+        budget: "",
+        isActive: false,
+      });
+      setSelectedStaff([]);
+      setSelectedCustomers([]);
       onSuccess();
       close();
       router.refresh();
     } else {
-      alert("Failed to create project");
+      const error = await res.json();
+      showToast("error", error.error || "Failed to create project");
     }
   };
 

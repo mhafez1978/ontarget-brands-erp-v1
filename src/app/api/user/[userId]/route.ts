@@ -8,16 +8,16 @@ export async function GET(
   { params }: { params: Promise<{ userId: string }> }
 ) {
   const { userId } = await params;
-  console.log("Fetching user profile for userId:", userId);
+  //console.log("Fetching user profile for userId:", userId);
   const session = await auth();
 
   if (!userId) {
-    console.log("User ID is missing in request parameters");
+    //console.log("User ID is missing in request parameters");
     return new Response("User ID is missing", { status: 400 });
   }
 
   if (!session || !session.user || session.user.id !== userId) {
-    console.log("Unauthorized access attempt by user:");
+    //console.log("Unauthorized access attempt by user:");
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -42,13 +42,13 @@ export async function GET(
     });
 
     if (!user) {
-      console.log(`User with ID ${userId} not found`);
+      //console.log(`User with ID ${userId} not found`);
       return new Response("User not found", { status: 404 });
     }
-    console.log("User profile fetched successfully:", user);
+    //console.log("User profile fetched successfully:", user);
     return Response.json(user);
   } catch (error) {
-    console.error("Failed to fetch user:", error);
+    //console.error("Failed to fetch user:", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }

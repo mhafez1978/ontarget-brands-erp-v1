@@ -6,22 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSession } from "next-auth/react";
+import { showToast } from "@/hooks/toast";
+
+type FormState = {
+  key: string;
+  name: string;
+  description: string;
+  pricePerMonth: number;
+  billingCycle: string;
+  maxUsers: number;
+  maxAdmins: number;
+  maxCustomers: number;
+  maxManagers: number;
+  storageLimitMB: number;
+  maxProjects: number;
+  features: string[];
+};
 
 export const CreatePlanForm = () => {
-  type FormState = {
-    name: string;
-    description: string;
-    pricePerMonth: number;
-    maxUsers: number;
-    maxAdmins: number;
-    maxCustomers: number;
-    maxManagers: number;
-    storageLimitMB: number;
-    maxProjects: number;
-    features: string[];
-  };
+  const { data: session } = useSession();
 
+  const billingCycleOptions = ["ONE_TIME", "MONTHLY", "QUARTERLY", "ANNUALLY"];
   const featureOptions = [
+    "company",
     "projects",
     "inventory",
     "services",
@@ -34,9 +41,11 @@ export const CreatePlanForm = () => {
   ];
 
   const [form, setForm] = useState<FormState>({
+    key: "starter",
     name: "Starter",
     description: "Starter Plan",
     pricePerMonth: 9.99,
+    billingCycle: "Monthly",
     maxUsers: 5,
     maxAdmins: 1,
     maxCustomers: 10,
@@ -86,10 +95,13 @@ export const CreatePlanForm = () => {
 
     if (res.ok) {
       alert("Plan created successfully");
+      showToast("success", "Plan created successfully");
       setForm({
+        key: "",
         name: "",
         description: "",
         pricePerMonth: 0.0,
+        billingCycle: "",
         maxUsers: 1,
         maxAdmins: 1,
         maxCustomers: 10,
@@ -100,10 +112,18 @@ export const CreatePlanForm = () => {
       });
     } else {
       const err = await res.json();
-      alert(`Failed: ${err.error || "Unknown error"}`);
+      showToast("error", err.error || "Failed to create plan");
     }
   };
 
+  if (!session || session.user.role !== "SUPER_ADMIN") {
+    return (
+      <div className="w-full h-screen max-h-full bg-gray-50 text-gray-700">
+        <h2>You do not have access to this feature ...</h2>
+        <p>Contact your company administrator.</p>
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit}
@@ -118,6 +138,17 @@ export const CreatePlanForm = () => {
           value={form.name}
           onChange={handleChange}
           placeholder="e.g. Starter"
+          required
+        />
+      </label>
+
+      <label className="flex flex-col">
+        <span className="font-medium mb-1">Plan Key (must be unique)</span>
+        <Input
+          name="key"
+          value={form.key}
+          onChange={handleChange}
+          placeholder="e.g. starter, standard, premium"
           required
         />
       </label>
@@ -142,6 +173,25 @@ export const CreatePlanForm = () => {
           min="0"
           step="0.01"
         />
+      </label>
+
+      <label className="flex flex-col">
+        <span className="font-medium mb-1">Billing Cycle</span>
+        <select
+          name="billingCycle"
+          value={form.billingCycle}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, billingCycle: e.target.value }))
+          }
+          className="h-12 border border-gray-300 rounded px-3"
+          required
+        >
+          {billingCycleOptions.map((cycle) => (
+            <option key={cycle} value={cycle}>
+              {cycle.replace("_", " ")} {/* Display nicely */}
+            </option>
+          ))}
+        </select>
       </label>
 
       <div className="grid grid-cols-2 gap-4">
@@ -186,7 +236,7 @@ export const CreatePlanForm = () => {
         </div>
       </div>
 
-      <Button type="submit">Save to DB</Button>
+      <Button type="submit">Save to Database... </Button>
     </form>
   );
 };

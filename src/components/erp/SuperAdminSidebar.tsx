@@ -45,9 +45,9 @@ const menuItems = [
   },
   {
     id: "users",
-    label: "Users Management",
+    label: "Staff",
     icon: UserCog,
-    url: "/users-management",
+    url: "/workforce",
   },
   {
     id: "ai-content",
@@ -70,7 +70,7 @@ const menuItems = [
   { id: "settings", label: "Settings", icon: SettingsIcon, url: "/settings" },
 ];
 
-export const Sidebar = () => {
+export const SuperAdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { data: session } = useSession();

@@ -54,7 +54,7 @@ export async function POST(
         { status: 400 }
       );
     }
-    console.log("#####Request body:", JSON.stringify(body, null, 2));
+    //console.log("#####Request body:", JSON.stringify(body, null, 2));
 
     const createdProject = await prisma.project.create({
       data: {

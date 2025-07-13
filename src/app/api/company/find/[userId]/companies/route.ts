@@ -62,10 +62,10 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
     }
-    console.log(companies);
+    //console.log(companies);
     return NextResponse.json(companies);
   } catch (error) {
-    console.error("Error fetching company:", error);
+    //console.error("Error fetching company:", error);
     return NextResponse.json(
       { message: "Internal server error." },
       { status: 500 }

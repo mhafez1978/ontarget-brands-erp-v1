@@ -20,6 +20,29 @@ export async function GET(
       select: {
         id: true,
         name: true,
+        email: true,
+        phone: true,
+        image: true,
+        birthDate: true,
+        addressLine1: true,
+        addressLine2: true,
+        city: true,
+        state: true,
+        zipCode: true,
+        country: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            subscriptionPlan: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 

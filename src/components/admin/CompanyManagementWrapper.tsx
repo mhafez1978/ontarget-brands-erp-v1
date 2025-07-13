@@ -14,7 +14,8 @@ interface Props {
 export const CompanyManagementWrapper = ({ userId }: Props) => {
   const [refreshSignal, setRefreshSignal] = useState(0);
   const { data: session } = useSession();
-  if (!session || !userId || session.user.id !== userId) {
+
+  if (!userId) {
     return redirect("/auth");
   }
 

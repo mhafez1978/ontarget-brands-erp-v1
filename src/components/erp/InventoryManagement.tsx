@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,40 +154,47 @@ export const InventoryManagement = () => {
           <Plus className="w-4 h-4 mr-2" />
           Add Product
         </Button> */}
-        <OffCanvasBtn buttonText={"Add New Product"}>
-          <h2 className="mb-4">Add New Product</h2>
-          <form>
-            <input
-              type="text"
-              placeholder="Service Name"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="text"
-              placeholder="Category"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="text"
-              placeholder="Duration"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <textarea
-              placeholder="Description"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
-            >
-              Save
-            </Button>
-          </form>
+        <OffCanvasBtn
+          buttonText={"Add New Product"}
+          formName={"Add New Product"}
+        >
+          {(close) => (
+            <>
+              <h2 className="mb-4">Add New Product</h2>
+              <form>
+                <input
+                  type="text"
+                  placeholder="Service Name"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Category"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Duration"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <textarea
+                  placeholder="Description"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  Save
+                </Button>
+              </form>
+            </>
+          )}
         </OffCanvasBtn>
       </div>
 

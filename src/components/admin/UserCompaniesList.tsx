@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pencil, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { EditCompanyForm } from "../forms/EditCompanyForm";
 import { Company as PrismaCompany } from "@/generated/prisma";
 import Link from "next/link";
@@ -91,7 +91,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   // };
 
   const handleDelete = async (company: Company) => {
-    console.log("Deleting company...", company);
+    //console.log("Deleting company...", company);
     try {
       const res = await fetch(`/api/admin/company/${company.id}/delete`, {
         method: "POST",
@@ -104,7 +104,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
         throw new Error(err.error || "Failed to delete company");
       }
 
-      console.log("Company deleted successfully.");
+      //console.log("Company deleted successfully.");
 
       // 🔥 Update local state to remove the deleted company
       setCompanies((prev) => prev.filter((c) => c.id !== company.id));
@@ -259,9 +259,10 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
       </div>
 
       <Sheet open={!!selectedCompany} onOpenChange={handleClose}>
+        <SheetTitle className="text-lg text-black font-semibold"></SheetTitle>
         <SheetContent
           side="right"
-          className="w-full px-4 overflow-y-auto lg:min-w-[30vw]"
+          className="w-full px-4 lg:min-w-[30vw] pt-10"
         >
           {selectedCompany && (
             <EditCompanyForm

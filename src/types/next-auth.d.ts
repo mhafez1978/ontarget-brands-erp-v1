@@ -1,47 +1,105 @@
-// file: types/next-auth.d.ts
-
 import { DefaultSession, DefaultUser } from "next-auth";
-import { JWT } from "next-auth/jwt";
 
-// Define the shape of the company and subscription plan for clarity
+// Extend the SubscriptionPlan type
 interface SubscriptionPlan {
   id: string;
+  key: string;
   name: string;
+  billingCycle: string;
+  pricePerMonth: decimal;
 }
 
+// Extend the Company type to match the Prisma schema and authorize result
 interface Company {
   id: string;
   name: string;
-  subscriptionPlan: SubscriptionPlan;
+  slogan: string | null;
+  category: string | null;
+  type: string | null;
+  logo: string | null;
+  domain: string | null;
+  phone: string | null;
+  supportEmail: string | null;
+  salesEmail: string | null;
+  addressLine1: string | null;
+  addressLine2: string | null;
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
+  country: string | null;
+  isActive: boolean;
+  gmailConnected: boolean;
+  office365Connected: boolean;
+  subscriptionPlan: SubscriptionPlan | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }
 
 declare module "next-auth" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
   interface Session {
     user: {
       id: string;
-      role: string; // Your custom role
-      company: Company | null; // Your custom company object
-      plan: string | null; // Your custom plan name
-    } & DefaultSession["user"]; // Keep the default properties
+      role: string;
+      company: Company | null;
+      plan: string | null;
+      subscriptionPlan: SubscriptionPlan | null;
+      billingCycle: string | null;
+      pricePerMonth: number | null;
+      ownedCompanies: { id: string; name: string }[];
+    } & DefaultSession["user"];
   }
 
-  // Extend the default User model if needed, but Session is more important for client-side
-  interface User {
-    role: string;
-    company: Company | null;
-    plan: string | null;
-  }
-}
-
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and sent to the `session` callback */
-  interface JWT {
+  interface User extends DefaultUser {
     id: string;
     role: string;
     company: Company | null;
     plan: string | null;
+    subscriptionPlan: SubscriptionPlan | null;
+    billingCycle: string | null;
+    pricePerMonth: number | null;
+    ownedCompanies: { id: string; name: string }[];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    email?: string;
+    name?: string;
+    image?: string | null;
+    role: string;
+    company: Company | null;
+    plan: string | null;
+    subscriptionPlan: SubscriptionPlan | null;
+    billingCycle: string | null;
+    pricePerMonth: number | null;
+    ownedCompanies: { id: string; name: string }[];
+  }
+}
+
+declare module "next-auth/providers/credentials" {
+  interface Credentials {
+    email: string;
+    password: string;
+  }
+}
+
+declare module "next-auth/providers" {
+  interface Provider {
+    credentials?: {
+      email: { label: string; type: string };
+      password: { label: string; type: string };
+    };
+  }
+}
+
+declare module "next-auth/core/types" {
+  interface NextAuthConfig {
+    providers?: Provider[];
+    callbacks?: {
+      jwt?: (token: JWT, user?: User) => Promise<JWT>;
+      session?: (session: Session, token: JWT) => Promise<Session>;
+    };
   }
 }

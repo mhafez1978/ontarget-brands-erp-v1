@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import OAuthButtons from "@/components/auth/OAuthButtons";
-import { signIn } from "next-auth/react"; // 🔄 use this instead of @/auth for client auth
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
+import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -14,10 +14,44 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pfcounter, setPFCounter] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [cooldown, setCooldown] = useState(0); // seconds remaining
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (cooldown > 0) {
+      timer = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            setIsDisabled(false);
+            setError(null);
+            setPFCounter(0);
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error state
+    setError(null);
+
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
+    if (pfcounter >= 3) {
+      setIsDisabled(true);
+      setError("You've exceeded allowed login attempts.");
+      setCooldown(30);
+      return;
+    }
 
     const res = await signIn("credentials", {
       email,
@@ -25,11 +59,14 @@ const LoginForm = () => {
       redirect: false,
     });
 
-    if (!res.ok) {
-      console.error("Login failed:", res.error);
-      setError("Invalid email or password");
-    } else if (res.ok) {
-      router.push("/dashboard"); // 🔁 redirect to your app dashboard
+    if (res?.error) {
+      setPFCounter((prev) => prev + 1);
+      setError("Invalid email or password.");
+    } else if (res?.ok) {
+      setPFCounter(0);
+      router.push("/dashboard");
+    } else {
+      setError("Unexpected error. Please try again.");
     }
   };
 
@@ -37,7 +74,6 @@ const LoginForm = () => {
     <div className="space-y-6">
       <OAuthButtons />
 
-      {/* Divider */}
       <div className="relative">
         <Separator className="bg-gray-200" />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -60,6 +96,7 @@ const LoginForm = () => {
             className="h-12 border-gray-300 focus:border-black focus:ring-black"
             placeholder="you@company.com"
             required
+            disabled={isDisabled}
           />
         </div>
 
@@ -78,6 +115,7 @@ const LoginForm = () => {
             className="h-12 border-gray-300 focus:border-black focus:ring-black"
             placeholder="Enter your password"
             required
+            disabled={isDisabled}
           />
         </div>
 
@@ -89,6 +127,7 @@ const LoginForm = () => {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
               className="w-4 h-4 text-black border-gray-300 rounded focus:ring-black"
+              disabled={isDisabled}
             />
             <label htmlFor="remember" className="text-sm text-gray-600">
               Remember me
@@ -102,17 +141,28 @@ const LoginForm = () => {
           </button>
         </div>
 
-        {error && (
-          <div className="text-sm text-red-600 font-medium">{error}</div>
-        )}
-
         <Button
           type="submit"
+          disabled={isDisabled}
           className="w-full h-12 bg-black hover:bg-gray-800 text-white font-medium transition-all duration-200"
         >
-          Sign In
+          {isDisabled ? `Access Blocked` : "Sign In"}
         </Button>
       </form>
+
+      {error && (
+        <p className="text-red-500 text-sm text-center">
+          {isDisabled && cooldown > 0 ? (
+            <>
+              {error}
+              <br />
+              Try again in {cooldown} seconds.
+            </>
+          ) : (
+            error
+          )}
+        </p>
+      )}
     </div>
   );
 };

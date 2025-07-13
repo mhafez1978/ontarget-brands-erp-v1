@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       users,
     } = body;
 
-    console.log("########### Fired API to create company ...");
+    //console.log("########### Fired API to create company ...");
 
     if (!name || !subscriptionPlanId || !ownerId) {
       return NextResponse.json(
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    console.log("########### About to create company ...");
+    //console.log("########### About to create company ...");
 
     const newCompany = await prisma.company.create({
       data: {
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("########### Company created successfully:", newCompany);
+    //console.log("########### Company created successfully:", newCompany);
 
     // lets promote user to admin on company creation
     const promotedUser = await prisma.user.update({
@@ -103,6 +103,9 @@ export async function POST(req: NextRequest) {
       },
       data: {
         role: "ADMIN",
+        company: {
+          connect: { id: newCompany.id },
+        },
       },
     });
 

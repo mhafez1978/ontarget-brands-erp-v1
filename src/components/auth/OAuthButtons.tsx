@@ -5,9 +5,9 @@ interface OAuthButtonsProps {
   isRegister?: boolean;
 }
 
-const OAuthButtons = ({ isRegister = false }: OAuthButtonsProps) => {
+export const OAuthButtons = ({ isRegister = false }: OAuthButtonsProps) => {
   const handleOAuthLogin = (provider: string) => {
-    console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
+    //console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
   };
 
   return (
@@ -58,5 +58,3 @@ const OAuthButtons = ({ isRegister = false }: OAuthButtonsProps) => {
     </div>
   );
 };
-
-export default OAuthButtons;

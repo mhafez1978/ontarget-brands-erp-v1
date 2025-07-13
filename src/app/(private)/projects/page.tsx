@@ -5,37 +5,35 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation"; // Correct import for Server Components
 
 const ProjectsPage = async () => {
-  // 1. Get the session on the server
   const session = await auth();
-
-  // 2. Handle unauthenticated users first (most important guard clause)
   if (!session || !session.user) {
-    // If no session, send them to the login page.
-    redirect("/auth");
+    return redirect("/auth");
   }
-
-  // 3. Define roles for clarity
+  //const userId = session.user.id;
   const userRole = session.user.role;
-  const authorizedRoles = ["ADMIN", "SUPER_ADMIN", "MANAGER"];
-
-  // 4. Handle the "happy path": users who ARE allowed to see the component
-  if (authorizedRoles.includes(userRole)) {
-    // The user has a valid role, render the main component for them.
-    return <ProjectsManagement />;
+  const subscriptionPlan = session.user.subscriptionPlan;
+  if (
+    !userRole ||
+    !["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(userRole) ||
+    !subscriptionPlan ||
+    subscriptionPlan.key.toLowerCase() !== "premium"
+  ) {
+    // Access denied
+    return (
+      <>
+        <div className="pt-4">
+          <h2 className="text-5xl font-bold mb-4">Upgrade Required</h2>
+          <p className="text-red-500 text-lg mb-2">
+            You do not have this feature enabled in your plan.
+          </p>
+          <p className="text-sm text-gray-500 italic">
+            Please upgrade your plan to access Inventory Management.
+          </p>
+        </div>
+      </>
+    );
   }
-
-  // 5. Handle special cases for other logged-in users
-  if (userRole === "CUSTOMER") {
-    // A CUSTOMER is logged in but shouldn't be here.
-    // We cannot `alert` them, but we can redirect them to a page
-    // that explains what they need to do next.
-    redirect("/company"); // or /dashboard?error=setup_incomplete
-  }
-
-  // 6. Handle all other authenticated users (e.g., STAFF, GUEST)
-  // They are logged in but not authorized for this specific page.
-  // Send them to a safe default page, not the login page.
-  redirect("/dashboard"); // Or your home page "/"
+  return <ProjectsManagement />;
 };
 
 export default ProjectsPage;

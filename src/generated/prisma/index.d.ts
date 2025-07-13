@@ -103,6 +103,18 @@ export const BusinessType: {
 export type BusinessType = (typeof BusinessType)[keyof typeof BusinessType]
 
 
+export const BillingCycle: {
+  ONE_TIME: 'ONE_TIME',
+  NET_7: 'NET_7',
+  NET_15: 'NET_15',
+  MONTHLY: 'MONTHLY',
+  QUARTERLY: 'QUARTERLY',
+  ANNUALLY: 'ANNUALLY'
+};
+
+export type BillingCycle = (typeof BillingCycle)[keyof typeof BillingCycle]
+
+
 export const ProjectStatus: {
   PLANNING: 'PLANNING',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -127,6 +139,10 @@ export const CompanyCategory: typeof $Enums.CompanyCategory
 export type BusinessType = $Enums.BusinessType
 
 export const BusinessType: typeof $Enums.BusinessType
+
+export type BillingCycle = $Enums.BillingCycle
+
+export const BillingCycle: typeof $Enums.BillingCycle
 
 export type ProjectStatus = $Enums.ProjectStatus
 
@@ -384,8 +400,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.10.1
-   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+   * Prisma Client JS version: 6.11.1
+   * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
    */
   export type PrismaVersion = {
     client: string
@@ -1673,6 +1689,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     email: string | null
+    emailVerified: Date | null
     image: string | null
     phone: string | null
     birthDate: Date | null
@@ -1689,12 +1706,14 @@ export namespace Prisma {
     lastLogin: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
     name: string | null
     email: string | null
+    emailVerified: Date | null
     image: string | null
     phone: string | null
     birthDate: Date | null
@@ -1711,12 +1730,14 @@ export namespace Prisma {
     lastLogin: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     name: number
     email: number
+    emailVerified: number
     image: number
     phone: number
     birthDate: number
@@ -1733,6 +1754,7 @@ export namespace Prisma {
     lastLogin: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -1741,6 +1763,7 @@ export namespace Prisma {
     id?: true
     name?: true
     email?: true
+    emailVerified?: true
     image?: true
     phone?: true
     birthDate?: true
@@ -1757,12 +1780,14 @@ export namespace Prisma {
     lastLogin?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     name?: true
     email?: true
+    emailVerified?: true
     image?: true
     phone?: true
     birthDate?: true
@@ -1779,12 +1804,14 @@ export namespace Prisma {
     lastLogin?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     name?: true
     email?: true
+    emailVerified?: true
     image?: true
     phone?: true
     birthDate?: true
@@ -1801,6 +1828,7 @@ export namespace Prisma {
     lastLogin?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -1880,6 +1908,7 @@ export namespace Prisma {
     id: string
     name: string | null
     email: string
+    emailVerified: Date | null
     image: string | null
     phone: string | null
     birthDate: Date | null
@@ -1896,6 +1925,7 @@ export namespace Prisma {
     lastLogin: Date | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1919,6 +1949,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
+    emailVerified?: boolean
     image?: boolean
     phone?: boolean
     birthDate?: boolean
@@ -1935,6 +1966,7 @@ export namespace Prisma {
     lastLogin?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     ownedCompanies?: boolean | User$ownedCompaniesArgs<ExtArgs>
     companies?: boolean | User$companiesArgs<ExtArgs>
     company?: boolean | User$companyArgs<ExtArgs>
@@ -1950,6 +1982,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     email?: boolean
+    emailVerified?: boolean
     image?: boolean
     phone?: boolean
     birthDate?: boolean
@@ -1966,9 +1999,10 @@ export namespace Prisma {
     lastLogin?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "image" | "phone" | "birthDate" | "password" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "isActive" | "role" | "lastLogin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "phone" | "birthDate" | "password" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "isActive" | "role" | "lastLogin" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ownedCompanies?: boolean | User$ownedCompaniesArgs<ExtArgs>
     companies?: boolean | User$companiesArgs<ExtArgs>
@@ -1993,6 +2027,7 @@ export namespace Prisma {
       id: string
       name: string | null
       email: string
+      emailVerified: Date | null
       image: string | null
       phone: string | null
       birthDate: Date | null
@@ -2009,6 +2044,7 @@ export namespace Prisma {
       lastLogin: Date | null
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2387,6 +2423,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
+    readonly emailVerified: FieldRef<"User", 'DateTime'>
     readonly image: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
     readonly birthDate: FieldRef<"User", 'DateTime'>
@@ -2403,6 +2440,7 @@ export namespace Prisma {
     readonly lastLogin: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly deletedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -2921,6 +2959,8 @@ export namespace Prisma {
     type: $Enums.BusinessType | null
     logo: string | null
     domain: string | null
+    subdomain: string | null
+    isCustomDomain: boolean | null
     phone: string | null
     supportEmail: string | null
     salesEmail: string | null
@@ -2937,6 +2977,7 @@ export namespace Prisma {
     subscriptionPlanId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type CompanyMaxAggregateOutputType = {
@@ -2947,6 +2988,8 @@ export namespace Prisma {
     type: $Enums.BusinessType | null
     logo: string | null
     domain: string | null
+    subdomain: string | null
+    isCustomDomain: boolean | null
     phone: string | null
     supportEmail: string | null
     salesEmail: string | null
@@ -2963,6 +3006,7 @@ export namespace Prisma {
     subscriptionPlanId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type CompanyCountAggregateOutputType = {
@@ -2973,6 +3017,8 @@ export namespace Prisma {
     type: number
     logo: number
     domain: number
+    subdomain: number
+    isCustomDomain: number
     phone: number
     supportEmail: number
     salesEmail: number
@@ -2989,6 +3035,7 @@ export namespace Prisma {
     subscriptionPlanId: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -3001,6 +3048,8 @@ export namespace Prisma {
     type?: true
     logo?: true
     domain?: true
+    subdomain?: true
+    isCustomDomain?: true
     phone?: true
     supportEmail?: true
     salesEmail?: true
@@ -3017,6 +3066,7 @@ export namespace Prisma {
     subscriptionPlanId?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type CompanyMaxAggregateInputType = {
@@ -3027,6 +3077,8 @@ export namespace Prisma {
     type?: true
     logo?: true
     domain?: true
+    subdomain?: true
+    isCustomDomain?: true
     phone?: true
     supportEmail?: true
     salesEmail?: true
@@ -3043,6 +3095,7 @@ export namespace Prisma {
     subscriptionPlanId?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type CompanyCountAggregateInputType = {
@@ -3053,6 +3106,8 @@ export namespace Prisma {
     type?: true
     logo?: true
     domain?: true
+    subdomain?: true
+    isCustomDomain?: true
     phone?: true
     supportEmail?: true
     salesEmail?: true
@@ -3069,6 +3124,7 @@ export namespace Prisma {
     subscriptionPlanId?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -3152,6 +3208,8 @@ export namespace Prisma {
     type: $Enums.BusinessType | null
     logo: string | null
     domain: string | null
+    subdomain: string | null
+    isCustomDomain: boolean | null
     phone: string | null
     supportEmail: string | null
     salesEmail: string | null
@@ -3168,6 +3226,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: CompanyCountAggregateOutputType | null
     _min: CompanyMinAggregateOutputType | null
     _max: CompanyMaxAggregateOutputType | null
@@ -3195,6 +3254,8 @@ export namespace Prisma {
     type?: boolean
     logo?: boolean
     domain?: boolean
+    subdomain?: boolean
+    isCustomDomain?: boolean
     phone?: boolean
     supportEmail?: boolean
     salesEmail?: boolean
@@ -3211,6 +3272,7 @@ export namespace Prisma {
     subscriptionPlanId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     owner?: boolean | UserDefaultArgs<ExtArgs>
     activeUsers?: boolean | Company$activeUsersArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
@@ -3229,6 +3291,8 @@ export namespace Prisma {
     type?: boolean
     logo?: boolean
     domain?: boolean
+    subdomain?: boolean
+    isCustomDomain?: boolean
     phone?: boolean
     supportEmail?: boolean
     salesEmail?: boolean
@@ -3245,9 +3309,10 @@ export namespace Prisma {
     subscriptionPlanId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slogan" | "category" | "type" | "logo" | "domain" | "phone" | "supportEmail" | "salesEmail" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "isActive" | "gmailConnected" | "office365Connected" | "ownerId" | "subscriptionPlanId" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slogan" | "category" | "type" | "logo" | "domain" | "subdomain" | "isCustomDomain" | "phone" | "supportEmail" | "salesEmail" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "isActive" | "gmailConnected" | "office365Connected" | "ownerId" | "subscriptionPlanId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     activeUsers?: boolean | Company$activeUsersArgs<ExtArgs>
@@ -3274,6 +3339,8 @@ export namespace Prisma {
       type: $Enums.BusinessType | null
       logo: string | null
       domain: string | null
+      subdomain: string | null
+      isCustomDomain: boolean | null
       phone: string | null
       supportEmail: string | null
       salesEmail: string | null
@@ -3290,6 +3357,7 @@ export namespace Prisma {
       subscriptionPlanId: string
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -3671,6 +3739,8 @@ export namespace Prisma {
     readonly type: FieldRef<"Company", 'BusinessType'>
     readonly logo: FieldRef<"Company", 'String'>
     readonly domain: FieldRef<"Company", 'String'>
+    readonly subdomain: FieldRef<"Company", 'String'>
+    readonly isCustomDomain: FieldRef<"Company", 'Boolean'>
     readonly phone: FieldRef<"Company", 'String'>
     readonly supportEmail: FieldRef<"Company", 'String'>
     readonly salesEmail: FieldRef<"Company", 'String'>
@@ -3687,6 +3757,7 @@ export namespace Prisma {
     readonly subscriptionPlanId: FieldRef<"Company", 'String'>
     readonly createdAt: FieldRef<"Company", 'DateTime'>
     readonly updatedAt: FieldRef<"Company", 'DateTime'>
+    readonly deletedAt: FieldRef<"Company", 'DateTime'>
   }
     
 
@@ -4154,9 +4225,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanMinAggregateOutputType = {
     id: string | null
+    key: string | null
     name: string | null
-    pricePerMonth: Decimal | null
     description: string | null
+    pricePerMonth: Decimal | null
+    billingCycle: $Enums.BillingCycle | null
     maxUsers: number | null
     maxAdmins: number | null
     maxManagers: number | null
@@ -4166,13 +4239,16 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type SubscriptionPlanMaxAggregateOutputType = {
     id: string | null
+    key: string | null
     name: string | null
-    pricePerMonth: Decimal | null
     description: string | null
+    pricePerMonth: Decimal | null
+    billingCycle: $Enums.BillingCycle | null
     maxUsers: number | null
     maxAdmins: number | null
     maxManagers: number | null
@@ -4182,13 +4258,16 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type SubscriptionPlanCountAggregateOutputType = {
     id: number
+    key: number
     name: number
-    pricePerMonth: number
     description: number
+    pricePerMonth: number
+    billingCycle: number
     maxUsers: number
     maxAdmins: number
     maxManagers: number
@@ -4198,6 +4277,7 @@ export namespace Prisma {
     isActive: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -4224,9 +4304,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanMinAggregateInputType = {
     id?: true
+    key?: true
     name?: true
-    pricePerMonth?: true
     description?: true
+    pricePerMonth?: true
+    billingCycle?: true
     maxUsers?: true
     maxAdmins?: true
     maxManagers?: true
@@ -4236,13 +4318,16 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type SubscriptionPlanMaxAggregateInputType = {
     id?: true
+    key?: true
     name?: true
-    pricePerMonth?: true
     description?: true
+    pricePerMonth?: true
+    billingCycle?: true
     maxUsers?: true
     maxAdmins?: true
     maxManagers?: true
@@ -4252,13 +4337,16 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type SubscriptionPlanCountAggregateInputType = {
     id?: true
+    key?: true
     name?: true
-    pricePerMonth?: true
     description?: true
+    pricePerMonth?: true
+    billingCycle?: true
     maxUsers?: true
     maxAdmins?: true
     maxManagers?: true
@@ -4268,6 +4356,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -4359,9 +4448,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanGroupByOutputType = {
     id: string
+    key: string
     name: string
-    pricePerMonth: Decimal
     description: string | null
+    pricePerMonth: Decimal
+    billingCycle: $Enums.BillingCycle
     maxUsers: number
     maxAdmins: number
     maxManagers: number
@@ -4371,6 +4462,7 @@ export namespace Prisma {
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: SubscriptionPlanCountAggregateOutputType | null
     _avg: SubscriptionPlanAvgAggregateOutputType | null
     _sum: SubscriptionPlanSumAggregateOutputType | null
@@ -4394,9 +4486,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    key?: boolean
     name?: boolean
-    pricePerMonth?: boolean
     description?: boolean
+    pricePerMonth?: boolean
+    billingCycle?: boolean
     maxUsers?: boolean
     maxAdmins?: boolean
     maxManagers?: boolean
@@ -4406,6 +4500,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     features?: boolean | SubscriptionPlan$featuresArgs<ExtArgs>
     companies?: boolean | SubscriptionPlan$companiesArgs<ExtArgs>
     _count?: boolean | SubscriptionPlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -4415,9 +4510,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanSelectScalar = {
     id?: boolean
+    key?: boolean
     name?: boolean
-    pricePerMonth?: boolean
     description?: boolean
+    pricePerMonth?: boolean
+    billingCycle?: boolean
     maxUsers?: boolean
     maxAdmins?: boolean
     maxManagers?: boolean
@@ -4427,9 +4524,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type SubscriptionPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "pricePerMonth" | "description" | "maxUsers" | "maxAdmins" | "maxManagers" | "maxCustomers" | "storageLimitMB" | "maxProjects" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["subscriptionPlan"]>
+  export type SubscriptionPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "name" | "description" | "pricePerMonth" | "billingCycle" | "maxUsers" | "maxAdmins" | "maxManagers" | "maxCustomers" | "storageLimitMB" | "maxProjects" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["subscriptionPlan"]>
   export type SubscriptionPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     features?: boolean | SubscriptionPlan$featuresArgs<ExtArgs>
     companies?: boolean | SubscriptionPlan$companiesArgs<ExtArgs>
@@ -4444,9 +4542,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      key: string
       name: string
-      pricePerMonth: Prisma.Decimal
       description: string | null
+      pricePerMonth: Prisma.Decimal
+      billingCycle: $Enums.BillingCycle
       maxUsers: number
       maxAdmins: number
       maxManagers: number
@@ -4456,6 +4556,7 @@ export namespace Prisma {
       isActive: boolean
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["subscriptionPlan"]>
     composites: {}
   }
@@ -4828,9 +4929,11 @@ export namespace Prisma {
    */
   interface SubscriptionPlanFieldRefs {
     readonly id: FieldRef<"SubscriptionPlan", 'String'>
+    readonly key: FieldRef<"SubscriptionPlan", 'String'>
     readonly name: FieldRef<"SubscriptionPlan", 'String'>
-    readonly pricePerMonth: FieldRef<"SubscriptionPlan", 'Decimal'>
     readonly description: FieldRef<"SubscriptionPlan", 'String'>
+    readonly pricePerMonth: FieldRef<"SubscriptionPlan", 'Decimal'>
+    readonly billingCycle: FieldRef<"SubscriptionPlan", 'BillingCycle'>
     readonly maxUsers: FieldRef<"SubscriptionPlan", 'Int'>
     readonly maxAdmins: FieldRef<"SubscriptionPlan", 'Int'>
     readonly maxManagers: FieldRef<"SubscriptionPlan", 'Int'>
@@ -4840,6 +4943,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"SubscriptionPlan", 'Boolean'>
     readonly createdAt: FieldRef<"SubscriptionPlan", 'DateTime'>
     readonly updatedAt: FieldRef<"SubscriptionPlan", 'DateTime'>
+    readonly deletedAt: FieldRef<"SubscriptionPlan", 'DateTime'>
   }
     
 
@@ -5264,6 +5368,9 @@ export namespace Prisma {
     key: string | null
     label: string | null
     isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type FeatureMaxAggregateOutputType = {
@@ -5271,6 +5378,9 @@ export namespace Prisma {
     key: string | null
     label: string | null
     isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type FeatureCountAggregateOutputType = {
@@ -5278,6 +5388,9 @@ export namespace Prisma {
     key: number
     label: number
     isActive: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -5287,6 +5400,9 @@ export namespace Prisma {
     key?: true
     label?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type FeatureMaxAggregateInputType = {
@@ -5294,6 +5410,9 @@ export namespace Prisma {
     key?: true
     label?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type FeatureCountAggregateInputType = {
@@ -5301,6 +5420,9 @@ export namespace Prisma {
     key?: true
     label?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -5381,6 +5503,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     _count: FeatureCountAggregateOutputType | null
     _min: FeatureMinAggregateOutputType | null
     _max: FeatureMaxAggregateOutputType | null
@@ -5405,6 +5530,9 @@ export namespace Prisma {
     key?: boolean
     label?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     plans?: boolean | Feature$plansArgs<ExtArgs>
     _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
@@ -5416,9 +5544,12 @@ export namespace Prisma {
     key?: boolean
     label?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "label" | "isActive", ExtArgs["result"]["feature"]>
+  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "key" | "label" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["feature"]>
   export type FeatureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plans?: boolean | Feature$plansArgs<ExtArgs>
     _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
@@ -5434,6 +5565,9 @@ export namespace Prisma {
       key: string
       label: string
       isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["feature"]>
     composites: {}
   }
@@ -5808,6 +5942,9 @@ export namespace Prisma {
     readonly key: FieldRef<"Feature", 'String'>
     readonly label: FieldRef<"Feature", 'String'>
     readonly isActive: FieldRef<"Feature", 'Boolean'>
+    readonly createdAt: FieldRef<"Feature", 'DateTime'>
+    readonly updatedAt: FieldRef<"Feature", 'DateTime'>
+    readonly deletedAt: FieldRef<"Feature", 'DateTime'>
   }
     
 
@@ -6230,6 +6367,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -6247,6 +6385,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -6264,6 +6403,7 @@ export namespace Prisma {
     isActive: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -6293,6 +6433,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -6310,6 +6451,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -6327,6 +6469,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -6426,11 +6569,12 @@ export namespace Prisma {
     companyId: string
     budget: Decimal | null
     progress: number | null
-    managerId: string
+    managerId: string | null
     customerid: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -6467,8 +6611,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    manager?: boolean | UserDefaultArgs<ExtArgs>
+    manager?: boolean | Project$managerArgs<ExtArgs>
     customer?: boolean | Project$customerArgs<ExtArgs>
     staff?: boolean | Project$staffArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -6491,12 +6636,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "status" | "startDate" | "endDate" | "companyId" | "budget" | "progress" | "managerId" | "customerid" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "status" | "startDate" | "endDate" | "companyId" | "budget" | "progress" | "managerId" | "customerid" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
-    manager?: boolean | UserDefaultArgs<ExtArgs>
+    manager?: boolean | Project$managerArgs<ExtArgs>
     customer?: boolean | Project$customerArgs<ExtArgs>
     staff?: boolean | Project$staffArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -6506,7 +6652,7 @@ export namespace Prisma {
     name: "Project"
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
-      manager: Prisma.$UserPayload<ExtArgs>
+      manager: Prisma.$UserPayload<ExtArgs> | null
       customer: Prisma.$ProjectCustomerPayload<ExtArgs> | null
       staff: Prisma.$ProjectStaffPayload<ExtArgs>[]
     }
@@ -6520,11 +6666,12 @@ export namespace Prisma {
       companyId: string
       budget: Prisma.Decimal | null
       progress: number | null
-      managerId: string
+      managerId: string | null
       customerid: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -6866,7 +7013,7 @@ export namespace Prisma {
   export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    manager<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    manager<T extends Project$managerArgs<ExtArgs> = {}>(args?: Subset<T, Project$managerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     customer<T extends Project$customerArgs<ExtArgs> = {}>(args?: Subset<T, Project$customerArgs<ExtArgs>>): Prisma__ProjectCustomerClient<$Result.GetResult<Prisma.$ProjectCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     staff<T extends Project$staffArgs<ExtArgs> = {}>(args?: Subset<T, Project$staffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -6912,6 +7059,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"Project", 'Boolean'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
+    readonly deletedAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -7252,6 +7400,25 @@ export namespace Prisma {
      * Limit how many Projects to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Project.manager
+   */
+  export type Project$managerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -9200,6 +9367,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     email: 'email',
+    emailVerified: 'emailVerified',
     image: 'image',
     phone: 'phone',
     birthDate: 'birthDate',
@@ -9215,7 +9383,8 @@ export namespace Prisma {
     role: 'role',
     lastLogin: 'lastLogin',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -9229,6 +9398,8 @@ export namespace Prisma {
     type: 'type',
     logo: 'logo',
     domain: 'domain',
+    subdomain: 'subdomain',
+    isCustomDomain: 'isCustomDomain',
     phone: 'phone',
     supportEmail: 'supportEmail',
     salesEmail: 'salesEmail',
@@ -9244,7 +9415,8 @@ export namespace Prisma {
     ownerId: 'ownerId',
     subscriptionPlanId: 'subscriptionPlanId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -9252,9 +9424,11 @@ export namespace Prisma {
 
   export const SubscriptionPlanScalarFieldEnum: {
     id: 'id',
+    key: 'key',
     name: 'name',
-    pricePerMonth: 'pricePerMonth',
     description: 'description',
+    pricePerMonth: 'pricePerMonth',
+    billingCycle: 'billingCycle',
     maxUsers: 'maxUsers',
     maxAdmins: 'maxAdmins',
     maxManagers: 'maxManagers',
@@ -9263,7 +9437,8 @@ export namespace Prisma {
     maxProjects: 'maxProjects',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type SubscriptionPlanScalarFieldEnum = (typeof SubscriptionPlanScalarFieldEnum)[keyof typeof SubscriptionPlanScalarFieldEnum]
@@ -9273,7 +9448,10 @@ export namespace Prisma {
     id: 'id',
     key: 'key',
     label: 'label',
-    isActive: 'isActive'
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type FeatureScalarFieldEnum = (typeof FeatureScalarFieldEnum)[keyof typeof FeatureScalarFieldEnum]
@@ -9293,7 +9471,8 @@ export namespace Prisma {
     customerid: 'customerid',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -9362,6 +9541,7 @@ export namespace Prisma {
     slogan: 'slogan',
     logo: 'logo',
     domain: 'domain',
+    subdomain: 'subdomain',
     phone: 'phone',
     supportEmail: 'supportEmail',
     salesEmail: 'salesEmail',
@@ -9380,6 +9560,7 @@ export namespace Prisma {
 
   export const SubscriptionPlanOrderByRelevanceFieldEnum: {
     id: 'id',
+    key: 'key',
     name: 'name',
     description: 'description'
   };
@@ -9483,6 +9664,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BillingCycle'
+   */
+  export type EnumBillingCycleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingCycle'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -9513,6 +9701,7 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
+    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -9529,6 +9718,7 @@ export namespace Prisma {
     lastLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     ownedCompanies?: CompanyListRelationFilter
     companies?: CompanyListRelationFilter
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -9541,6 +9731,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     email?: SortOrder
+    emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
@@ -9557,6 +9748,7 @@ export namespace Prisma {
     lastLogin?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     ownedCompanies?: CompanyOrderByRelationAggregateInput
     companies?: CompanyOrderByRelationAggregateInput
     company?: CompanyOrderByWithRelationInput
@@ -9573,6 +9765,7 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -9589,6 +9782,7 @@ export namespace Prisma {
     lastLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     ownedCompanies?: CompanyListRelationFilter
     companies?: CompanyListRelationFilter
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -9601,6 +9795,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     email?: SortOrder
+    emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
@@ -9617,6 +9812,7 @@ export namespace Prisma {
     lastLogin?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -9629,6 +9825,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringWithAggregatesFilter<"User"> | string
+    emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     birthDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -9645,6 +9842,7 @@ export namespace Prisma {
     lastLogin?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type CompanyWhereInput = {
@@ -9658,6 +9856,8 @@ export namespace Prisma {
     type?: EnumBusinessTypeNullableFilter<"Company"> | $Enums.BusinessType | null
     logo?: StringNullableFilter<"Company"> | string | null
     domain?: StringNullableFilter<"Company"> | string | null
+    subdomain?: StringNullableFilter<"Company"> | string | null
+    isCustomDomain?: BoolNullableFilter<"Company"> | boolean | null
     phone?: StringNullableFilter<"Company"> | string | null
     supportEmail?: StringNullableFilter<"Company"> | string | null
     salesEmail?: StringNullableFilter<"Company"> | string | null
@@ -9674,6 +9874,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     activeUsers?: UserListRelationFilter
     users?: UserListRelationFilter
@@ -9689,6 +9890,8 @@ export namespace Prisma {
     type?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     domain?: SortOrderInput | SortOrder
+    subdomain?: SortOrderInput | SortOrder
+    isCustomDomain?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     supportEmail?: SortOrderInput | SortOrder
     salesEmail?: SortOrderInput | SortOrder
@@ -9705,6 +9908,7 @@ export namespace Prisma {
     subscriptionPlanId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     owner?: UserOrderByWithRelationInput
     activeUsers?: UserOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
@@ -9717,6 +9921,7 @@ export namespace Prisma {
     id?: string
     name?: string
     domain?: string
+    subdomain?: string
     supportEmail?: string
     salesEmail?: string
     AND?: CompanyWhereInput | CompanyWhereInput[]
@@ -9726,6 +9931,7 @@ export namespace Prisma {
     category?: EnumCompanyCategoryNullableFilter<"Company"> | $Enums.CompanyCategory | null
     type?: EnumBusinessTypeNullableFilter<"Company"> | $Enums.BusinessType | null
     logo?: StringNullableFilter<"Company"> | string | null
+    isCustomDomain?: BoolNullableFilter<"Company"> | boolean | null
     phone?: StringNullableFilter<"Company"> | string | null
     addressLine1?: StringNullableFilter<"Company"> | string | null
     addressLine2?: StringNullableFilter<"Company"> | string | null
@@ -9740,12 +9946,13 @@ export namespace Prisma {
     subscriptionPlanId?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     activeUsers?: UserListRelationFilter
     users?: UserListRelationFilter
     subscriptionPlan?: XOR<SubscriptionPlanScalarRelationFilter, SubscriptionPlanWhereInput>
     Project?: ProjectListRelationFilter
-  }, "id" | "name" | "domain" | "supportEmail" | "salesEmail">
+  }, "id" | "name" | "domain" | "subdomain" | "supportEmail" | "salesEmail">
 
   export type CompanyOrderByWithAggregationInput = {
     id?: SortOrder
@@ -9755,6 +9962,8 @@ export namespace Prisma {
     type?: SortOrderInput | SortOrder
     logo?: SortOrderInput | SortOrder
     domain?: SortOrderInput | SortOrder
+    subdomain?: SortOrderInput | SortOrder
+    isCustomDomain?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     supportEmail?: SortOrderInput | SortOrder
     salesEmail?: SortOrderInput | SortOrder
@@ -9771,6 +9980,7 @@ export namespace Prisma {
     subscriptionPlanId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: CompanyCountOrderByAggregateInput
     _max?: CompanyMaxOrderByAggregateInput
     _min?: CompanyMinOrderByAggregateInput
@@ -9787,6 +9997,8 @@ export namespace Prisma {
     type?: EnumBusinessTypeNullableWithAggregatesFilter<"Company"> | $Enums.BusinessType | null
     logo?: StringNullableWithAggregatesFilter<"Company"> | string | null
     domain?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    subdomain?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    isCustomDomain?: BoolNullableWithAggregatesFilter<"Company"> | boolean | null
     phone?: StringNullableWithAggregatesFilter<"Company"> | string | null
     supportEmail?: StringNullableWithAggregatesFilter<"Company"> | string | null
     salesEmail?: StringNullableWithAggregatesFilter<"Company"> | string | null
@@ -9803,6 +10015,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringWithAggregatesFilter<"Company"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
   }
 
   export type SubscriptionPlanWhereInput = {
@@ -9810,9 +10023,11 @@ export namespace Prisma {
     OR?: SubscriptionPlanWhereInput[]
     NOT?: SubscriptionPlanWhereInput | SubscriptionPlanWhereInput[]
     id?: StringFilter<"SubscriptionPlan"> | string
+    key?: StringFilter<"SubscriptionPlan"> | string
     name?: StringFilter<"SubscriptionPlan"> | string
-    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
     description?: StringNullableFilter<"SubscriptionPlan"> | string | null
+    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFilter<"SubscriptionPlan"> | $Enums.BillingCycle
     maxUsers?: IntFilter<"SubscriptionPlan"> | number
     maxAdmins?: IntFilter<"SubscriptionPlan"> | number
     maxManagers?: IntFilter<"SubscriptionPlan"> | number
@@ -9822,15 +10037,18 @@ export namespace Prisma {
     isActive?: BoolFilter<"SubscriptionPlan"> | boolean
     createdAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
     updatedAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"SubscriptionPlan"> | Date | string | null
     features?: FeatureListRelationFilter
     companies?: CompanyListRelationFilter
   }
 
   export type SubscriptionPlanOrderByWithRelationInput = {
     id?: SortOrder
+    key?: SortOrder
     name?: SortOrder
-    pricePerMonth?: SortOrder
     description?: SortOrderInput | SortOrder
+    pricePerMonth?: SortOrder
+    billingCycle?: SortOrder
     maxUsers?: SortOrder
     maxAdmins?: SortOrder
     maxManagers?: SortOrder
@@ -9840,6 +10058,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     features?: FeatureOrderByRelationAggregateInput
     companies?: CompanyOrderByRelationAggregateInput
     _relevance?: SubscriptionPlanOrderByRelevanceInput
@@ -9847,12 +10066,14 @@ export namespace Prisma {
 
   export type SubscriptionPlanWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    key?: string
     name?: string
     AND?: SubscriptionPlanWhereInput | SubscriptionPlanWhereInput[]
     OR?: SubscriptionPlanWhereInput[]
     NOT?: SubscriptionPlanWhereInput | SubscriptionPlanWhereInput[]
-    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
     description?: StringNullableFilter<"SubscriptionPlan"> | string | null
+    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFilter<"SubscriptionPlan"> | $Enums.BillingCycle
     maxUsers?: IntFilter<"SubscriptionPlan"> | number
     maxAdmins?: IntFilter<"SubscriptionPlan"> | number
     maxManagers?: IntFilter<"SubscriptionPlan"> | number
@@ -9862,15 +10083,18 @@ export namespace Prisma {
     isActive?: BoolFilter<"SubscriptionPlan"> | boolean
     createdAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
     updatedAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"SubscriptionPlan"> | Date | string | null
     features?: FeatureListRelationFilter
     companies?: CompanyListRelationFilter
-  }, "id" | "name">
+  }, "id" | "key" | "name">
 
   export type SubscriptionPlanOrderByWithAggregationInput = {
     id?: SortOrder
+    key?: SortOrder
     name?: SortOrder
-    pricePerMonth?: SortOrder
     description?: SortOrderInput | SortOrder
+    pricePerMonth?: SortOrder
+    billingCycle?: SortOrder
     maxUsers?: SortOrder
     maxAdmins?: SortOrder
     maxManagers?: SortOrder
@@ -9880,6 +10104,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: SubscriptionPlanCountOrderByAggregateInput
     _avg?: SubscriptionPlanAvgOrderByAggregateInput
     _max?: SubscriptionPlanMaxOrderByAggregateInput
@@ -9892,9 +10117,11 @@ export namespace Prisma {
     OR?: SubscriptionPlanScalarWhereWithAggregatesInput[]
     NOT?: SubscriptionPlanScalarWhereWithAggregatesInput | SubscriptionPlanScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"SubscriptionPlan"> | string
+    key?: StringWithAggregatesFilter<"SubscriptionPlan"> | string
     name?: StringWithAggregatesFilter<"SubscriptionPlan"> | string
-    pricePerMonth?: DecimalWithAggregatesFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
     description?: StringNullableWithAggregatesFilter<"SubscriptionPlan"> | string | null
+    pricePerMonth?: DecimalWithAggregatesFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleWithAggregatesFilter<"SubscriptionPlan"> | $Enums.BillingCycle
     maxUsers?: IntWithAggregatesFilter<"SubscriptionPlan"> | number
     maxAdmins?: IntWithAggregatesFilter<"SubscriptionPlan"> | number
     maxManagers?: IntWithAggregatesFilter<"SubscriptionPlan"> | number
@@ -9904,6 +10131,7 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"SubscriptionPlan"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SubscriptionPlan"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"SubscriptionPlan"> | Date | string | null
   }
 
   export type FeatureWhereInput = {
@@ -9914,6 +10142,9 @@ export namespace Prisma {
     key?: StringFilter<"Feature"> | string
     label?: StringFilter<"Feature"> | string
     isActive?: BoolFilter<"Feature"> | boolean
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Feature"> | Date | string | null
     plans?: SubscriptionPlanListRelationFilter
   }
 
@@ -9922,6 +10153,9 @@ export namespace Prisma {
     key?: SortOrder
     label?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     plans?: SubscriptionPlanOrderByRelationAggregateInput
     _relevance?: FeatureOrderByRelevanceInput
   }
@@ -9934,6 +10168,9 @@ export namespace Prisma {
     NOT?: FeatureWhereInput | FeatureWhereInput[]
     label?: StringFilter<"Feature"> | string
     isActive?: BoolFilter<"Feature"> | boolean
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Feature"> | Date | string | null
     plans?: SubscriptionPlanListRelationFilter
   }, "id" | "key">
 
@@ -9942,6 +10179,9 @@ export namespace Prisma {
     key?: SortOrder
     label?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: FeatureCountOrderByAggregateInput
     _max?: FeatureMaxOrderByAggregateInput
     _min?: FeatureMinOrderByAggregateInput
@@ -9955,6 +10195,9 @@ export namespace Prisma {
     key?: StringWithAggregatesFilter<"Feature"> | string
     label?: StringWithAggregatesFilter<"Feature"> | string
     isActive?: BoolWithAggregatesFilter<"Feature"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Feature"> | Date | string | null
   }
 
   export type ProjectWhereInput = {
@@ -9970,13 +10213,14 @@ export namespace Prisma {
     companyId?: StringFilter<"Project"> | string
     budget?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     progress?: IntNullableFilter<"Project"> | number | null
-    managerId?: StringFilter<"Project"> | string
+    managerId?: StringNullableFilter<"Project"> | string | null
     customerid?: StringNullableFilter<"Project"> | string | null
     isActive?: BoolFilter<"Project"> | boolean
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    manager?: XOR<UserScalarRelationFilter, UserWhereInput>
+    manager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     customer?: XOR<ProjectCustomerNullableScalarRelationFilter, ProjectCustomerWhereInput> | null
     staff?: ProjectStaffListRelationFilter
   }
@@ -9991,11 +10235,12 @@ export namespace Prisma {
     companyId?: SortOrder
     budget?: SortOrderInput | SortOrder
     progress?: SortOrderInput | SortOrder
-    managerId?: SortOrder
+    managerId?: SortOrderInput | SortOrder
     customerid?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     company?: CompanyOrderByWithRelationInput
     manager?: UserOrderByWithRelationInput
     customer?: ProjectCustomerOrderByWithRelationInput
@@ -10016,13 +10261,14 @@ export namespace Prisma {
     companyId?: StringFilter<"Project"> | string
     budget?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     progress?: IntNullableFilter<"Project"> | number | null
-    managerId?: StringFilter<"Project"> | string
+    managerId?: StringNullableFilter<"Project"> | string | null
     customerid?: StringNullableFilter<"Project"> | string | null
     isActive?: BoolFilter<"Project"> | boolean
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
-    manager?: XOR<UserScalarRelationFilter, UserWhereInput>
+    manager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     customer?: XOR<ProjectCustomerNullableScalarRelationFilter, ProjectCustomerWhereInput> | null
     staff?: ProjectStaffListRelationFilter
   }, "id">
@@ -10037,11 +10283,12 @@ export namespace Prisma {
     companyId?: SortOrder
     budget?: SortOrderInput | SortOrder
     progress?: SortOrderInput | SortOrder
-    managerId?: SortOrder
+    managerId?: SortOrderInput | SortOrder
     customerid?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -10062,11 +10309,12 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"Project"> | string
     budget?: DecimalNullableWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     progress?: IntNullableWithAggregatesFilter<"Project"> | number | null
-    managerId?: StringWithAggregatesFilter<"Project"> | string
+    managerId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     customerid?: StringNullableWithAggregatesFilter<"Project"> | string | null
     isActive?: BoolWithAggregatesFilter<"Project"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   }
 
   export type ProjectStaffWhereInput = {
@@ -10193,6 +10441,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -10208,6 +10457,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     companies?: CompanyCreateNestedManyWithoutUsersInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
@@ -10220,6 +10470,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -10236,6 +10487,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
@@ -10247,6 +10499,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10262,6 +10515,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
@@ -10274,6 +10528,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10290,6 +10545,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
@@ -10301,6 +10557,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -10317,12 +10574,14 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10338,12 +10597,14 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10360,6 +10621,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CompanyCreateInput = {
@@ -10370,6 +10632,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -10384,6 +10648,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     owner: UserCreateNestedOneWithoutOwnedCompaniesInput
     activeUsers?: UserCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompaniesInput
@@ -10399,6 +10664,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -10415,6 +10682,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
     Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
@@ -10428,6 +10696,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10442,6 +10712,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
     activeUsers?: UserUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompaniesNestedInput
@@ -10457,6 +10728,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10473,6 +10746,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -10486,6 +10760,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -10502,6 +10778,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type CompanyUpdateManyMutationInput = {
@@ -10512,6 +10789,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10526,6 +10805,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CompanyUncheckedUpdateManyInput = {
@@ -10536,6 +10816,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10552,13 +10834,16 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SubscriptionPlanCreateInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -10568,15 +10853,18 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     features?: FeatureCreateNestedManyWithoutPlansInput
     companies?: CompanyCreateNestedManyWithoutSubscriptionPlanInput
   }
 
   export type SubscriptionPlanUncheckedCreateInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -10586,15 +10874,18 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     features?: FeatureUncheckedCreateNestedManyWithoutPlansInput
     companies?: CompanyUncheckedCreateNestedManyWithoutSubscriptionPlanInput
   }
 
   export type SubscriptionPlanUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -10604,15 +10895,18 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     features?: FeatureUpdateManyWithoutPlansNestedInput
     companies?: CompanyUpdateManyWithoutSubscriptionPlanNestedInput
   }
 
   export type SubscriptionPlanUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -10622,15 +10916,18 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     features?: FeatureUncheckedUpdateManyWithoutPlansNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutSubscriptionPlanNestedInput
   }
 
   export type SubscriptionPlanCreateManyInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -10640,13 +10937,16 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type SubscriptionPlanUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -10656,13 +10956,16 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SubscriptionPlanUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -10672,6 +10975,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FeatureCreateInput = {
@@ -10679,6 +10983,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     plans?: SubscriptionPlanCreateNestedManyWithoutFeaturesInput
   }
 
@@ -10687,6 +10994,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     plans?: SubscriptionPlanUncheckedCreateNestedManyWithoutFeaturesInput
   }
 
@@ -10695,6 +11005,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     plans?: SubscriptionPlanUpdateManyWithoutFeaturesNestedInput
   }
 
@@ -10703,6 +11016,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     plans?: SubscriptionPlanUncheckedUpdateManyWithoutFeaturesNestedInput
   }
 
@@ -10711,6 +11027,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type FeatureUpdateManyMutationInput = {
@@ -10718,6 +11037,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FeatureUncheckedUpdateManyInput = {
@@ -10725,6 +11047,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectCreateInput = {
@@ -10740,8 +11065,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     company: CompanyCreateNestedOneWithoutProjectInput
-    manager: UserCreateNestedOneWithoutProjectInput
+    manager?: UserCreateNestedOneWithoutProjectInput
     customer?: ProjectCustomerCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffCreateNestedManyWithoutProjectInput
   }
@@ -10756,11 +11082,12 @@ export namespace Prisma {
     companyId: string
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     customer?: ProjectCustomerUncheckedCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -10778,8 +11105,9 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: CompanyUpdateOneRequiredWithoutProjectNestedInput
-    manager?: UserUpdateOneRequiredWithoutProjectNestedInput
+    manager?: UserUpdateOneWithoutProjectNestedInput
     customer?: ProjectCustomerUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUpdateManyWithoutProjectNestedInput
   }
@@ -10794,11 +11122,12 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: ProjectCustomerUncheckedUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -10813,11 +11142,12 @@ export namespace Prisma {
     companyId: string
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -10833,6 +11163,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -10845,11 +11176,12 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectStaffCreateInput = {
@@ -11084,6 +11416,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    emailVerified?: SortOrder
     image?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
@@ -11100,12 +11433,14 @@ export namespace Prisma {
     lastLogin?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    emailVerified?: SortOrder
     image?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
@@ -11122,12 +11457,14 @@ export namespace Prisma {
     lastLogin?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
+    emailVerified?: SortOrder
     image?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
@@ -11144,6 +11481,7 @@ export namespace Prisma {
     lastLogin?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -11242,6 +11580,11 @@ export namespace Prisma {
     not?: NestedEnumBusinessTypeNullableFilter<$PrismaModel> | $Enums.BusinessType | null
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -11276,6 +11619,8 @@ export namespace Prisma {
     type?: SortOrder
     logo?: SortOrder
     domain?: SortOrder
+    subdomain?: SortOrder
+    isCustomDomain?: SortOrder
     phone?: SortOrder
     supportEmail?: SortOrder
     salesEmail?: SortOrder
@@ -11292,6 +11637,7 @@ export namespace Prisma {
     subscriptionPlanId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type CompanyMaxOrderByAggregateInput = {
@@ -11302,6 +11648,8 @@ export namespace Prisma {
     type?: SortOrder
     logo?: SortOrder
     domain?: SortOrder
+    subdomain?: SortOrder
+    isCustomDomain?: SortOrder
     phone?: SortOrder
     supportEmail?: SortOrder
     salesEmail?: SortOrder
@@ -11318,6 +11666,7 @@ export namespace Prisma {
     subscriptionPlanId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type CompanyMinOrderByAggregateInput = {
@@ -11328,6 +11677,8 @@ export namespace Prisma {
     type?: SortOrder
     logo?: SortOrder
     domain?: SortOrder
+    subdomain?: SortOrder
+    isCustomDomain?: SortOrder
     phone?: SortOrder
     supportEmail?: SortOrder
     salesEmail?: SortOrder
@@ -11344,6 +11695,7 @@ export namespace Prisma {
     subscriptionPlanId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type EnumCompanyCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11366,6 +11718,14 @@ export namespace Prisma {
     _max?: NestedEnumBusinessTypeNullableFilter<$PrismaModel>
   }
 
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[]
@@ -11375,6 +11735,13 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumBillingCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingCycle | EnumBillingCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingCycle[]
+    notIn?: $Enums.BillingCycle[]
+    not?: NestedEnumBillingCycleFilter<$PrismaModel> | $Enums.BillingCycle
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -11406,9 +11773,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanCountOrderByAggregateInput = {
     id?: SortOrder
+    key?: SortOrder
     name?: SortOrder
-    pricePerMonth?: SortOrder
     description?: SortOrder
+    pricePerMonth?: SortOrder
+    billingCycle?: SortOrder
     maxUsers?: SortOrder
     maxAdmins?: SortOrder
     maxManagers?: SortOrder
@@ -11418,6 +11787,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SubscriptionPlanAvgOrderByAggregateInput = {
@@ -11432,9 +11802,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanMaxOrderByAggregateInput = {
     id?: SortOrder
+    key?: SortOrder
     name?: SortOrder
-    pricePerMonth?: SortOrder
     description?: SortOrder
+    pricePerMonth?: SortOrder
+    billingCycle?: SortOrder
     maxUsers?: SortOrder
     maxAdmins?: SortOrder
     maxManagers?: SortOrder
@@ -11444,13 +11816,16 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SubscriptionPlanMinOrderByAggregateInput = {
     id?: SortOrder
+    key?: SortOrder
     name?: SortOrder
-    pricePerMonth?: SortOrder
     description?: SortOrder
+    pricePerMonth?: SortOrder
+    billingCycle?: SortOrder
     maxUsers?: SortOrder
     maxAdmins?: SortOrder
     maxManagers?: SortOrder
@@ -11460,6 +11835,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SubscriptionPlanSumOrderByAggregateInput = {
@@ -11486,6 +11862,16 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type EnumBillingCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingCycle | EnumBillingCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingCycle[]
+    notIn?: $Enums.BillingCycle[]
+    not?: NestedEnumBillingCycleWithAggregatesFilter<$PrismaModel> | $Enums.BillingCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBillingCycleFilter<$PrismaModel>
+    _max?: NestedEnumBillingCycleFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -11525,6 +11911,9 @@ export namespace Prisma {
     key?: SortOrder
     label?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type FeatureMaxOrderByAggregateInput = {
@@ -11532,6 +11921,9 @@ export namespace Prisma {
     key?: SortOrder
     label?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type FeatureMinOrderByAggregateInput = {
@@ -11539,6 +11931,9 @@ export namespace Prisma {
     key?: SortOrder
     label?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type EnumProjectStatusFilter<$PrismaModel = never> = {
@@ -11575,6 +11970,11 @@ export namespace Prisma {
     isNot?: CompanyWhereInput
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type ProjectCustomerNullableScalarRelationFilter = {
     is?: ProjectCustomerWhereInput | null
     isNot?: ProjectCustomerWhereInput | null
@@ -11601,6 +12001,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -11623,6 +12024,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -11640,6 +12042,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
@@ -12070,6 +12473,10 @@ export namespace Prisma {
     set?: $Enums.BusinessType | null
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput = {
     create?: XOR<UserCreateWithoutOwnedCompaniesInput, UserUncheckedCreateWithoutOwnedCompaniesInput>
     connectOrCreate?: UserCreateOrConnectWithoutOwnedCompaniesInput
@@ -12200,6 +12607,10 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumBillingCycleFieldUpdateOperationsInput = {
+    set?: $Enums.BillingCycle
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -12368,10 +12779,12 @@ export namespace Prisma {
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutProjectInput, CompanyUpdateWithoutProjectInput>, CompanyUncheckedUpdateWithoutProjectInput>
   }
 
-  export type UserUpdateOneRequiredWithoutProjectNestedInput = {
+  export type UserUpdateOneWithoutProjectNestedInput = {
     create?: XOR<UserCreateWithoutProjectInput, UserUncheckedCreateWithoutProjectInput>
     connectOrCreate?: UserCreateOrConnectWithoutProjectInput
     upsert?: UserUpsertWithoutProjectInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectInput, UserUpdateWithoutProjectInput>, UserUncheckedUpdateWithoutProjectInput>
   }
@@ -12662,6 +13075,11 @@ export namespace Prisma {
     not?: NestedEnumBusinessTypeNullableFilter<$PrismaModel> | $Enums.BusinessType | null
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type NestedEnumCompanyCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.CompanyCategory | EnumCompanyCategoryFieldRefInput<$PrismaModel> | null
     in?: $Enums.CompanyCategory[] | null
@@ -12682,6 +13100,14 @@ export namespace Prisma {
     _max?: NestedEnumBusinessTypeNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[]
@@ -12691,6 +13117,13 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedEnumBillingCycleFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingCycle | EnumBillingCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingCycle[]
+    notIn?: $Enums.BillingCycle[]
+    not?: NestedEnumBillingCycleFilter<$PrismaModel> | $Enums.BillingCycle
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -12707,6 +13140,16 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBillingCycleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingCycle | EnumBillingCycleFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingCycle[]
+    notIn?: $Enums.BillingCycle[]
+    not?: NestedEnumBillingCycleWithAggregatesFilter<$PrismaModel> | $Enums.BillingCycle
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBillingCycleFilter<$PrismaModel>
+    _max?: NestedEnumBillingCycleFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -12815,6 +13258,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12829,6 +13274,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompaniesInput
     subscriptionPlan: SubscriptionPlanCreateNestedOneWithoutCompaniesInput
@@ -12843,6 +13289,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12858,6 +13306,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
     Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
@@ -12881,6 +13330,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12895,6 +13346,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     owner: UserCreateNestedOneWithoutOwnedCompaniesInput
     activeUsers?: UserCreateNestedManyWithoutCompanyInput
     subscriptionPlan: SubscriptionPlanCreateNestedOneWithoutCompaniesInput
@@ -12909,6 +13361,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12925,6 +13379,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
     Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -12942,6 +13397,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12956,6 +13413,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     owner: UserCreateNestedOneWithoutOwnedCompaniesInput
     users?: UserCreateNestedManyWithoutCompaniesInput
     subscriptionPlan: SubscriptionPlanCreateNestedOneWithoutCompaniesInput
@@ -12970,6 +13428,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -12986,6 +13446,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
     Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
   }
@@ -13056,6 +13517,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     company: CompanyCreateNestedOneWithoutProjectInput
     customer?: ProjectCustomerCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffCreateNestedManyWithoutProjectInput
@@ -13075,6 +13537,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     customer?: ProjectCustomerUncheckedCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -13116,6 +13579,8 @@ export namespace Prisma {
     type?: EnumBusinessTypeNullableFilter<"Company"> | $Enums.BusinessType | null
     logo?: StringNullableFilter<"Company"> | string | null
     domain?: StringNullableFilter<"Company"> | string | null
+    subdomain?: StringNullableFilter<"Company"> | string | null
+    isCustomDomain?: BoolNullableFilter<"Company"> | boolean | null
     phone?: StringNullableFilter<"Company"> | string | null
     supportEmail?: StringNullableFilter<"Company"> | string | null
     salesEmail?: StringNullableFilter<"Company"> | string | null
@@ -13132,6 +13597,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Company"> | Date | string | null
   }
 
   export type CompanyUpsertWithWhereUniqueWithoutUsersInput = {
@@ -13169,6 +13635,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13183,6 +13651,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
     users?: UserUpdateManyWithoutCompaniesNestedInput
     subscriptionPlan?: SubscriptionPlanUpdateOneRequiredWithoutCompaniesNestedInput
@@ -13197,6 +13666,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13213,6 +13684,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -13300,17 +13772,19 @@ export namespace Prisma {
     companyId?: StringFilter<"Project"> | string
     budget?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     progress?: IntNullableFilter<"Project"> | number | null
-    managerId?: StringFilter<"Project"> | string
+    managerId?: StringNullableFilter<"Project"> | string | null
     customerid?: StringNullableFilter<"Project"> | string | null
     isActive?: BoolFilter<"Project"> | boolean
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
   }
 
   export type UserCreateWithoutOwnedCompaniesInput = {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13326,6 +13800,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     companies?: CompanyCreateNestedManyWithoutUsersInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
@@ -13337,6 +13812,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13353,6 +13829,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
@@ -13368,6 +13845,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13383,6 +13861,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     companies?: CompanyCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
@@ -13394,6 +13873,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13409,6 +13889,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
@@ -13430,6 +13911,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13445,6 +13927,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
@@ -13456,6 +13939,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -13472,6 +13956,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
@@ -13485,9 +13970,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanCreateWithoutCompaniesInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -13497,14 +13984,17 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     features?: FeatureCreateNestedManyWithoutPlansInput
   }
 
   export type SubscriptionPlanUncheckedCreateWithoutCompaniesInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -13514,6 +14004,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     features?: FeatureUncheckedCreateNestedManyWithoutPlansInput
   }
 
@@ -13535,7 +14026,8 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    manager: UserCreateNestedOneWithoutProjectInput
+    deletedAt?: Date | string | null
+    manager?: UserCreateNestedOneWithoutProjectInput
     customer?: ProjectCustomerCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffCreateNestedManyWithoutProjectInput
   }
@@ -13549,11 +14041,12 @@ export namespace Prisma {
     endDate?: Date | string | null
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     customer?: ProjectCustomerUncheckedCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -13583,6 +14076,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13598,6 +14092,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
@@ -13609,6 +14104,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13625,6 +14121,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
@@ -13654,6 +14151,7 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
+    emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -13670,6 +14168,7 @@ export namespace Prisma {
     lastLogin?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
   }
 
   export type UserUpsertWithWhereUniqueWithoutCompaniesInput = {
@@ -13701,9 +14200,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanUpdateWithoutCompaniesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -13713,14 +14214,17 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     features?: FeatureUpdateManyWithoutPlansNestedInput
   }
 
   export type SubscriptionPlanUncheckedUpdateWithoutCompaniesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -13730,6 +14234,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     features?: FeatureUncheckedUpdateManyWithoutPlansNestedInput
   }
 
@@ -13754,6 +14259,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type FeatureUncheckedCreateWithoutPlansInput = {
@@ -13761,6 +14269,9 @@ export namespace Prisma {
     key: string
     label: string
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type FeatureCreateOrConnectWithoutPlansInput = {
@@ -13776,6 +14287,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -13790,6 +14303,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     owner: UserCreateNestedOneWithoutOwnedCompaniesInput
     activeUsers?: UserCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompaniesInput
@@ -13804,6 +14318,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -13819,6 +14335,7 @@ export namespace Prisma {
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
     Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
@@ -13858,6 +14375,9 @@ export namespace Prisma {
     key?: StringFilter<"Feature"> | string
     label?: StringFilter<"Feature"> | string
     isActive?: BoolFilter<"Feature"> | boolean
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Feature"> | Date | string | null
   }
 
   export type CompanyUpsertWithWhereUniqueWithoutSubscriptionPlanInput = {
@@ -13878,9 +14398,11 @@ export namespace Prisma {
 
   export type SubscriptionPlanCreateWithoutFeaturesInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -13890,14 +14412,17 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     companies?: CompanyCreateNestedManyWithoutSubscriptionPlanInput
   }
 
   export type SubscriptionPlanUncheckedCreateWithoutFeaturesInput = {
     id?: string
+    key: string
     name: string
-    pricePerMonth?: Decimal | DecimalJsLike | number | string
     description?: string | null
+    pricePerMonth?: Decimal | DecimalJsLike | number | string
+    billingCycle: $Enums.BillingCycle
     maxUsers?: number
     maxAdmins?: number
     maxManagers?: number
@@ -13907,6 +14432,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     companies?: CompanyUncheckedCreateNestedManyWithoutSubscriptionPlanInput
   }
 
@@ -13936,9 +14462,11 @@ export namespace Prisma {
     OR?: SubscriptionPlanScalarWhereInput[]
     NOT?: SubscriptionPlanScalarWhereInput | SubscriptionPlanScalarWhereInput[]
     id?: StringFilter<"SubscriptionPlan"> | string
+    key?: StringFilter<"SubscriptionPlan"> | string
     name?: StringFilter<"SubscriptionPlan"> | string
-    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
     description?: StringNullableFilter<"SubscriptionPlan"> | string | null
+    pricePerMonth?: DecimalFilter<"SubscriptionPlan"> | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFilter<"SubscriptionPlan"> | $Enums.BillingCycle
     maxUsers?: IntFilter<"SubscriptionPlan"> | number
     maxAdmins?: IntFilter<"SubscriptionPlan"> | number
     maxManagers?: IntFilter<"SubscriptionPlan"> | number
@@ -13948,6 +14476,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"SubscriptionPlan"> | boolean
     createdAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
     updatedAt?: DateTimeFilter<"SubscriptionPlan"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"SubscriptionPlan"> | Date | string | null
   }
 
   export type CompanyCreateWithoutProjectInput = {
@@ -13958,6 +14487,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -13972,6 +14503,7 @@ export namespace Prisma {
     office365Connected?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     owner: UserCreateNestedOneWithoutOwnedCompaniesInput
     activeUsers?: UserCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompaniesInput
@@ -13986,6 +14518,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -14002,6 +14536,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
   }
@@ -14015,6 +14550,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14030,6 +14566,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     companies?: CompanyCreateNestedManyWithoutUsersInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
@@ -14041,6 +14578,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14057,6 +14595,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
@@ -14130,6 +14669,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14144,6 +14685,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
     activeUsers?: UserUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompaniesNestedInput
@@ -14158,6 +14700,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14174,6 +14718,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
   }
@@ -14193,6 +14738,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14208,6 +14754,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
@@ -14219,6 +14766,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14235,6 +14783,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
@@ -14297,8 +14846,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     company: CompanyCreateNestedOneWithoutProjectInput
-    manager: UserCreateNestedOneWithoutProjectInput
+    manager?: UserCreateNestedOneWithoutProjectInput
     customer?: ProjectCustomerCreateNestedOneWithoutProjectInput
   }
 
@@ -14312,11 +14862,12 @@ export namespace Prisma {
     companyId: string
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     customer?: ProjectCustomerUncheckedCreateNestedOneWithoutProjectInput
   }
 
@@ -14329,6 +14880,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14344,6 +14896,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     companies?: CompanyCreateNestedManyWithoutUsersInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
@@ -14355,6 +14908,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14371,6 +14925,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
@@ -14406,8 +14961,9 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: CompanyUpdateOneRequiredWithoutProjectNestedInput
-    manager?: UserUpdateOneRequiredWithoutProjectNestedInput
+    manager?: UserUpdateOneWithoutProjectNestedInput
     customer?: ProjectCustomerUpdateOneWithoutProjectNestedInput
   }
 
@@ -14421,11 +14977,12 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: ProjectCustomerUncheckedUpdateOneWithoutProjectNestedInput
   }
 
@@ -14444,6 +15001,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14459,6 +15017,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
@@ -14470,6 +15029,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14486,6 +15046,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
@@ -14505,8 +15066,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     company: CompanyCreateNestedOneWithoutProjectInput
-    manager: UserCreateNestedOneWithoutProjectInput
+    manager?: UserCreateNestedOneWithoutProjectInput
     staff?: ProjectStaffCreateNestedManyWithoutProjectInput
   }
 
@@ -14520,11 +15082,12 @@ export namespace Prisma {
     companyId: string
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     staff?: ProjectStaffUncheckedCreateNestedManyWithoutProjectInput
   }
 
@@ -14537,6 +15100,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14552,6 +15116,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
     companies?: CompanyCreateNestedManyWithoutUsersInput
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
@@ -14563,6 +15128,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -14579,6 +15145,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
@@ -14614,8 +15181,9 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: CompanyUpdateOneRequiredWithoutProjectNestedInput
-    manager?: UserUpdateOneRequiredWithoutProjectNestedInput
+    manager?: UserUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUpdateManyWithoutProjectNestedInput
   }
 
@@ -14629,11 +15197,12 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     staff?: ProjectStaffUncheckedUpdateManyWithoutProjectNestedInput
   }
 
@@ -14652,6 +15221,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14667,6 +15237,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
@@ -14678,6 +15249,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14694,6 +15266,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
@@ -14708,6 +15281,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -14723,6 +15298,7 @@ export namespace Prisma {
     subscriptionPlanId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ProjectCustomerCreateManyUserInput = {
@@ -14753,6 +15329,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type CompanyUpdateWithoutOwnerInput = {
@@ -14763,6 +15340,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14777,6 +15356,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompaniesNestedInput
     subscriptionPlan?: SubscriptionPlanUpdateOneRequiredWithoutCompaniesNestedInput
@@ -14791,6 +15371,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14806,6 +15388,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -14819,6 +15402,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14834,6 +15419,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CompanyUpdateWithoutUsersInput = {
@@ -14844,6 +15430,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14858,6 +15446,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
     activeUsers?: UserUpdateManyWithoutCompanyNestedInput
     subscriptionPlan?: SubscriptionPlanUpdateOneRequiredWithoutCompaniesNestedInput
@@ -14872,6 +15461,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14888,6 +15479,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
   }
@@ -14900,6 +15492,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14916,6 +15510,7 @@ export namespace Prisma {
     subscriptionPlanId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectCustomerUpdateWithoutUserInput = {
@@ -14973,6 +15568,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     company?: CompanyUpdateOneRequiredWithoutProjectNestedInput
     customer?: ProjectCustomerUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUpdateManyWithoutProjectNestedInput
@@ -14992,6 +15588,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: ProjectCustomerUncheckedUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -15010,12 +15607,14 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserCreateManyCompanyInput = {
     id?: string
     name?: string | null
     email: string
+    emailVerified?: Date | string | null
     image?: string | null
     phone?: string | null
     birthDate?: Date | string | null
@@ -15031,6 +15630,7 @@ export namespace Prisma {
     lastLogin?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ProjectCreateManyCompanyInput = {
@@ -15042,17 +15642,19 @@ export namespace Prisma {
     endDate?: Date | string | null
     budget?: Decimal | DecimalJsLike | number | string | null
     progress?: number | null
-    managerId: string
+    managerId?: string | null
     customerid?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15068,6 +15670,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
@@ -15079,6 +15682,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15094,6 +15698,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
@@ -15105,6 +15710,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15120,12 +15726,14 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUpdateWithoutCompaniesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15141,6 +15749,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
@@ -15152,6 +15761,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15168,6 +15778,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
@@ -15178,6 +15789,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15194,6 +15806,7 @@ export namespace Prisma {
     lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUpdateWithoutCompanyInput = {
@@ -15209,7 +15822,8 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    manager?: UserUpdateOneRequiredWithoutProjectNestedInput
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    manager?: UserUpdateOneWithoutProjectNestedInput
     customer?: ProjectCustomerUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUpdateManyWithoutProjectNestedInput
   }
@@ -15223,11 +15837,12 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: ProjectCustomerUncheckedUpdateOneWithoutProjectNestedInput
     staff?: ProjectStaffUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -15241,11 +15856,12 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     budget?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     progress?: NullableIntFieldUpdateOperationsInput | number | null
-    managerId?: StringFieldUpdateOperationsInput | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
     customerid?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CompanyCreateManySubscriptionPlanInput = {
@@ -15256,6 +15872,8 @@ export namespace Prisma {
     type?: $Enums.BusinessType | null
     logo?: string | null
     domain?: string | null
+    subdomain?: string | null
+    isCustomDomain?: boolean | null
     phone?: string | null
     supportEmail?: string | null
     salesEmail?: string | null
@@ -15271,6 +15889,7 @@ export namespace Prisma {
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type FeatureUpdateWithoutPlansInput = {
@@ -15278,6 +15897,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FeatureUncheckedUpdateWithoutPlansInput = {
@@ -15285,6 +15907,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FeatureUncheckedUpdateManyWithoutPlansInput = {
@@ -15292,6 +15917,9 @@ export namespace Prisma {
     key?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CompanyUpdateWithoutSubscriptionPlanInput = {
@@ -15302,6 +15930,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15316,6 +15946,7 @@ export namespace Prisma {
     office365Connected?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
     activeUsers?: UserUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompaniesNestedInput
@@ -15330,6 +15961,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15345,6 +15978,7 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
@@ -15358,6 +15992,8 @@ export namespace Prisma {
     type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
     logo?: NullableStringFieldUpdateOperationsInput | string | null
     domain?: NullableStringFieldUpdateOperationsInput | string | null
+    subdomain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15373,13 +16009,16 @@ export namespace Prisma {
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SubscriptionPlanUpdateWithoutFeaturesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -15389,14 +16028,17 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companies?: CompanyUpdateManyWithoutSubscriptionPlanNestedInput
   }
 
   export type SubscriptionPlanUncheckedUpdateWithoutFeaturesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -15406,14 +16048,17 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     companies?: CompanyUncheckedUpdateManyWithoutSubscriptionPlanNestedInput
   }
 
   export type SubscriptionPlanUncheckedUpdateManyWithoutFeaturesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    pricePerMonth?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
     maxUsers?: IntFieldUpdateOperationsInput | number
     maxAdmins?: IntFieldUpdateOperationsInput | number
     maxManagers?: IntFieldUpdateOperationsInput | number
@@ -15423,6 +16068,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectStaffCreateManyProjectInput = {

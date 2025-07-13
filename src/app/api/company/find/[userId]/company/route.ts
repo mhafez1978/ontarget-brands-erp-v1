@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
     }
-    console.log(company);
+    //console.log(company);
     return NextResponse.json(company);
   } catch (error) {
     console.error("Error fetching company:", error);

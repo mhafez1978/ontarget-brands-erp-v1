@@ -1,12 +1,10 @@
-
-
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import OAuthButtons from "./OAuthButtons";
+import { OAuthButtons } from "./OAuthButtons";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({

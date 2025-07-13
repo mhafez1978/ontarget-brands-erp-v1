@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -12,309 +14,350 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Search,
-  Plus,
-  Filter,
-  Shield,
-  User,
-  Crown,
-  Settings,
-} from "lucide-react";
+import { Search, Filter, Edit } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { OffCanvasBtn } from "@/components/OffCanvasBtn";
+import { CreateCompanyStaff } from "../forms/CreateCompanyStaff";
+import { showToast } from "@/hooks/toast";
+import { EditStaffForm } from "../forms/EditStaffForm";
+import { Role } from "@/generated/prisma";
 
-const userData = [
-  {
-    id: "USR-001",
-    name: "John Admin",
-    email: "john.admin@company.com",
-    role: "admin",
-    department: "IT",
-    lastLogin: "2024-01-15 14:30",
-    status: "active",
-    permissions: ["all"],
-  },
-  {
-    id: "USR-002",
-    name: "Sarah Manager",
-    email: "sarah.manager@company.com",
-    role: "manager",
-    department: "Sales",
-    lastLogin: "2024-01-15 09:15",
-    status: "active",
-    permissions: ["sales", "customers", "reports"],
-  },
-  {
-    id: "USR-003",
-    name: "Mike Staff",
-    email: "mike.staff@company.com",
-    role: "staff",
-    department: "Warehouse",
-    lastLogin: "2024-01-14 16:45",
-    status: "active",
-    permissions: ["inventory", "orders"],
-  },
-  {
-    id: "USR-004",
-    name: "Lisa Clerk",
-    email: "lisa.clerk@company.com",
-    role: "clerk",
-    department: "Customer Service",
-    lastLogin: "2024-01-13 11:20",
-    status: "active",
-    permissions: ["customers", "orders"],
-  },
-  {
-    id: "USR-005",
-    name: "David Guest",
-    email: "david.guest@company.com",
-    role: "viewer",
-    department: "Accounting",
-    lastLogin: "2024-01-10 08:30",
-    status: "inactive",
-    permissions: ["reports"],
-  },
-];
+interface StaffData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  state: string;
+  country: string;
+  birthDate: Date | null;
+  password?: string;
+  lastLogin?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date | null;
+  role: string;
+  isActive: boolean;
+  companyId: string;
+  zipCode?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  emailVerified?: Date | null;
+  image?: string;
+  onSuccess?: (newStaff: StaffData) => void;
+}
 
-export const UsersManagement = () => {
+export const UsersManagement = ({ companyId }: { companyId: string }) => {
+  const [staffByCompany, setStaffByCompany] = useState<
+    Record<string, StaffData[]>
+  >({});
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
-  const filteredUsers = userData.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.department.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = selectedRole === "all" || user.role === selectedRole;
-    return matchesSearch && matchesRole;
-  });
+  const [editingStaff, setEditingStaff] = useState<StaffData | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const getRoleBadge = (role: string) => {
-    switch (role) {
-      case "admin":
-        return (
-          <Badge className="bg-red-100 text-red-800">
-            <Crown className="w-3 h-3 mr-1" />
-            Admin
-          </Badge>
-        );
-      case "manager":
-        return (
-          <Badge className="bg-blue-100 text-blue-800">
-            <Shield className="w-3 h-3 mr-1" />
-            Manager
-          </Badge>
-        );
-      case "staff":
-        return (
-          <Badge className="bg-green-100 text-green-800">
-            <User className="w-3 h-3 mr-1" />
-            Staff
-          </Badge>
-        );
-      case "clerk":
-        return <Badge className="bg-yellow-100 text-yellow-800">Clerk</Badge>;
-      case "viewer":
-        return <Badge variant="outline">Viewer</Badge>;
-      default:
-        return <Badge variant="secondary">{role}</Badge>;
-    }
-  };
+  const { data: session } = useSession();
 
-  const getStatusBadge = (status: string) => {
-    return status === "active" ? (
-      <Badge className="bg-green-100 text-green-800">Active</Badge>
-    ) : (
-      <Badge variant="secondary">Inactive</Badge>
+  if (
+    !session ||
+    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
+  ) {
+    return (
+      <div className="p-8">
+        <h1 className="text-3xl font-bold text-gray-900">Access Denied</h1>
+        <p className="text-gray-600 mt-2">
+          You do not have permission to view this Staff.
+        </p>
+      </div>
     );
-  };
+  }
 
-  const roles = [
-    "all",
-    ...Array.from(new Set(userData.map((user) => user.role))),
-  ];
-  const totalUsers = userData.length;
-  const activeUsers = userData.filter((u) => u.status === "active").length;
-  const adminUsers = userData.filter((u) => u.role === "admin").length;
+  useEffect(() => {
+    if (
+      !session ||
+      !session.user.ownedCompanies ||
+      session.user.ownedCompanies.length === 0
+    ) {
+      showToast("error", "No companies found for the user");
+      return;
+    }
 
+    const initialCompanyId = session.user.ownedCompanies[0].id;
+    setSelectedCompanyId(initialCompanyId);
+
+    const fetchStaff = async (companyId: string) => {
+      const res = await fetch(`/api/company/admin/${companyId}/staff`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast("error", data.error || "Failed to fetch staff");
+        return;
+      }
+
+      setStaffByCompany((prev) => ({
+        ...prev,
+        [companyId]: data.staff || [],
+      }));
+    };
+
+    fetchStaff(initialCompanyId);
+  }, [session]);
+
+  const handleEdit =
+    ({ companyId, userId }: { companyId: string; userId: string }) =>
+    () => {
+      const staff = staffByCompany[companyId]?.find((s) => s.id === userId);
+      if (!staff) {
+        showToast("error", "Staff not found");
+        return;
+      }
+      setEditingStaff(staff);
+      setIsEditOpen(true);
+    };
+
+  const handleDelete =
+    ({ companyId, userId }: { companyId: string; userId: string }) =>
+    async () => {
+      if (!selectedCompanyId) return;
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this staff member?"
+      );
+      if (!confirmed) return;
+
+      const res = await fetch(
+        `/api/company/admin/${companyId}/staff/${userId}/delete`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        showToast("error", data.error || "Failed to delete");
+        return;
+      }
+
+      showToast("success", "Staff member deleted");
+      setStaffByCompany((prev) => ({
+        ...prev,
+        [selectedCompanyId]: prev[selectedCompanyId].filter(
+          (s) => s.id !== userId
+        ),
+      }));
+    };
+
+  const filteredStaff =
+    selectedCompanyId &&
+    staffByCompany[selectedCompanyId]?.filter((s) => {
+      const matchesSearch =
+        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.phone.includes(searchTerm);
+      const matchesStatus =
+        selectedStatus === "all" ||
+        s.isActive === (selectedStatus === "active");
+      return matchesSearch && matchesStatus;
+    });
+
+  const statuses = ["all", "active", "inactive"];
+
+  // Used to trigger a reload of staff data after editing
+  function setReload(_reload: boolean) {
+    if (selectedCompanyId) {
+      // Refetch staff for the selected company
+      fetch(`/api/company/admin/${selectedCompanyId}/staff`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setStaffByCompany((prev) => ({
+            ...prev,
+            [selectedCompanyId]: data.staff || [],
+          }));
+        })
+        .catch(() => {
+          showToast("error", "Failed to reload staff data");
+        });
+    }
+  }
   return (
     <div className="p-8 space-y-8">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Staff Management</h1>
           <p className="text-gray-600 mt-1">
-            Manage user accounts, roles, and permissions
+            Manage employees, roles, and permissions
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Add User
-        </Button>
+        <OffCanvasBtn buttonText="Add Staff" formName="Onboard New Staff">
+          {(close) => (
+            <CreateCompanyStaff
+              companyId={selectedCompanyId ?? session?.user?.company?.id ?? ""}
+            />
+          )}
+        </OffCanvasBtn>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Total Users
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalUsers}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Active Users
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {activeUsers}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Administrators
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{adminUsers}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Departments
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Array.from(new Set(userData.map((u) => u.department))).length}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Tabs
+        defaultValue={session?.user?.ownedCompanies?.[0]?.id}
+        onValueChange={setSelectedCompanyId}
+      >
+        <TabsList className="mb-6">
+          {session?.user?.ownedCompanies?.map((company) => (
+            <TabsTrigger key={company.id} value={company.id}>
+              {company.name}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      {/* Users Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>User Directory</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search users..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {roles.map((role) => (
-                  <option key={role} value={role}>
-                    {role === "all"
-                      ? "All Roles"
-                      : role.charAt(0).toUpperCase() + role.slice(1)}
-                  </option>
-                ))}
-              </select>
-              <Button variant="outline">
-                <Filter className="w-4 h-4 mr-2" />
-                More Filters
-              </Button>
-            </div>
-          </div>
+        {session?.user?.ownedCompanies?.map((company) => (
+          <TabsContent key={company.id} value={company.id}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Staff Directory</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col md:flex-row gap-4 mb-6">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      placeholder="Search staff..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <select
+                      value={selectedStatus}
+                      onChange={(e) => setSelectedStatus(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                      {statuses.map((status) => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                    <Button variant="outline">
+                      <Filter className="w-4 h-4 mr-2" />
+                      More Filters
+                    </Button>
+                  </div>
+                </div>
 
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Department</TableHead>
-                  <TableHead>Last Login</TableHead>
-                  <TableHead>Permissions</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-gray-50">
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                          <span className="text-xs font-semibold text-white">
-                            {user.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-gray-500">
-                            {user.email}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{getRoleBadge(user.role)}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{user.department}</Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-600">
-                      {user.lastLogin}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {user.permissions.slice(0, 2).map((permission) => (
-                          <Badge
-                            key={permission}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {permission}
-                          </Badge>
-                        ))}
-                        {user.permissions.length > 2 && (
-                          <Badge variant="secondary" className="text-xs">
-                            +{user.permissions.length - 2}
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(user.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Settings className="w-3 h-3 mr-1" />
-                          Edit
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          Permissions
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                <div className="border rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Staff</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(Array.isArray(filteredStaff) ? filteredStaff : []).map(
+                        (s: StaffData) => (
+                          <TableRow key={s.id} className="hover:bg-gray-50">
+                            <TableCell>{s.name}</TableCell>
+                            <TableCell>{s.email}</TableCell>
+                            <TableCell>{s.phone}</TableCell>
+                            <TableCell>
+                              {[s.city, s.state, s.country]
+                                .filter(Boolean)
+                                .join(", ")}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{s.role}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={s.isActive ? "default" : "secondary"}
+                              >
+                                {s.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={handleEdit({
+                                    companyId: selectedCompanyId!,
+                                    userId: s.id,
+                                  })}
+                                >
+                                  Edit
+                                </Button>
+
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={handleDelete({
+                                    companyId: selectedCompanyId!,
+                                    userId: s.id,
+                                  })}
+                                >
+                                  Delete
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
+      {editingStaff && isEditOpen && (
+        <EditStaffForm
+          user={{
+            id: editingStaff.id,
+            name: editingStaff.name ?? "",
+            email: editingStaff.email,
+            emailVerified: editingStaff.emailVerified ?? null,
+            image: editingStaff.image ?? "",
+            phone: editingStaff.phone ?? "",
+            birthDate: editingStaff.birthDate ?? null,
+            password: editingStaff.password ?? "",
+            addressLine1: editingStaff.addressLine1 ?? "",
+            addressLine2: editingStaff.addressLine2 ?? "",
+            city: editingStaff.city ?? "",
+            state: editingStaff.state ?? "",
+            country: editingStaff.country ?? "",
+            zipCode: editingStaff.zipCode ?? "",
+            role: editingStaff.role as Role,
+            isActive: editingStaff.isActive,
+            companyId: editingStaff.companyId,
+
+            // Add missing required fields with default or null values
+            lastLogin: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -49,8 +49,8 @@ export const OffCanvasBtn: React.FC<OffCanvasButtonProps> = ({
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="p-4 flex justify-between items-center border-b">
-                <h2>{formName}</h2>
+              <div className="p-4 flex justify-between items-center border-b px-10">
+                <h2 className="font-black text-2xl">{formName}</h2>
                 <Button variant="ghost" onClick={close}>
                   <CircleXIcon />
                 </Button>

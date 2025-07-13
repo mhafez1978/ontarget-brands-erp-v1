@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   Card,
   CardContent,
@@ -108,40 +108,46 @@ export const ServicesManagement = () => {
           <Plus className="w-4 h-4" />
           Add New Service
         </Button> */}
-        <OffCanvasBtn buttonText={"Add New Service"}>
-          <h2 className="mb-4">Add New Service</h2>
-          <form>
-            <input
-              type="text"
-              placeholder="Service Name"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="text"
-              placeholder="Category"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="text"
-              placeholder="Duration"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <textarea
-              placeholder="Description"
-              className="w-full mb-2 p-2 border border-gray-300 rounded"
-            />
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
-            >
-              Add Service
-            </Button>
-          </form>
+        <OffCanvasBtn
+          buttonText={"Add New Service"}
+          formName={"Add New Service"}
+        >
+          {(close) => (
+            <>
+              <form>
+                <input
+                  type="text"
+                  placeholder="Service Name"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Category"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Duration"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <textarea
+                  placeholder="Description"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  Add Service
+                </Button>
+              </form>
+            </>
+          )}
         </OffCanvasBtn>
       </div>
 

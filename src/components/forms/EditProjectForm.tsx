@@ -20,6 +20,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { showToast } from "@/hooks/toast";
 
 type UserOption = { id: string; name: string };
 
@@ -141,11 +142,26 @@ export const EditProjectForm = ({
         return;
       }
       setSuccess(true);
+      showToast("success", "Project updated successfully");
+      setForm({
+        name: "",
+        description: "",
+        status: "PLANNING",
+        startDate: "",
+        endDate: "",
+        budget: "",
+        progress: 0,
+        isActive: false,
+      });
+      setSelectedStaff([]);
+      setSelectedCustomers([]);
+      router.refresh(); // refresh the page to reflect changes
       if (onSuccess) onSuccess();
       if (onCancel) onCancel(); // optional close handler
       return;
     } else {
-      alert("Failed to update project");
+      const error = await res.json();
+      showToast("error", error.error || "Failed to update project");
       setFailure(true);
       return;
     }

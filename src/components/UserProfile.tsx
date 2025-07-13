@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { showToast } from "@/hooks/toast";
 
 type UserProfileType = {
   id: string;
@@ -96,10 +97,10 @@ const UserProfile = () => {
 
       const updatedUser = await res.json();
       setFormData(updatedUser);
-      alert("Profile updated successfully");
+      showToast("success", "Profile updated successfully");
     } catch (err) {
       console.error("Error updating user profile:", err);
-      alert("Failed to update profile");
+      showToast("error", "Failed to update profile");
     }
   };
 

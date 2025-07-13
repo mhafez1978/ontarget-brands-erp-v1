@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showToast } from "@/hooks/toast";
 
 // Initialize i18n-iso-countries
 countries.registerLocale(enLocale);
@@ -143,8 +144,8 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
       return;
     }
     setIsSubmitting(true);
-    setError("");
-    setSuccess("");
+    setError(""); //resetting errors
+    setSuccess(""); //resetting success msg
 
     try {
       const res = await fetch("/api/company/create", {
@@ -156,9 +157,12 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
 
       if (!res.ok) {
         throw new Error(data.error || "Failed to create company");
+        showToast("error", data.error || "Failed to create company");
       }
 
       setSuccess("Company created successfully");
+
+      showToast("success", "Company created successfully");
 
       setFormData({
         name: "",
@@ -177,10 +181,12 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
         type: "" as BusinessType,
         subscriptionPlanId: "",
       });
-
+      /// initiat change menu if user creates a company we should show staff now
       onSuccess?.();
+      close?.();
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
+      showToast("error", err.message || "An unexpected error occurred");
     } finally {
       setIsSubmitting(false);
     }

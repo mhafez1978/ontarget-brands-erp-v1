@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { getToken } from "next-auth/jwt";
-import {prisma} from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 // Define EmailProvider enum if not imported from elsewhere
 enum EmailProvider {
@@ -38,23 +38,24 @@ export async function GET(req: Request) {
     return new Response("Not authenticated", { status: 401 });
   }
 
-  const userId = parseInt(sessionToken.id as string);
+  const userId = sessionToken.id as string;
 
-  // 3. Fetch the user's company
   let company;
+
   try {
     company = await prisma.company.findFirst({
       where: {
         ownerId: userId,
         deletedAt: null,
-        disabled: false,
+        isActive: true,
       },
     });
-
     if (!company || !company.id) {
       console.error("❌ No valid company found for user ID", userId);
       return new Response("Company not found for this user", { status: 404 });
     }
+    console.log("✅ Company found:", company.id);
+    return new Response("Company found", { status: 200 });
   } catch (err) {
     console.error("❌ Error fetching company:", err);
     return new Response("Database error during company lookup", {
@@ -68,10 +69,6 @@ export async function GET(req: Request) {
       where: { id: company.id },
       data: {
         emailProvider: EmailProvider.GMAIL,
-        emailOAuthToken: tokens as any, // type-safe if you're confident it's JSON-safe
-        emailOAuthExpiry: tokens.expiry_date
-          ? new Date(tokens.expiry_date)
-          : null,
         gmailConnected: true,
       },
     });

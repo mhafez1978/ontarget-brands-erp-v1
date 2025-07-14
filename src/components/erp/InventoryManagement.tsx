@@ -21,6 +21,13 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { OffCanvasBtn } from "../OffCanvasBtn";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const inventoryData = [
   {
@@ -144,10 +151,10 @@ export const InventoryManagement = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Inventory Management
+            Products Management
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage your product inventory and stock levels
+            Manage your products inventory and stock levels
           </p>
         </div>
         {/* <Button className="bg-blue-600 hover:bg-blue-700">
@@ -164,12 +171,27 @@ export const InventoryManagement = () => {
               <form>
                 <input
                   type="text"
-                  placeholder="Service Name"
+                  placeholder="Product Name"
                   className="w-full mb-2 p-2 border border-gray-300 rounded"
                 />
                 <input
                   type="text"
-                  placeholder="Category"
+                  placeholder="Product Description"
+                  className="w-full mb-2 p-2 border border-gray-300 rounded"
+                />
+                <Select>
+                  <SelectTrigger className="w-full mb-2">
+                    <SelectValue placeholder="Select Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="electronics">Electronics</SelectItem>
+                    <SelectItem value="clothing">Clothing</SelectItem>
+                    <SelectItem value="home-garden">Home & Garden</SelectItem>
+                  </SelectContent>
+                </Select>
+                <input
+                  type="number"
+                  placeholder="Quntity"
                   className="w-full mb-2 p-2 border border-gray-300 rounded"
                 />
                 <input
@@ -190,7 +212,7 @@ export const InventoryManagement = () => {
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700"
                 >
-                  Save
+                  Save Product
                 </Button>
               </form>
             </>

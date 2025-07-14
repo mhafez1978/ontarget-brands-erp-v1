@@ -1,23 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-      "Access-Control-Allow-Headers": "*",
-    },
-  });
-}
+import { Role } from "@/generated/prisma";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-    const { name, email, password, role } = body;
+    const { name, email, password } = body;
 
     if (!email || !password || !name) {
       return NextResponse.json(
@@ -26,10 +15,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    const existing = await prisma.user.findUnique({
+      where: { email: email as string },
+    });
+
     if (existing) {
       return NextResponse.json(
-        { error: "Email already registered" },
+        { error: "Email already registered, please login." },
         { status: 409 }
       );
     }
@@ -38,17 +30,16 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: role || "CUSTOMER",
+        name: name as string,
+        email: email as string,
+        password: hashedPassword as string,
+        role: Role.ERP_CUSTOMER,
       },
     });
 
     return NextResponse.json({
       success: true,
-      user: { id: user.id, email: user.email },
-      headers: { "Access-Control-Allow-Origin": "*" },
+      user,
     });
   } catch (err) {
     console.error("Registration error:", err);

@@ -54,13 +54,15 @@ export async function GET(
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
         managerId: project.managerId,
-        manager: {
-          id: project.manager.id,
-          name: project.manager.name,
-          email: project.manager.email,
-          image: project.manager.image,
-          role: project.manager.role,
-        },
+        manager: project.manager
+          ? {
+              id: project.manager.id,
+              name: project.manager.name,
+              email: project.manager.email,
+              image: project.manager.image,
+              role: project.manager.role,
+            }
+          : null,
         customerName: project.customer?.user?.name ?? null,
         assignedAdminsOrManagers,
         products: 0,

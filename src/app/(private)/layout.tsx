@@ -9,7 +9,6 @@ import {
   Building2,
   Users,
   UsersRound,
-  Boxes,
   Globe,
   Bot,
   FolderKanban,
@@ -85,7 +84,7 @@ const routeMap: Record<string, string> = {
 
 // Role + Plan menu config
 const menuConfig: Record<string, string[]> = {
-  CUSTOMER_starter: [
+  ERP_CUSTOMER_starter: [
     "Dashboard",
     "Profile",
     "Company",
@@ -94,7 +93,7 @@ const menuConfig: Record<string, string[]> = {
     "Customer Menu",
     "Settings",
   ],
-  CUSTOMER_standard: [
+  ERP_CUSTOMER_standard: [
     "Dashboard",
     "Profile",
     "Company",
@@ -103,7 +102,7 @@ const menuConfig: Record<string, string[]> = {
     "Customer Menu",
     "Settings",
   ],
-  CUSTOMER_premium: [
+  ERP_CUSTOMER_premium: [
     "Dashboard",
     "Profile",
     "Company",
@@ -294,7 +293,7 @@ export default function RootLayout({
         </nav>
       </aside>
 
-      <main className="flex-1 p-4 overflow-auto">{children}</main>
+      <main className="flex-1 p-4 h-screen overflow-y-scroll">{children}</main>
     </div>
   );
 }

@@ -97,6 +97,7 @@ const LoginForm = () => {
             placeholder="you@company.com"
             required
             disabled={isDisabled}
+            autoComplete="email"
           />
         </div>
 
@@ -116,6 +117,7 @@ const LoginForm = () => {
             placeholder="Enter your password"
             required
             disabled={isDisabled}
+            autoComplete="current-password"
           />
         </div>
 

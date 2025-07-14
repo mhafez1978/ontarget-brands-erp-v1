@@ -5,9 +5,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { companyId: string } }
+  { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const { companyId } = params;
+  const { companyId } = await params;
 
   try {
     const projects = await prisma.project.findMany({
@@ -42,7 +42,7 @@ export async function GET(
             user: {
               select: {
                 name: true,
-                role: true, // 👈 optional, use if you want to filter for CUSTOMER role
+                role: true, // 👈 optional, use if you want to filter for ERP_CUSTOMER role
               },
             },
           },

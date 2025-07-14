@@ -59,7 +59,7 @@ export default function CustomerRegisterForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          role: "CUSTOMER", // Lock role
+          role: "ERP_CUSTOMER", // Lock role
         }),
       });
 

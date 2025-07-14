@@ -1,7 +1,7 @@
-import { DomainWebsite } from "@/components/erp/DomainWebsite";
+import { WebsiteManagement } from "@/components/erp/WebsiteManagement";
 
 const BusinessWebsitePage = () => {
-  return <DomainWebsite />;
+  return <WebsiteManagement />;
 };
 
 export default BusinessWebsitePage;

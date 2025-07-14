@@ -40,7 +40,7 @@ const RegisterForm = () => {
         body: JSON.stringify({
           ...formData,
           name: `${formData.firstName} ${formData.lastName}`.trim(),
-          role: "CUSTOMER",
+          role: "ERP_CUSTOMER",
         }),
       });
 
@@ -84,6 +84,7 @@ const RegisterForm = () => {
               value={formData.firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
               required
+              autoComplete="given-name"
             />
           </div>
           <div>
@@ -96,6 +97,7 @@ const RegisterForm = () => {
               value={formData.lastName}
               onChange={(e) => handleInputChange("lastName", e.target.value)}
               required
+              autoComplete="family-name"
             />
           </div>
         </div>
@@ -111,6 +113,8 @@ const RegisterForm = () => {
             value={formData.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
             required
+            autoComplete="email"
+            placeholder="name@company.com"
           />
         </div>
 
@@ -125,6 +129,8 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={(e) => handleInputChange("password", e.target.value)}
             required
+            autoComplete="new-password"
+            placeholder="Enter your password"
           />
         </div>
 
@@ -141,6 +147,8 @@ const RegisterForm = () => {
               handleInputChange("confirmPassword", e.target.value)
             }
             required
+            autoComplete="new-password"
+            placeholder="Re-enter your password"
           />
         </div>
 

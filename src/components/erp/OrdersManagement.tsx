@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -159,31 +159,38 @@ export const OrdersManagement = () => {
           <Package className="w-4 h-4 mr-2" />
           Create Order
         </Button> */}
-        <OffCanvasBtn buttonText={"Create New Order"}>
-          <h2 className="mb-4">Create New Order</h2>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Order ....
-              </label>
-              <Input placeholder="Enter project name" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <Input placeholder="Enter project description" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Budget
-              </label>
-              <Input type="number" placeholder="Enter budget amount" />
-            </div>
-            <Button type="submit" className="w-full">
-              Create Order
-            </Button>
-          </form>
+        <OffCanvasBtn
+          buttonText={"Create New Order"}
+          formName={"Create New Order"}
+        >
+          {(close) => (
+            <>
+              <h2 className="mb-4">Create New Order</h2>
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Order ....
+                  </label>
+                  <Input placeholder="Enter project name" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
+                  <Input placeholder="Enter project description" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Budget
+                  </label>
+                  <Input type="number" placeholder="Enter budget amount" />
+                </div>
+                <Button type="submit" className="w-full">
+                  Create Order
+                </Button>
+              </form>
+            </>
+          )}
         </OffCanvasBtn>
       </div>
 

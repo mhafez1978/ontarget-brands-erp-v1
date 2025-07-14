@@ -27,6 +27,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: true,
             image: true,
             password: true,
+            isActive: true,
+            lastLogin: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
             company: {
               select: {
                 id: true,
@@ -45,9 +50,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 state: true,
                 zipCode: true,
                 country: true,
-                isActive: true,
+                emailProvider: true,
+                // emailOAuthToken: true,
+                // emailOAuthExpiry: true,
                 gmailConnected: true,
                 office365Connected: true,
+                ownerId: true,
+                isActive: true,
+
                 subscriptionPlan: {
                   select: {
                     id: true,
@@ -146,7 +156,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-
+  secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   pages: {
     signIn: "/auth",
   },

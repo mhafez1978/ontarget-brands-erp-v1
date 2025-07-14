@@ -33,7 +33,9 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   if (
     !session ||
     !session.user ||
-    !["ADMIN", "SUPER_ADMIN", "CUSTOMER", "MANAGER"].includes(session.user.role)
+    !["ADMIN", "SUPER_ADMIN", "ERP_CUSTOMER", "MANAGER"].includes(
+      session.user.role
+    )
   ) {
     // Access denied
     return redirect("/auth");

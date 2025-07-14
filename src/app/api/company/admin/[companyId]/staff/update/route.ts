@@ -6,10 +6,10 @@ import { auth } from "@/auth";
 
 export const PATCH = async (
   req: NextRequest,
-  { params }: { params: { companyId: string; userId: string } }
+  { params }: { params: Promise<{ companyId: string; userId: string }> }
 ) => {
   const session = await auth();
-  const { companyId, userId } = params;
+  const { companyId, userId } = await params;
 
   if (
     !session ||

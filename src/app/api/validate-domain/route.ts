@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
   console.log("fired..... validate-domain API");
@@ -10,7 +8,7 @@ export async function GET(req: Request) {
 
   if (!domain) return NextResponse.json({ valid: false });
 
-  const company = await prisma.company.findUnique({
+  const company = await prisma.companySubdomain.findFirst({
     where: { subdomain: domain },
     select: { id: true },
   });

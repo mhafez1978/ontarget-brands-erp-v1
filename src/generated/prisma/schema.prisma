@@ -35,7 +35,7 @@ model User {
   company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull) // Clear active company if company is deleted
 
   isActive        Boolean           @default(true)
-  role            Role              @default(CUSTOMER)
+  role            Role              @default(ERP_CUSTOMER)
   lastLogin       DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -48,28 +48,28 @@ model User {
 }
 
 model Company {
-  id             String           @id @default(uuid()) @map("companyId")
-  name           String           @unique @db.VarChar(255)
-  slogan         String?          @db.VarChar(255)
-  category       CompanyCategory?
-  type           BusinessType?
-  logo           String?          @db.VarChar(255)
-  domain         String?          @unique @db.VarChar(255)
-  subdomain      String?          @unique @db.VarChar(255)
-  isCustomDomain Boolean?         @default(false)
-  phone          String?          @db.VarChar(20)
-  supportEmail   String?          @unique @db.VarChar(255)
-  salesEmail     String?          @unique @db.VarChar(255)
-  addressLine1   String?          @db.VarChar(255)
-  addressLine2   String?          @db.VarChar(255)
-  city           String?          @db.VarChar(100)
-  state          String?          @db.VarChar(100)
-  zipCode        String?          @db.VarChar(20)
-  country        String?          @db.VarChar(100)
-
-  isActive           Boolean @default(true)
-  gmailConnected     Boolean @default(false)
-  office365Connected Boolean @default(false)
+  id                 String             @id @default(uuid()) @map("companyId")
+  name               String             @unique @db.VarChar(255)
+  slogan             String?            @db.VarChar(255)
+  category           CompanyCategory?
+  type               BusinessType?
+  logo               String?            @db.VarChar(255)
+  domain             String?            @unique @db.VarChar(255)
+  CompanySubdomain   CompanySubdomain[]
+  isCustomDomain     Boolean?           @default(false)
+  phone              String?            @db.VarChar(20)
+  supportEmail       String?            @unique @db.VarChar(255)
+  salesEmail         String?            @unique @db.VarChar(255)
+  addressLine1       String?            @db.VarChar(255)
+  addressLine2       String?            @db.VarChar(255)
+  city               String?            @db.VarChar(100)
+  state              String?            @db.VarChar(100)
+  zipCode            String?            @db.VarChar(20)
+  country            String?            @db.VarChar(100)
+  emailProvider      EmailProviders?
+  isActive           Boolean            @default(true)
+  gmailConnected     Boolean            @default(false)
+  office365Connected Boolean            @default(false)
 
   // Owner relation
   ownerId String
@@ -84,12 +84,24 @@ model Company {
   subscriptionPlanId String
   subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction) // Prevent plan deletion if companies exist
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // Added for soft deletes
-  Project   Project[]
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  deletedAt              DateTime? // Added for soft deletes
+  Project                Project[]
+  CompanyLanding         CompanyLanding[]
+  Product                Product[]
+  Supplier               Supplier[]
+  CompanyProductCategory CompanyProductCategory[]
+  Service                Service[]
 
   @@map("companies")
+}
+
+model CompanySubdomain {
+  id        String  @id @default(uuid())
+  subdomain String  @unique
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model SubscriptionPlan {
@@ -110,7 +122,7 @@ model SubscriptionPlan {
   isActive       Boolean      @default(true)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  deletedAt      DateTime? // soft delete
+  deletedAt      DateTime?
 
   @@map("subscription_plans")
 }
@@ -123,66 +135,173 @@ model Feature {
   isActive  Boolean            @default(true)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
-  deletedAt DateTime? // Added for soft deletes
+  deletedAt DateTime?
 
   @@map("features")
 }
 
+model CompanyLanding {
+  id                             String    @id @default(uuid())
+  heroTitle                      String?   @db.VarChar(100)
+  heroDescription                String?   @db.VarChar(100)
+  c2a1Text                       String?   @db.VarChar(100)
+  c2a1Link                       String?   @db.VarChar(100)
+  c2a2Text                       String?   @db.VarChar(100)
+  c2a2Link                       String?   @db.VarChar(100)
+  pinned1Title                   String?   @db.VarChar(100)
+  pinned2Title                   String?   @db.VarChar(100)
+  pinned3Title                   String?   @db.VarChar(100)
+  pinned1Description             String?   @db.VarChar(100)
+  pinned2Description             String?   @db.VarChar(100)
+  pinned3Description             String?   @db.VarChar(100)
+  testimonialsSectionTitle       String?   @db.VarChar(100)
+  testimonialsSectionDescription String?   @db.VarChar(100)
+  testimonial1Author             String?   @db.VarChar(100)
+  testimonial1Text               String?   @db.VarChar(100)
+  testimonial2Author             String?   @db.VarChar(100)
+  testimonial2Text               String?   @db.VarChar(100)
+  contactSectionTitle            String?   @db.VarChar(100)
+  contactSectionDescription      String?   @db.VarChar(100)
+  companyId                      String
+  company                        Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt                      DateTime  @default(now())
+  updatedAt                      DateTime  @updatedAt
+  deletedAt                      DateTime?
+}
+
 model Project {
-  id          String        @id @default(uuid())
-  name        String        @db.VarChar(255)
-  description String?       @db.Text
-  status      ProjectStatus @default(PLANNING)
+  id          String           @id @default(uuid())
+  name        String           @db.VarChar(255)
+  description String?          @db.Text
+  status      ProjectStatus    @default(PLANNING)
   startDate   DateTime?
   endDate     DateTime?
-
-  companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade) // Delete projects if company is deleted
-  budget    Decimal?
-  progress  Int?
-  managerId String?
-  manager   User?    @relation(fields: [managerId], references: [id], onDelete: SetNull) // Allow projects to persist without a manager
-
-  customerid String?
-  customer   ProjectCustomer? @relation("ProjectToCustomer")
-
-  staff     ProjectStaff[]
-  isActive  Boolean        @default(false)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  deletedAt DateTime? // Added for soft deletes
+  companyId   String
+  company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  budget      Decimal?
+  progress    Int?
+  managerId   String?
+  manager     User?            @relation(fields: [managerId], references: [id], onDelete: SetNull)
+  customerid  String?
+  customer    ProjectCustomer? @relation("ProjectToCustomer")
+  staff       ProjectStaff[]
+  isActive    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  deletedAt   DateTime? // Added for soft deletes
 
   @@map("projects")
 }
 
 model ProjectStaff {
-  id        String @id @default(uuid()) @map("projectStaffId")
-  projectId String
-  userId    String
-
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade) // Delete staff assignments if project is deleted
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Delete staff assignments if user is deleted
-
-  assignedAt DateTime @default(now())
+  id         String    @id @default(uuid()) @map("projectStaffId")
+  projectId  String
+  userId     String
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedAt DateTime  @default(now())
+  dueDate    DateTime?
 
   @@unique([projectId, userId])
   @@map("project_staff")
 }
 
 model ProjectCustomer {
-  id        String @id @default(uuid()) @map("projectCustomerId")
-  projectId String @unique
+  id        String   @id @default(uuid()) @map("projectCustomerId")
+  projectId String   @unique
   userId    String
-
-  project Project @relation("ProjectToCustomer", fields: [projectId], references: [id], onDelete: Cascade) // Delete customer assignment if project is deleted
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // Delete customer assignment if user is deleted
-
-  role    String?  @db.VarChar(100)
-  notes   String?  @db.Text
-  addedAt DateTime @default(now())
+  project   Project  @relation("ProjectToCustomer", fields: [projectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String?  @db.VarChar(100)
+  notes     String?  @db.Text
+  addedAt   DateTime @default(now())
 
   @@unique([projectId, userId])
   @@map("project_customers")
+}
+
+model Product {
+  id             String                   @id @default(uuid())
+  name           String
+  description    String?
+  sku            String?
+  upc            String?
+  unit           ProductUnit?
+  quantity       Int?
+  cost           Float?
+  price          Float?
+  brand          String?
+  status         ProductStatus?
+  supplierId     String?
+  supplier       Supplier?                @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  deliveryMethod DeliveryMethod
+  category       CompanyProductCategory[]
+  companyId      String
+  company        Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  deletedAt      DateTime?
+}
+
+model Supplier {
+  id           String    @id @default(uuid())
+  name         String
+  tagline      String?
+  website      String?
+  salesEmail   String?
+  supportEmail String?
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  zipCode      String?
+  country      String?
+  product      Product[]
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+}
+
+model CompanyProductCategory {
+  id              String          @id @default(uuid())
+  productId       String
+  product         Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productCategory ProductCategory
+  companyId       String
+  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+}
+
+model Service {
+  id             String          @id @default(uuid())
+  tags           ServiceTag[]    @relation("ServiceTags")
+  companyId      String
+  description    String?
+  deliveryMethod DeliveryMethod?
+  duration       Int?
+  price          Decimal?        @db.Decimal(10, 2)
+  currency       Currency?
+  isActive       Boolean         @default(true)
+  categories     ServiceCategory
+  tag            ServiceTag[]
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model ServiceTag {
+  id        String   @id @default(uuid())
+  value     String   @db.VarChar(100)
+  service   Service  @relation("ServiceTags", fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Service Service[]
 }
 
 enum Role {
@@ -190,7 +309,8 @@ enum Role {
   ADMIN
   MANAGER
   STAFF
-  CUSTOMER
+  ERP_CUSTOMER
+  COMPANY_CUSTOMER
   GUEST
 }
 
@@ -217,6 +337,41 @@ enum CompanyCategory {
   TECHNOLOGY
   TELECOMMUNICATIONS
   TRANSPORTATION
+  OTHER
+}
+
+enum ProductCategory {
+  ELECTRONICS
+  HOME_APPLIANCES
+  CLOTHING
+  FOOTWEAR
+  BEAUTY_PERSONAL_CARE
+  HEALTH_WELLNESS
+  GROCERY
+  FURNITURE
+  HOME_DECOR
+  KITCHEN_DINING
+  TOYS_GAMES
+  BABY_PRODUCTS
+  SPORTS_OUTDOORS
+  AUTOMOTIVE
+  BOOKS
+  MUSIC_MOVIES
+  OFFICE_SUPPLIES
+  PET_SUPPLIES
+  JEWELRY
+  WATCHES
+  TOOLS_HARDWARE
+  GARDEN_OUTDOOR
+  ART_CRAFTS
+  STATIONERY
+  OTHER
+}
+
+enum EmailProviders {
+  GMAIL
+  OFFICE365
+  CUSTOM
 }
 
 enum BusinessType {
@@ -242,4 +397,231 @@ enum ProjectStatus {
   COMPLETED
   CANCELED
   ARCHIVED
+}
+
+enum ProductStatus {
+  ACTIVE
+  LIMITED_OFFER
+  REGION_BASED
+  BACK_ORDER
+  DISCONTINUED
+  OUT_OF_STOCK
+}
+
+enum ProductUnit {
+  OUNCE_OZ
+  POUND_LB
+  DOZEN
+  GRAM_G
+  KILOGRAM_KG
+  LITER_L
+  MILLILITER_ML
+  GALLON_GAL
+  PACK
+  BOX
+  BAG
+  SET
+  PAIR
+  UNIT
+}
+
+enum ServiceCategory {
+  CONSULTING
+  SUPPORT
+  INSTALLATION
+  TRAINING
+  DEVELOPMENT
+  DESIGN
+  MAINTENANCE
+  DELIVERY
+  SUBSCRIPTION
+  MARKETING
+  ANALYTICS
+  STRATEGY
+  SECURITY
+  IMPLEMENTATION
+  INTEGRATION
+  OUTSOURCING
+  OTHER
+}
+
+enum DeliveryMethod {
+  ONSITE
+  REMOTE
+  HYBRID
+  DIGITAL
+  PICKUP
+  SHIP_TO_CUSTOMER
+  DELIVERY
+}
+
+enum PaymentMethod {
+  CASH
+  CHECK
+  CREDIT
+  COD
+  CREDIT_CARD
+}
+
+enum Currency {
+  AED
+  AFN
+  ALL
+  AMD
+  ANG
+  AOA
+  ARS
+  AUD
+  AWG
+  AZN
+  BAM
+  BBD
+  BDT
+  BGN
+  BHD
+  BIF
+  BMD
+  BND
+  BOB
+  BRL
+  BSD
+  BTN
+  BWP
+  BYN
+  BZD
+  CAD
+  CDF
+  CHF
+  CLP
+  CNY
+  COP
+  CRC
+  CUP
+  CVE
+  CZK
+  DJF
+  DKK
+  DOP
+  DZD
+  EGP
+  ERN
+  ETB
+  EUR
+  FJD
+  FKP
+  FOK
+  GBP
+  GEL
+  GGP
+  GHS
+  GIP
+  GMD
+  GNF
+  GTQ
+  GYD
+  HKD
+  HNL
+  HRK
+  HTG
+  HUF
+  IDR
+  ILS
+  IMP
+  INR
+  IQD
+  IRR
+  ISK
+  JEP
+  JMD
+  JOD
+  JPY
+  KES
+  KGS
+  KHR
+  KID
+  KMF
+  KRW
+  KWD
+  KYD
+  KZT
+  LAK
+  LBP
+  LKR
+  LRD
+  LSL
+  LYD
+  MAD
+  MDL
+  MGA
+  MKD
+  MMK
+  MNT
+  MOP
+  MRU
+  MUR
+  MVR
+  MWK
+  MXN
+  MYR
+  MZN
+  NAD
+  NGN
+  NIO
+  NOK
+  NPR
+  NZD
+  OMR
+  PAB
+  PEN
+  PGK
+  PHP
+  PKR
+  PLN
+  PYG
+  QAR
+  RON
+  RSD
+  RUB
+  RWF
+  SAR
+  SBD
+  SCR
+  SDG
+  SEK
+  SGD
+  SHP
+  SLE
+  SOS
+  SRD
+  SSP
+  STN
+  SYP
+  SZL
+  THB
+  TJS
+  TMT
+  TND
+  TOP
+  TRY
+  TTD
+  TVD
+  TWD
+  TZS
+  UAH
+  UGX
+  USD
+  UYU
+  UZS
+  VES
+  VND
+  VUV
+  WST
+  XAF
+  XCD
+  XOF
+  XPF
+  YER
+  ZAR
+  ZMW
+  ZWL
 }

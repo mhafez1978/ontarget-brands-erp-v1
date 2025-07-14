@@ -9,7 +9,7 @@ const CompanyPage = async () => {
     return redirect("/auth");
   }
 
-  if (!["ADMIN", "CUSTOMER", "SUPER_ADMIN"].includes(session.user.role)) {
+  if (!["ADMIN", "ERP_CUSTOMER", "SUPER_ADMIN"].includes(session.user.role)) {
     return (
       <div className="text-center mt-10">
         <h1 className="text-2xl font-bold">Access Denied</h1>

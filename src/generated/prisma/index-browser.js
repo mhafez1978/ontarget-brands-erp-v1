@@ -152,7 +152,6 @@ exports.Prisma.CompanyScalarFieldEnum = {
   type: 'type',
   logo: 'logo',
   domain: 'domain',
-  subdomain: 'subdomain',
   isCustomDomain: 'isCustomDomain',
   phone: 'phone',
   supportEmail: 'supportEmail',
@@ -163,6 +162,7 @@ exports.Prisma.CompanyScalarFieldEnum = {
   state: 'state',
   zipCode: 'zipCode',
   country: 'country',
+  emailProvider: 'emailProvider',
   isActive: 'isActive',
   gmailConnected: 'gmailConnected',
   office365Connected: 'office365Connected',
@@ -171,6 +171,12 @@ exports.Prisma.CompanyScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
+};
+
+exports.Prisma.CompanySubdomainScalarFieldEnum = {
+  id: 'id',
+  subdomain: 'subdomain',
+  companyId: 'companyId'
 };
 
 exports.Prisma.SubscriptionPlanScalarFieldEnum = {
@@ -202,6 +208,34 @@ exports.Prisma.FeatureScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.CompanyLandingScalarFieldEnum = {
+  id: 'id',
+  heroTitle: 'heroTitle',
+  heroDescription: 'heroDescription',
+  c2a1Text: 'c2a1Text',
+  c2a1Link: 'c2a1Link',
+  c2a2Text: 'c2a2Text',
+  c2a2Link: 'c2a2Link',
+  pinned1Title: 'pinned1Title',
+  pinned2Title: 'pinned2Title',
+  pinned3Title: 'pinned3Title',
+  pinned1Description: 'pinned1Description',
+  pinned2Description: 'pinned2Description',
+  pinned3Description: 'pinned3Description',
+  testimonialsSectionTitle: 'testimonialsSectionTitle',
+  testimonialsSectionDescription: 'testimonialsSectionDescription',
+  testimonial1Author: 'testimonial1Author',
+  testimonial1Text: 'testimonial1Text',
+  testimonial2Author: 'testimonial2Author',
+  testimonial2Text: 'testimonial2Text',
+  contactSectionTitle: 'contactSectionTitle',
+  contactSectionDescription: 'contactSectionDescription',
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
 exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -224,7 +258,8 @@ exports.Prisma.ProjectStaffScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   userId: 'userId',
-  assignedAt: 'assignedAt'
+  assignedAt: 'assignedAt',
+  dueDate: 'dueDate'
 };
 
 exports.Prisma.ProjectCustomerScalarFieldEnum = {
@@ -234,6 +269,77 @@ exports.Prisma.ProjectCustomerScalarFieldEnum = {
   role: 'role',
   notes: 'notes',
   addedAt: 'addedAt'
+};
+
+exports.Prisma.ProductScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  sku: 'sku',
+  upc: 'upc',
+  unit: 'unit',
+  quantity: 'quantity',
+  cost: 'cost',
+  price: 'price',
+  brand: 'brand',
+  status: 'status',
+  supplierId: 'supplierId',
+  deliveryMethod: 'deliveryMethod',
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.SupplierScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tagline: 'tagline',
+  website: 'website',
+  salesEmail: 'salesEmail',
+  supportEmail: 'supportEmail',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  city: 'city',
+  state: 'state',
+  zipCode: 'zipCode',
+  country: 'country',
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.CompanyProductCategoryScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  productCategory: 'productCategory',
+  companyId: 'companyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ServiceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  description: 'description',
+  deliveryMethod: 'deliveryMethod',
+  duration: 'duration',
+  price: 'price',
+  currency: 'currency',
+  isActive: 'isActive',
+  categories: 'categories',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ServiceTagScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  serviceId: 'serviceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -268,7 +374,6 @@ exports.Prisma.CompanyOrderByRelevanceFieldEnum = {
   slogan: 'slogan',
   logo: 'logo',
   domain: 'domain',
-  subdomain: 'subdomain',
   phone: 'phone',
   supportEmail: 'supportEmail',
   salesEmail: 'salesEmail',
@@ -282,6 +387,12 @@ exports.Prisma.CompanyOrderByRelevanceFieldEnum = {
   subscriptionPlanId: 'subscriptionPlanId'
 };
 
+exports.Prisma.CompanySubdomainOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subdomain: 'subdomain',
+  companyId: 'companyId'
+};
+
 exports.Prisma.SubscriptionPlanOrderByRelevanceFieldEnum = {
   id: 'id',
   key: 'key',
@@ -293,6 +404,31 @@ exports.Prisma.FeatureOrderByRelevanceFieldEnum = {
   id: 'id',
   key: 'key',
   label: 'label'
+};
+
+exports.Prisma.CompanyLandingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  heroTitle: 'heroTitle',
+  heroDescription: 'heroDescription',
+  c2a1Text: 'c2a1Text',
+  c2a1Link: 'c2a1Link',
+  c2a2Text: 'c2a2Text',
+  c2a2Link: 'c2a2Link',
+  pinned1Title: 'pinned1Title',
+  pinned2Title: 'pinned2Title',
+  pinned3Title: 'pinned3Title',
+  pinned1Description: 'pinned1Description',
+  pinned2Description: 'pinned2Description',
+  pinned3Description: 'pinned3Description',
+  testimonialsSectionTitle: 'testimonialsSectionTitle',
+  testimonialsSectionDescription: 'testimonialsSectionDescription',
+  testimonial1Author: 'testimonial1Author',
+  testimonial1Text: 'testimonial1Text',
+  testimonial2Author: 'testimonial2Author',
+  testimonial2Text: 'testimonial2Text',
+  contactSectionTitle: 'contactSectionTitle',
+  contactSectionDescription: 'contactSectionDescription',
+  companyId: 'companyId'
 };
 
 exports.Prisma.ProjectOrderByRelevanceFieldEnum = {
@@ -317,12 +453,58 @@ exports.Prisma.ProjectCustomerOrderByRelevanceFieldEnum = {
   role: 'role',
   notes: 'notes'
 };
+
+exports.Prisma.ProductOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  sku: 'sku',
+  upc: 'upc',
+  brand: 'brand',
+  supplierId: 'supplierId',
+  companyId: 'companyId'
+};
+
+exports.Prisma.SupplierOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  tagline: 'tagline',
+  website: 'website',
+  salesEmail: 'salesEmail',
+  supportEmail: 'supportEmail',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  city: 'city',
+  state: 'state',
+  zipCode: 'zipCode',
+  country: 'country',
+  companyId: 'companyId'
+};
+
+exports.Prisma.CompanyProductCategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  companyId: 'companyId'
+};
+
+exports.Prisma.ServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  description: 'description'
+};
+
+exports.Prisma.ServiceTagOrderByRelevanceFieldEnum = {
+  id: 'id',
+  value: 'value',
+  serviceId: 'serviceId'
+};
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
   STAFF: 'STAFF',
-  CUSTOMER: 'CUSTOMER',
+  ERP_CUSTOMER: 'ERP_CUSTOMER',
+  COMPANY_CUSTOMER: 'COMPANY_CUSTOMER',
   GUEST: 'GUEST'
 };
 
@@ -348,7 +530,8 @@ exports.CompanyCategory = exports.$Enums.CompanyCategory = {
   RETAIL: 'RETAIL',
   TECHNOLOGY: 'TECHNOLOGY',
   TELECOMMUNICATIONS: 'TELECOMMUNICATIONS',
-  TRANSPORTATION: 'TRANSPORTATION'
+  TRANSPORTATION: 'TRANSPORTATION',
+  OTHER: 'OTHER'
 };
 
 exports.BusinessType = exports.$Enums.BusinessType = {
@@ -356,6 +539,12 @@ exports.BusinessType = exports.$Enums.BusinessType = {
   PRODUCTS: 'PRODUCTS',
   SERVICES_AND_PRODUCTS: 'SERVICES_AND_PRODUCTS',
   OTHER: 'OTHER'
+};
+
+exports.EmailProviders = exports.$Enums.EmailProviders = {
+  GMAIL: 'GMAIL',
+  OFFICE365: 'OFFICE365',
+  CUSTOM: 'CUSTOM'
 };
 
 exports.BillingCycle = exports.$Enums.BillingCycle = {
@@ -376,14 +565,268 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   ARCHIVED: 'ARCHIVED'
 };
 
+exports.ProductUnit = exports.$Enums.ProductUnit = {
+  OUNCE_OZ: 'OUNCE_OZ',
+  POUND_LB: 'POUND_LB',
+  DOZEN: 'DOZEN',
+  GRAM_G: 'GRAM_G',
+  KILOGRAM_KG: 'KILOGRAM_KG',
+  LITER_L: 'LITER_L',
+  MILLILITER_ML: 'MILLILITER_ML',
+  GALLON_GAL: 'GALLON_GAL',
+  PACK: 'PACK',
+  BOX: 'BOX',
+  BAG: 'BAG',
+  SET: 'SET',
+  PAIR: 'PAIR',
+  UNIT: 'UNIT'
+};
+
+exports.ProductStatus = exports.$Enums.ProductStatus = {
+  ACTIVE: 'ACTIVE',
+  LIMITED_OFFER: 'LIMITED_OFFER',
+  REGION_BASED: 'REGION_BASED',
+  BACK_ORDER: 'BACK_ORDER',
+  DISCONTINUED: 'DISCONTINUED',
+  OUT_OF_STOCK: 'OUT_OF_STOCK'
+};
+
+exports.DeliveryMethod = exports.$Enums.DeliveryMethod = {
+  ONSITE: 'ONSITE',
+  REMOTE: 'REMOTE',
+  HYBRID: 'HYBRID',
+  DIGITAL: 'DIGITAL',
+  PICKUP: 'PICKUP',
+  SHIP_TO_CUSTOMER: 'SHIP_TO_CUSTOMER',
+  DELIVERY: 'DELIVERY'
+};
+
+exports.ProductCategory = exports.$Enums.ProductCategory = {
+  ELECTRONICS: 'ELECTRONICS',
+  HOME_APPLIANCES: 'HOME_APPLIANCES',
+  CLOTHING: 'CLOTHING',
+  FOOTWEAR: 'FOOTWEAR',
+  BEAUTY_PERSONAL_CARE: 'BEAUTY_PERSONAL_CARE',
+  HEALTH_WELLNESS: 'HEALTH_WELLNESS',
+  GROCERY: 'GROCERY',
+  FURNITURE: 'FURNITURE',
+  HOME_DECOR: 'HOME_DECOR',
+  KITCHEN_DINING: 'KITCHEN_DINING',
+  TOYS_GAMES: 'TOYS_GAMES',
+  BABY_PRODUCTS: 'BABY_PRODUCTS',
+  SPORTS_OUTDOORS: 'SPORTS_OUTDOORS',
+  AUTOMOTIVE: 'AUTOMOTIVE',
+  BOOKS: 'BOOKS',
+  MUSIC_MOVIES: 'MUSIC_MOVIES',
+  OFFICE_SUPPLIES: 'OFFICE_SUPPLIES',
+  PET_SUPPLIES: 'PET_SUPPLIES',
+  JEWELRY: 'JEWELRY',
+  WATCHES: 'WATCHES',
+  TOOLS_HARDWARE: 'TOOLS_HARDWARE',
+  GARDEN_OUTDOOR: 'GARDEN_OUTDOOR',
+  ART_CRAFTS: 'ART_CRAFTS',
+  STATIONERY: 'STATIONERY',
+  OTHER: 'OTHER'
+};
+
+exports.Currency = exports.$Enums.Currency = {
+  AED: 'AED',
+  AFN: 'AFN',
+  ALL: 'ALL',
+  AMD: 'AMD',
+  ANG: 'ANG',
+  AOA: 'AOA',
+  ARS: 'ARS',
+  AUD: 'AUD',
+  AWG: 'AWG',
+  AZN: 'AZN',
+  BAM: 'BAM',
+  BBD: 'BBD',
+  BDT: 'BDT',
+  BGN: 'BGN',
+  BHD: 'BHD',
+  BIF: 'BIF',
+  BMD: 'BMD',
+  BND: 'BND',
+  BOB: 'BOB',
+  BRL: 'BRL',
+  BSD: 'BSD',
+  BTN: 'BTN',
+  BWP: 'BWP',
+  BYN: 'BYN',
+  BZD: 'BZD',
+  CAD: 'CAD',
+  CDF: 'CDF',
+  CHF: 'CHF',
+  CLP: 'CLP',
+  CNY: 'CNY',
+  COP: 'COP',
+  CRC: 'CRC',
+  CUP: 'CUP',
+  CVE: 'CVE',
+  CZK: 'CZK',
+  DJF: 'DJF',
+  DKK: 'DKK',
+  DOP: 'DOP',
+  DZD: 'DZD',
+  EGP: 'EGP',
+  ERN: 'ERN',
+  ETB: 'ETB',
+  EUR: 'EUR',
+  FJD: 'FJD',
+  FKP: 'FKP',
+  FOK: 'FOK',
+  GBP: 'GBP',
+  GEL: 'GEL',
+  GGP: 'GGP',
+  GHS: 'GHS',
+  GIP: 'GIP',
+  GMD: 'GMD',
+  GNF: 'GNF',
+  GTQ: 'GTQ',
+  GYD: 'GYD',
+  HKD: 'HKD',
+  HNL: 'HNL',
+  HRK: 'HRK',
+  HTG: 'HTG',
+  HUF: 'HUF',
+  IDR: 'IDR',
+  ILS: 'ILS',
+  IMP: 'IMP',
+  INR: 'INR',
+  IQD: 'IQD',
+  IRR: 'IRR',
+  ISK: 'ISK',
+  JEP: 'JEP',
+  JMD: 'JMD',
+  JOD: 'JOD',
+  JPY: 'JPY',
+  KES: 'KES',
+  KGS: 'KGS',
+  KHR: 'KHR',
+  KID: 'KID',
+  KMF: 'KMF',
+  KRW: 'KRW',
+  KWD: 'KWD',
+  KYD: 'KYD',
+  KZT: 'KZT',
+  LAK: 'LAK',
+  LBP: 'LBP',
+  LKR: 'LKR',
+  LRD: 'LRD',
+  LSL: 'LSL',
+  LYD: 'LYD',
+  MAD: 'MAD',
+  MDL: 'MDL',
+  MGA: 'MGA',
+  MKD: 'MKD',
+  MMK: 'MMK',
+  MNT: 'MNT',
+  MOP: 'MOP',
+  MRU: 'MRU',
+  MUR: 'MUR',
+  MVR: 'MVR',
+  MWK: 'MWK',
+  MXN: 'MXN',
+  MYR: 'MYR',
+  MZN: 'MZN',
+  NAD: 'NAD',
+  NGN: 'NGN',
+  NIO: 'NIO',
+  NOK: 'NOK',
+  NPR: 'NPR',
+  NZD: 'NZD',
+  OMR: 'OMR',
+  PAB: 'PAB',
+  PEN: 'PEN',
+  PGK: 'PGK',
+  PHP: 'PHP',
+  PKR: 'PKR',
+  PLN: 'PLN',
+  PYG: 'PYG',
+  QAR: 'QAR',
+  RON: 'RON',
+  RSD: 'RSD',
+  RUB: 'RUB',
+  RWF: 'RWF',
+  SAR: 'SAR',
+  SBD: 'SBD',
+  SCR: 'SCR',
+  SDG: 'SDG',
+  SEK: 'SEK',
+  SGD: 'SGD',
+  SHP: 'SHP',
+  SLE: 'SLE',
+  SOS: 'SOS',
+  SRD: 'SRD',
+  SSP: 'SSP',
+  STN: 'STN',
+  SYP: 'SYP',
+  SZL: 'SZL',
+  THB: 'THB',
+  TJS: 'TJS',
+  TMT: 'TMT',
+  TND: 'TND',
+  TOP: 'TOP',
+  TRY: 'TRY',
+  TTD: 'TTD',
+  TVD: 'TVD',
+  TWD: 'TWD',
+  TZS: 'TZS',
+  UAH: 'UAH',
+  UGX: 'UGX',
+  USD: 'USD',
+  UYU: 'UYU',
+  UZS: 'UZS',
+  VES: 'VES',
+  VND: 'VND',
+  VUV: 'VUV',
+  WST: 'WST',
+  XAF: 'XAF',
+  XCD: 'XCD',
+  XOF: 'XOF',
+  XPF: 'XPF',
+  YER: 'YER',
+  ZAR: 'ZAR',
+  ZMW: 'ZMW',
+  ZWL: 'ZWL'
+};
+
+exports.ServiceCategory = exports.$Enums.ServiceCategory = {
+  CONSULTING: 'CONSULTING',
+  SUPPORT: 'SUPPORT',
+  INSTALLATION: 'INSTALLATION',
+  TRAINING: 'TRAINING',
+  DEVELOPMENT: 'DEVELOPMENT',
+  DESIGN: 'DESIGN',
+  MAINTENANCE: 'MAINTENANCE',
+  DELIVERY: 'DELIVERY',
+  SUBSCRIPTION: 'SUBSCRIPTION',
+  MARKETING: 'MARKETING',
+  ANALYTICS: 'ANALYTICS',
+  STRATEGY: 'STRATEGY',
+  SECURITY: 'SECURITY',
+  IMPLEMENTATION: 'IMPLEMENTATION',
+  INTEGRATION: 'INTEGRATION',
+  OUTSOURCING: 'OUTSOURCING',
+  OTHER: 'OTHER'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Company: 'Company',
+  CompanySubdomain: 'CompanySubdomain',
   SubscriptionPlan: 'SubscriptionPlan',
   Feature: 'Feature',
+  CompanyLanding: 'CompanyLanding',
   Project: 'Project',
   ProjectStaff: 'ProjectStaff',
-  ProjectCustomer: 'ProjectCustomer'
+  ProjectCustomer: 'ProjectCustomer',
+  Product: 'Product',
+  Supplier: 'Supplier',
+  CompanyProductCategory: 'CompanyProductCategory',
+  Service: 'Service',
+  ServiceTag: 'ServiceTag'
 };
 
 /**

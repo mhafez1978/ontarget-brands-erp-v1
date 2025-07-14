@@ -26,7 +26,7 @@
 // import type { Company } from "@/generated/prisma";
 
 // type CustomerSidebarMenuProps = {
-//   role: "CUSTOMER" | "ADMIN" | "MANAGER";
+//   role: "ERP_CUSTOMER" | "ADMIN" | "MANAGER";
 //   planKey?: string;
 //   company?: Pick<
 //     Company,
@@ -357,7 +357,7 @@ import {
 import type { Company } from "@/generated/prisma";
 
 type CustomerSidebarMenuProps = {
-  role: "CUSTOMER" | "ADMIN" | "MANAGER";
+  role: "ERP_CUSTOMER" | "ADMIN" | "MANAGER";
   planKey?: string;
   company?: Pick<
     Company,

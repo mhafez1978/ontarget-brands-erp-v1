@@ -1,13 +1,12 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import subdomains from "./subdomains.json";
 
 export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
 };
 
-const allowedDomains = ["localhost:3000", "trillionclues.com"];
+const allowedDomains = ["localhost:3000"];
 
 export default auth(async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
@@ -15,18 +14,26 @@ export default auth(async (request: NextRequest) => {
 
   const subdomain = hostname.split(".")[0];
   const isRootDomainOnly = allowedDomains.includes(hostname);
-  const isKnownSubdomain = subdomains.some((d) => d.subdomain === subdomain);
 
-  // ✅ Allow root domain with no subdomain (e.g., localhost:3000)
   if (isRootDomainOnly) return NextResponse.next();
 
-  // ✅ Rewrite for known subdomain
-  if (isKnownSubdomain) {
+  let valid = false;
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/${subdomain}/validate`);
+    const data = await res.json();
+    valid = data.valid;
+  } catch (err) {
+    console.error("Subdomain check failed:", err);
+  }
+
+  if (valid) {
     const url = request.nextUrl.clone();
     url.pathname = `/${subdomain}${pathname}`;
     return NextResponse.rewrite(url);
   }
 
-  // ❌ Unknown subdomain
-  return new NextResponse("Subdomain not found", { status: 404 });
+  const url = request.nextUrl.clone();
+  url.pathname = "/subdomain-not-found";
+  return NextResponse.rewrite(url);
 });

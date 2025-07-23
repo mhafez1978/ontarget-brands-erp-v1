@@ -80,9 +80,9 @@ const recentOrders = [
 
 export const Dashboard = ({ session }: DashboardProps) => {
   return (
-    <div className="p-8 space-y-8">
+    <div className="w-full p-8 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="w-full flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-1">

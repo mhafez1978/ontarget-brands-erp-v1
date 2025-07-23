@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { OAuthButtons } from "./OAuthButtons";
+import { showToast } from "@/hooks/toast";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -50,7 +51,8 @@ const RegisterForm = () => {
       }
 
       // Optionally redirect or show success
-      alert("Account created!");
+      showToast("success", "Your account was created successfully ...");
+      //showToast("success", "you can now login");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -60,13 +62,13 @@ const RegisterForm = () => {
 
   return (
     <div className="space-y-6">
-      <OAuthButtons isRegister />
+      <OAuthButtons isRegister={true} />
 
       <div className="relative">
         <Separator className="bg-gray-200" />
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="bg-white px-4 text-sm text-gray-500">
-            or create account with email
+            or create account with your email
           </span>
         </div>
       </div>
@@ -81,6 +83,7 @@ const RegisterForm = () => {
             <Input
               id="firstName"
               type="text"
+              placeholder="First Name"
               value={formData.firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
               required
@@ -94,6 +97,7 @@ const RegisterForm = () => {
             <Input
               id="lastName"
               type="text"
+              placeholder="Last Name"
               value={formData.lastName}
               onChange={(e) => handleInputChange("lastName", e.target.value)}
               required
@@ -114,7 +118,7 @@ const RegisterForm = () => {
             onChange={(e) => handleInputChange("email", e.target.value)}
             required
             autoComplete="email"
-            placeholder="name@company.com"
+            placeholder="company@domain.com"
           />
         </div>
 
@@ -130,7 +134,7 @@ const RegisterForm = () => {
             onChange={(e) => handleInputChange("password", e.target.value)}
             required
             autoComplete="new-password"
-            placeholder="Enter your password"
+            placeholder="Your password"
           />
         </div>
 
@@ -148,12 +152,12 @@ const RegisterForm = () => {
             }
             required
             autoComplete="new-password"
-            placeholder="Re-enter your password"
+            placeholder="Confirm Password"
           />
         </div>
 
         {/* Terms */}
-        <div className="flex items-start gap-2">
+        <div className="flex flex-row pt-4 justify-start items-center gap-4">
           <input
             type="checkbox"
             checked={formData.agreeToTerms}
@@ -162,7 +166,7 @@ const RegisterForm = () => {
             }
             required
           />
-          <label className="text-sm text-gray-600">
+          <label className="text-xs text-gray-600">
             I agree to the{" "}
             <span className="font-medium underline cursor-pointer">Terms</span>{" "}
             and{" "}
@@ -171,16 +175,14 @@ const RegisterForm = () => {
             </span>
           </label>
         </div>
-
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-
         <Button
           type="submit"
-          className="w-full"
+          className="w-full bg-sky-400 hover:bg-sky-300 mt-8"
           disabled={isSubmitting || !formData.agreeToTerms}
         >
           {isSubmitting ? "Creating..." : "Create Account"}
         </Button>
+        {error && <p className="text-red-600 text-sm">{error}</p>}
       </form>
     </div>
   );

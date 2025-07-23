@@ -2,10 +2,7 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { CompanyCategory, BusinessType } from "@/generated/prisma";
-import countries from "i18n-iso-countries";
-import enLocale from "i18n-iso-countries/langs/en.json";
-import { allCountries } from "country-region-data";
-import type { CountryData } from "country-region-data";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -16,9 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { showToast } from "@/hooks/toast";
 
-// Initialize i18n-iso-countries
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+import { allCountries } from "country-region-data";
+import type { CountryData } from "country-region-data";
 countries.registerLocale(enLocale);
 
 interface Feature {
@@ -250,26 +251,25 @@ export const CreateCompanyForm = ({ userId, onSuccess }: Props) => {
           ))}
 
           {/* State/Province */}
-          {
-            <div className="space-y-1">
-              <Label>State/Province</Label>
-              <Select
-                value={formData.state}
-                onValueChange={(val) => handleChange("state", val)}
-              >
-                <SelectTrigger className="w-full h-9">
-                  <SelectValue placeholder="Select State/Province" />
-                </SelectTrigger>
-                <SelectContent>
-                  {states.map((s) => (
-                    <SelectItem key={s.name} value={s.name}>
-                      {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          }
+
+          <div className="space-y-1">
+            <Label>State/Province</Label>
+            <Select
+              value={formData.state}
+              onValueChange={(val) => handleChange("state", val)}
+            >
+              <SelectTrigger className="w-full h-9">
+                <SelectValue placeholder="Select State/Province" />
+              </SelectTrigger>
+              <SelectContent>
+                {states.map((s) => (
+                  <SelectItem key={s.name} value={s.name}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* Country */}
           <div className="space-y-1">

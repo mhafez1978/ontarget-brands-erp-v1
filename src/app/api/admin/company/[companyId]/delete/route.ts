@@ -1,0 +1,67 @@
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { companyId: string } }
+) {
+  const { companyId } = params;
+  if (!companyId) {
+    return new Response(JSON.stringify({ error: "Company ID is required" }), {
+      status: 400,
+    });
+  }
+
+  try {
+    const session = await auth();
+    if (!session || !session.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    if (!["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+      });
+    }
+
+    const getCompany = await prisma.company.findUnique({
+      where: { id: companyId },
+    });
+
+    if (!getCompany) {
+      return new Response(JSON.stringify({ error: "Company not found" }), {
+        status: 404,
+      });
+    }
+
+    const company = getCompany;
+
+    if (session.user.id !== company.ownerId) {
+      return new Response(
+        JSON.stringify({
+          error: "You cannot delete this company, you dont have permissions..",
+        }),
+        {
+          status: 403,
+        }
+      );
+    }
+    const deletedCompany = await prisma.company.delete({
+      where: { id: companyId },
+    });
+
+    return new Response(
+      JSON.stringify({ message: "Company deleted successfully" }),
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("Error deleting company:", error);
+    return new Response(JSON.stringify({ error: "Failed to delete company" }), {
+      status: 500,
+    });
+  }
+}

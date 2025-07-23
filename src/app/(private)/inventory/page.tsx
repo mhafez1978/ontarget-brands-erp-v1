@@ -7,14 +7,13 @@ const InventoryPage = async () => {
   if (!session || !session.user) {
     return redirect("/auth");
   }
-  const userId = session.user.id;
+  //const userId = session.user.id;
   const userRole = session.user.role;
   const subscriptionPlan = session.user.subscriptionPlan;
   if (
     !userRole ||
     !["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(userRole) ||
-    !subscriptionPlan ||
-    subscriptionPlan.key.toLowerCase() === "starter"
+    !subscriptionPlan
   ) {
     // Access denied
     return (

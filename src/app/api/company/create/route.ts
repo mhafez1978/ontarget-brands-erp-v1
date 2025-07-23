@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     const ownerExists = await prisma.user.findUnique({
       where: { id: ownerId },
     });
+
     if (!ownerExists) {
       return NextResponse.json({ error: "Owner not found" }, { status: 404 });
     }
@@ -48,6 +49,7 @@ export async function POST(req: NextRequest) {
     const planExists = await prisma.subscriptionPlan.findUnique({
       where: { id: subscriptionPlanId },
     });
+
     if (!planExists) {
       return NextResponse.json(
         { error: "Subscription plan not found" },
@@ -59,6 +61,7 @@ export async function POST(req: NextRequest) {
       const existingDomain = await prisma.company.findUnique({
         where: { domain },
       });
+
       if (existingDomain) {
         return NextResponse.json(
           { error: "Domain already in use" },
@@ -94,7 +97,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    //console.log("########### Company created successfully:", newCompany);
+    const addSubdomain = await prisma.companySubdomain.create({
+      data: {
+        subdomain: domain,
+        company: {
+          connect: { id: newCompany.id },
+        },
+      },
+    });
 
     // lets promote user to admin on company creation
     const promotedUser = await prisma.user.update({

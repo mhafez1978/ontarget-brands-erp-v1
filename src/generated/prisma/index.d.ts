@@ -83,6 +83,11 @@ export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
  * 
  */
 export type ServiceTag = $Result.DefaultSelection<Prisma.$ServiceTagPayload>
+/**
+ * Model TimeEntry
+ * 
+ */
+export type TimeEntry = $Result.DefaultSelection<Prisma.$TimeEntryPayload>
 
 /**
  * Enums
@@ -766,6 +771,16 @@ export class PrismaClient<
     * ```
     */
   get serviceTag(): Prisma.ServiceTagDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.timeEntry`: Exposes CRUD operations for the **TimeEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TimeEntries
+    * const timeEntries = await prisma.timeEntry.findMany()
+    * ```
+    */
+  get timeEntry(): Prisma.TimeEntryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -824,8 +839,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.11.1
-   * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
+   * Prisma Client JS version: 6.12.0
+   * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
    */
   export type PrismaVersion = {
     client: string
@@ -1219,7 +1234,8 @@ export namespace Prisma {
     Supplier: 'Supplier',
     CompanyProductCategory: 'CompanyProductCategory',
     Service: 'Service',
-    ServiceTag: 'ServiceTag'
+    ServiceTag: 'ServiceTag',
+    TimeEntry: 'TimeEntry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1238,7 +1254,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "company" | "companySubdomain" | "subscriptionPlan" | "feature" | "companyLanding" | "project" | "projectStaff" | "projectCustomer" | "product" | "supplier" | "companyProductCategory" | "service" | "serviceTag"
+      modelProps: "user" | "company" | "companySubdomain" | "subscriptionPlan" | "feature" | "companyLanding" | "project" | "projectStaff" | "projectCustomer" | "product" | "supplier" | "companyProductCategory" | "service" | "serviceTag" | "timeEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2166,6 +2182,72 @@ export namespace Prisma {
           }
         }
       }
+      TimeEntry: {
+        payload: Prisma.$TimeEntryPayload<ExtArgs>
+        fields: Prisma.TimeEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TimeEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TimeEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.TimeEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TimeEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          findMany: {
+            args: Prisma.TimeEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>[]
+          }
+          create: {
+            args: Prisma.TimeEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          createMany: {
+            args: Prisma.TimeEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.TimeEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          update: {
+            args: Prisma.TimeEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.TimeEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TimeEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TimeEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TimeEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.TimeEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTimeEntry>
+          }
+          groupBy: {
+            args: Prisma.TimeEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TimeEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TimeEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<TimeEntryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2264,6 +2346,7 @@ export namespace Prisma {
     companyProductCategory?: CompanyProductCategoryOmit
     service?: ServiceOmit
     serviceTag?: ServiceTagOmit
+    timeEntry?: TimeEntryOmit
   }
 
   /* Types for Logging */
@@ -2363,6 +2446,7 @@ export namespace Prisma {
     ProjectCustomer: number
     ProjectStaff: number
     Project: number
+    TimeEntry: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2371,6 +2455,7 @@ export namespace Prisma {
     ProjectCustomer?: boolean | UserCountOutputTypeCountProjectCustomerArgs
     ProjectStaff?: boolean | UserCountOutputTypeCountProjectStaffArgs
     Project?: boolean | UserCountOutputTypeCountProjectArgs
+    TimeEntry?: boolean | UserCountOutputTypeCountTimeEntryArgs
   }
 
   // Custom InputTypes
@@ -2419,6 +2504,13 @@ export namespace Prisma {
     where?: ProjectWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTimeEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimeEntryWhereInput
+  }
+
 
   /**
    * Count Type CompanyCountOutputType
@@ -2434,6 +2526,7 @@ export namespace Prisma {
     Supplier: number
     CompanyProductCategory: number
     Service: number
+    TimeEntry: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2446,6 +2539,7 @@ export namespace Prisma {
     Supplier?: boolean | CompanyCountOutputTypeCountSupplierArgs
     CompanyProductCategory?: boolean | CompanyCountOutputTypeCountCompanyProductCategoryArgs
     Service?: boolean | CompanyCountOutputTypeCountServiceArgs
+    TimeEntry?: boolean | CompanyCountOutputTypeCountTimeEntryArgs
   }
 
   // Custom InputTypes
@@ -2520,6 +2614,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ServiceWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountTimeEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimeEntryWhereInput
   }
 
 
@@ -2781,6 +2882,8 @@ export namespace Prisma {
     phone: string | null
     birthDate: Date | null
     password: string | null
+    mfaEnabled: boolean | null
+    mfaSecret: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
@@ -2805,6 +2908,8 @@ export namespace Prisma {
     phone: string | null
     birthDate: Date | null
     password: string | null
+    mfaEnabled: boolean | null
+    mfaSecret: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
@@ -2829,6 +2934,8 @@ export namespace Prisma {
     phone: number
     birthDate: number
     password: number
+    mfaEnabled: number
+    mfaSecret: number
     addressLine1: number
     addressLine2: number
     city: number
@@ -2855,6 +2962,8 @@ export namespace Prisma {
     phone?: true
     birthDate?: true
     password?: true
+    mfaEnabled?: true
+    mfaSecret?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
@@ -2879,6 +2988,8 @@ export namespace Prisma {
     phone?: true
     birthDate?: true
     password?: true
+    mfaEnabled?: true
+    mfaSecret?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
@@ -2903,6 +3014,8 @@ export namespace Prisma {
     phone?: true
     birthDate?: true
     password?: true
+    mfaEnabled?: true
+    mfaSecret?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
@@ -3000,6 +3113,8 @@ export namespace Prisma {
     phone: string | null
     birthDate: Date | null
     password: string
+    mfaEnabled: boolean
+    mfaSecret: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
@@ -3041,6 +3156,8 @@ export namespace Prisma {
     phone?: boolean
     birthDate?: boolean
     password?: boolean
+    mfaEnabled?: boolean
+    mfaSecret?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
@@ -3060,6 +3177,7 @@ export namespace Prisma {
     ProjectCustomer?: boolean | User$ProjectCustomerArgs<ExtArgs>
     ProjectStaff?: boolean | User$ProjectStaffArgs<ExtArgs>
     Project?: boolean | User$ProjectArgs<ExtArgs>
+    TimeEntry?: boolean | User$TimeEntryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3074,6 +3192,8 @@ export namespace Prisma {
     phone?: boolean
     birthDate?: boolean
     password?: boolean
+    mfaEnabled?: boolean
+    mfaSecret?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
@@ -3089,7 +3209,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "phone" | "birthDate" | "password" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "isActive" | "role" | "lastLogin" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "phone" | "birthDate" | "password" | "mfaEnabled" | "mfaSecret" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "isActive" | "role" | "lastLogin" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ownedCompanies?: boolean | User$ownedCompaniesArgs<ExtArgs>
     companies?: boolean | User$companiesArgs<ExtArgs>
@@ -3097,6 +3217,7 @@ export namespace Prisma {
     ProjectCustomer?: boolean | User$ProjectCustomerArgs<ExtArgs>
     ProjectStaff?: boolean | User$ProjectStaffArgs<ExtArgs>
     Project?: boolean | User$ProjectArgs<ExtArgs>
+    TimeEntry?: boolean | User$TimeEntryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3109,6 +3230,7 @@ export namespace Prisma {
       ProjectCustomer: Prisma.$ProjectCustomerPayload<ExtArgs>[]
       ProjectStaff: Prisma.$ProjectStaffPayload<ExtArgs>[]
       Project: Prisma.$ProjectPayload<ExtArgs>[]
+      TimeEntry: Prisma.$TimeEntryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3119,6 +3241,8 @@ export namespace Prisma {
       phone: string | null
       birthDate: Date | null
       password: string
+      mfaEnabled: boolean
+      mfaSecret: string | null
       addressLine1: string | null
       addressLine2: string | null
       city: string | null
@@ -3478,6 +3602,7 @@ export namespace Prisma {
     ProjectCustomer<T extends User$ProjectCustomerArgs<ExtArgs> = {}>(args?: Subset<T, User$ProjectCustomerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ProjectStaff<T extends User$ProjectStaffArgs<ExtArgs> = {}>(args?: Subset<T, User$ProjectStaffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Project<T extends User$ProjectArgs<ExtArgs> = {}>(args?: Subset<T, User$ProjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    TimeEntry<T extends User$TimeEntryArgs<ExtArgs> = {}>(args?: Subset<T, User$TimeEntryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3515,6 +3640,8 @@ export namespace Prisma {
     readonly phone: FieldRef<"User", 'String'>
     readonly birthDate: FieldRef<"User", 'DateTime'>
     readonly password: FieldRef<"User", 'String'>
+    readonly mfaEnabled: FieldRef<"User", 'Boolean'>
+    readonly mfaSecret: FieldRef<"User", 'String'>
     readonly addressLine1: FieldRef<"User", 'String'>
     readonly addressLine2: FieldRef<"User", 'String'>
     readonly city: FieldRef<"User", 'String'>
@@ -4010,6 +4137,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.TimeEntry
+   */
+  export type User$TimeEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    where?: TimeEntryWhereInput
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    cursor?: TimeEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TimeEntryScalarFieldEnum | TimeEntryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4371,6 +4522,7 @@ export namespace Prisma {
     Supplier?: boolean | Company$SupplierArgs<ExtArgs>
     CompanyProductCategory?: boolean | Company$CompanyProductCategoryArgs<ExtArgs>
     Service?: boolean | Company$ServiceArgs<ExtArgs>
+    TimeEntry?: boolean | Company$TimeEntryArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -4418,6 +4570,7 @@ export namespace Prisma {
     Supplier?: boolean | Company$SupplierArgs<ExtArgs>
     CompanyProductCategory?: boolean | Company$CompanyProductCategoryArgs<ExtArgs>
     Service?: boolean | Company$ServiceArgs<ExtArgs>
+    TimeEntry?: boolean | Company$TimeEntryArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4435,6 +4588,7 @@ export namespace Prisma {
       Supplier: Prisma.$SupplierPayload<ExtArgs>[]
       CompanyProductCategory: Prisma.$CompanyProductCategoryPayload<ExtArgs>[]
       Service: Prisma.$ServicePayload<ExtArgs>[]
+      TimeEntry: Prisma.$TimeEntryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4814,6 +4968,7 @@ export namespace Prisma {
     Supplier<T extends Company$SupplierArgs<ExtArgs> = {}>(args?: Subset<T, Company$SupplierArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     CompanyProductCategory<T extends Company$CompanyProductCategoryArgs<ExtArgs> = {}>(args?: Subset<T, Company$CompanyProductCategoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyProductCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Service<T extends Company$ServiceArgs<ExtArgs> = {}>(args?: Subset<T, Company$ServiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    TimeEntry<T extends Company$TimeEntryArgs<ExtArgs> = {}>(args?: Subset<T, Company$TimeEntryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5425,6 +5580,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Company.TimeEntry
+   */
+  export type Company$TimeEntryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    where?: TimeEntryWhereInput
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    cursor?: TimeEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TimeEntryScalarFieldEnum | TimeEntryScalarFieldEnum[]
   }
 
   /**
@@ -17913,6 +18092,1017 @@ export namespace Prisma {
 
 
   /**
+   * Model TimeEntry
+   */
+
+  export type AggregateTimeEntry = {
+    _count: TimeEntryCountAggregateOutputType | null
+    _avg: TimeEntryAvgAggregateOutputType | null
+    _sum: TimeEntrySumAggregateOutputType | null
+    _min: TimeEntryMinAggregateOutputType | null
+    _max: TimeEntryMaxAggregateOutputType | null
+  }
+
+  export type TimeEntryAvgAggregateOutputType = {
+    duration: number | null
+  }
+
+  export type TimeEntrySumAggregateOutputType = {
+    duration: number | null
+  }
+
+  export type TimeEntryMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    companyId: string | null
+    startTime: Date | null
+    endTime: Date | null
+    duration: number | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TimeEntryMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    companyId: string | null
+    startTime: Date | null
+    endTime: Date | null
+    duration: number | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TimeEntryCountAggregateOutputType = {
+    id: number
+    userId: number
+    companyId: number
+    startTime: number
+    endTime: number
+    duration: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TimeEntryAvgAggregateInputType = {
+    duration?: true
+  }
+
+  export type TimeEntrySumAggregateInputType = {
+    duration?: true
+  }
+
+  export type TimeEntryMinAggregateInputType = {
+    id?: true
+    userId?: true
+    companyId?: true
+    startTime?: true
+    endTime?: true
+    duration?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TimeEntryMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    companyId?: true
+    startTime?: true
+    endTime?: true
+    duration?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TimeEntryCountAggregateInputType = {
+    id?: true
+    userId?: true
+    companyId?: true
+    startTime?: true
+    endTime?: true
+    duration?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TimeEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TimeEntry to aggregate.
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TimeEntries to fetch.
+     */
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TimeEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TimeEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TimeEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TimeEntries
+    **/
+    _count?: true | TimeEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TimeEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TimeEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TimeEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TimeEntryMaxAggregateInputType
+  }
+
+  export type GetTimeEntryAggregateType<T extends TimeEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateTimeEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTimeEntry[P]>
+      : GetScalarType<T[P], AggregateTimeEntry[P]>
+  }
+
+
+
+
+  export type TimeEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimeEntryWhereInput
+    orderBy?: TimeEntryOrderByWithAggregationInput | TimeEntryOrderByWithAggregationInput[]
+    by: TimeEntryScalarFieldEnum[] | TimeEntryScalarFieldEnum
+    having?: TimeEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TimeEntryCountAggregateInputType | true
+    _avg?: TimeEntryAvgAggregateInputType
+    _sum?: TimeEntrySumAggregateInputType
+    _min?: TimeEntryMinAggregateInputType
+    _max?: TimeEntryMaxAggregateInputType
+  }
+
+  export type TimeEntryGroupByOutputType = {
+    id: string
+    userId: string
+    companyId: string
+    startTime: Date
+    endTime: Date | null
+    duration: number | null
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TimeEntryCountAggregateOutputType | null
+    _avg: TimeEntryAvgAggregateOutputType | null
+    _sum: TimeEntrySumAggregateOutputType | null
+    _min: TimeEntryMinAggregateOutputType | null
+    _max: TimeEntryMaxAggregateOutputType | null
+  }
+
+  type GetTimeEntryGroupByPayload<T extends TimeEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TimeEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TimeEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TimeEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], TimeEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TimeEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    companyId?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    duration?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["timeEntry"]>
+
+
+
+  export type TimeEntrySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    companyId?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    duration?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TimeEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "companyId" | "startTime" | "endTime" | "duration" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["timeEntry"]>
+  export type TimeEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $TimeEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TimeEntry"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      company: Prisma.$CompanyPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      companyId: string
+      startTime: Date
+      endTime: Date | null
+      duration: number | null
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["timeEntry"]>
+    composites: {}
+  }
+
+  type TimeEntryGetPayload<S extends boolean | null | undefined | TimeEntryDefaultArgs> = $Result.GetResult<Prisma.$TimeEntryPayload, S>
+
+  type TimeEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TimeEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TimeEntryCountAggregateInputType | true
+    }
+
+  export interface TimeEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TimeEntry'], meta: { name: 'TimeEntry' } }
+    /**
+     * Find zero or one TimeEntry that matches the filter.
+     * @param {TimeEntryFindUniqueArgs} args - Arguments to find a TimeEntry
+     * @example
+     * // Get one TimeEntry
+     * const timeEntry = await prisma.timeEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TimeEntryFindUniqueArgs>(args: SelectSubset<T, TimeEntryFindUniqueArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TimeEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TimeEntryFindUniqueOrThrowArgs} args - Arguments to find a TimeEntry
+     * @example
+     * // Get one TimeEntry
+     * const timeEntry = await prisma.timeEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TimeEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, TimeEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TimeEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryFindFirstArgs} args - Arguments to find a TimeEntry
+     * @example
+     * // Get one TimeEntry
+     * const timeEntry = await prisma.timeEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TimeEntryFindFirstArgs>(args?: SelectSubset<T, TimeEntryFindFirstArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TimeEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryFindFirstOrThrowArgs} args - Arguments to find a TimeEntry
+     * @example
+     * // Get one TimeEntry
+     * const timeEntry = await prisma.timeEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TimeEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, TimeEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TimeEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TimeEntries
+     * const timeEntries = await prisma.timeEntry.findMany()
+     * 
+     * // Get first 10 TimeEntries
+     * const timeEntries = await prisma.timeEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const timeEntryWithIdOnly = await prisma.timeEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TimeEntryFindManyArgs>(args?: SelectSubset<T, TimeEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TimeEntry.
+     * @param {TimeEntryCreateArgs} args - Arguments to create a TimeEntry.
+     * @example
+     * // Create one TimeEntry
+     * const TimeEntry = await prisma.timeEntry.create({
+     *   data: {
+     *     // ... data to create a TimeEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends TimeEntryCreateArgs>(args: SelectSubset<T, TimeEntryCreateArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TimeEntries.
+     * @param {TimeEntryCreateManyArgs} args - Arguments to create many TimeEntries.
+     * @example
+     * // Create many TimeEntries
+     * const timeEntry = await prisma.timeEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TimeEntryCreateManyArgs>(args?: SelectSubset<T, TimeEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a TimeEntry.
+     * @param {TimeEntryDeleteArgs} args - Arguments to delete one TimeEntry.
+     * @example
+     * // Delete one TimeEntry
+     * const TimeEntry = await prisma.timeEntry.delete({
+     *   where: {
+     *     // ... filter to delete one TimeEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TimeEntryDeleteArgs>(args: SelectSubset<T, TimeEntryDeleteArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TimeEntry.
+     * @param {TimeEntryUpdateArgs} args - Arguments to update one TimeEntry.
+     * @example
+     * // Update one TimeEntry
+     * const timeEntry = await prisma.timeEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TimeEntryUpdateArgs>(args: SelectSubset<T, TimeEntryUpdateArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TimeEntries.
+     * @param {TimeEntryDeleteManyArgs} args - Arguments to filter TimeEntries to delete.
+     * @example
+     * // Delete a few TimeEntries
+     * const { count } = await prisma.timeEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TimeEntryDeleteManyArgs>(args?: SelectSubset<T, TimeEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TimeEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TimeEntries
+     * const timeEntry = await prisma.timeEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TimeEntryUpdateManyArgs>(args: SelectSubset<T, TimeEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TimeEntry.
+     * @param {TimeEntryUpsertArgs} args - Arguments to update or create a TimeEntry.
+     * @example
+     * // Update or create a TimeEntry
+     * const timeEntry = await prisma.timeEntry.upsert({
+     *   create: {
+     *     // ... data to create a TimeEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TimeEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TimeEntryUpsertArgs>(args: SelectSubset<T, TimeEntryUpsertArgs<ExtArgs>>): Prisma__TimeEntryClient<$Result.GetResult<Prisma.$TimeEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TimeEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryCountArgs} args - Arguments to filter TimeEntries to count.
+     * @example
+     * // Count the number of TimeEntries
+     * const count = await prisma.timeEntry.count({
+     *   where: {
+     *     // ... the filter for the TimeEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends TimeEntryCountArgs>(
+      args?: Subset<T, TimeEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TimeEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TimeEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TimeEntryAggregateArgs>(args: Subset<T, TimeEntryAggregateArgs>): Prisma.PrismaPromise<GetTimeEntryAggregateType<T>>
+
+    /**
+     * Group by TimeEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TimeEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TimeEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TimeEntryGroupByArgs['orderBy'] }
+        : { orderBy?: TimeEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TimeEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTimeEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TimeEntry model
+   */
+  readonly fields: TimeEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TimeEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TimeEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TimeEntry model
+   */
+  interface TimeEntryFieldRefs {
+    readonly id: FieldRef<"TimeEntry", 'String'>
+    readonly userId: FieldRef<"TimeEntry", 'String'>
+    readonly companyId: FieldRef<"TimeEntry", 'String'>
+    readonly startTime: FieldRef<"TimeEntry", 'DateTime'>
+    readonly endTime: FieldRef<"TimeEntry", 'DateTime'>
+    readonly duration: FieldRef<"TimeEntry", 'Int'>
+    readonly description: FieldRef<"TimeEntry", 'String'>
+    readonly createdAt: FieldRef<"TimeEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"TimeEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TimeEntry findUnique
+   */
+  export type TimeEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TimeEntry to fetch.
+     */
+    where: TimeEntryWhereUniqueInput
+  }
+
+  /**
+   * TimeEntry findUniqueOrThrow
+   */
+  export type TimeEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TimeEntry to fetch.
+     */
+    where: TimeEntryWhereUniqueInput
+  }
+
+  /**
+   * TimeEntry findFirst
+   */
+  export type TimeEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TimeEntry to fetch.
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TimeEntries to fetch.
+     */
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TimeEntries.
+     */
+    cursor?: TimeEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TimeEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TimeEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TimeEntries.
+     */
+    distinct?: TimeEntryScalarFieldEnum | TimeEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TimeEntry findFirstOrThrow
+   */
+  export type TimeEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TimeEntry to fetch.
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TimeEntries to fetch.
+     */
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TimeEntries.
+     */
+    cursor?: TimeEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TimeEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TimeEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TimeEntries.
+     */
+    distinct?: TimeEntryScalarFieldEnum | TimeEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TimeEntry findMany
+   */
+  export type TimeEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which TimeEntries to fetch.
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TimeEntries to fetch.
+     */
+    orderBy?: TimeEntryOrderByWithRelationInput | TimeEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TimeEntries.
+     */
+    cursor?: TimeEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TimeEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TimeEntries.
+     */
+    skip?: number
+    distinct?: TimeEntryScalarFieldEnum | TimeEntryScalarFieldEnum[]
+  }
+
+  /**
+   * TimeEntry create
+   */
+  export type TimeEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TimeEntry.
+     */
+    data: XOR<TimeEntryCreateInput, TimeEntryUncheckedCreateInput>
+  }
+
+  /**
+   * TimeEntry createMany
+   */
+  export type TimeEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TimeEntries.
+     */
+    data: TimeEntryCreateManyInput | TimeEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TimeEntry update
+   */
+  export type TimeEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TimeEntry.
+     */
+    data: XOR<TimeEntryUpdateInput, TimeEntryUncheckedUpdateInput>
+    /**
+     * Choose, which TimeEntry to update.
+     */
+    where: TimeEntryWhereUniqueInput
+  }
+
+  /**
+   * TimeEntry updateMany
+   */
+  export type TimeEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TimeEntries.
+     */
+    data: XOR<TimeEntryUpdateManyMutationInput, TimeEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which TimeEntries to update
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * Limit how many TimeEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TimeEntry upsert
+   */
+  export type TimeEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TimeEntry to update in case it exists.
+     */
+    where: TimeEntryWhereUniqueInput
+    /**
+     * In case the TimeEntry found by the `where` argument doesn't exist, create a new TimeEntry with this data.
+     */
+    create: XOR<TimeEntryCreateInput, TimeEntryUncheckedCreateInput>
+    /**
+     * In case the TimeEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TimeEntryUpdateInput, TimeEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * TimeEntry delete
+   */
+  export type TimeEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+    /**
+     * Filter which TimeEntry to delete.
+     */
+    where: TimeEntryWhereUniqueInput
+  }
+
+  /**
+   * TimeEntry deleteMany
+   */
+  export type TimeEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TimeEntries to delete
+     */
+    where?: TimeEntryWhereInput
+    /**
+     * Limit how many TimeEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TimeEntry without action
+   */
+  export type TimeEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimeEntry
+     */
+    select?: TimeEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimeEntry
+     */
+    omit?: TimeEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimeEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -17935,6 +19125,8 @@ export namespace Prisma {
     phone: 'phone',
     birthDate: 'birthDate',
     password: 'password',
+    mfaEnabled: 'mfaEnabled',
+    mfaSecret: 'mfaSecret',
     addressLine1: 'addressLine1',
     addressLine2: 'addressLine2',
     city: 'city',
@@ -18190,6 +19382,21 @@ export namespace Prisma {
   export type ServiceTagScalarFieldEnum = (typeof ServiceTagScalarFieldEnum)[keyof typeof ServiceTagScalarFieldEnum]
 
 
+  export const TimeEntryScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    companyId: 'companyId',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    duration: 'duration',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TimeEntryScalarFieldEnum = (typeof TimeEntryScalarFieldEnum)[keyof typeof TimeEntryScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -18213,6 +19420,7 @@ export namespace Prisma {
     image: 'image',
     phone: 'phone',
     password: 'password',
+    mfaSecret: 'mfaSecret',
     addressLine1: 'addressLine1',
     addressLine2: 'addressLine2',
     city: 'city',
@@ -18395,6 +19603,16 @@ export namespace Prisma {
   export type ServiceTagOrderByRelevanceFieldEnum = (typeof ServiceTagOrderByRelevanceFieldEnum)[keyof typeof ServiceTagOrderByRelevanceFieldEnum]
 
 
+  export const TimeEntryOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    companyId: 'companyId',
+    description: 'description'
+  };
+
+  export type TimeEntryOrderByRelevanceFieldEnum = (typeof TimeEntryOrderByRelevanceFieldEnum)[keyof typeof TimeEntryOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -18541,6 +19759,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
     password?: StringFilter<"User"> | string
+    mfaEnabled?: BoolFilter<"User"> | boolean
+    mfaSecret?: StringNullableFilter<"User"> | string | null
     addressLine1?: StringNullableFilter<"User"> | string | null
     addressLine2?: StringNullableFilter<"User"> | string | null
     city?: StringNullableFilter<"User"> | string | null
@@ -18560,6 +19780,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerListRelationFilter
     ProjectStaff?: ProjectStaffListRelationFilter
     Project?: ProjectListRelationFilter
+    TimeEntry?: TimeEntryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -18571,6 +19792,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
     password?: SortOrder
+    mfaEnabled?: SortOrder
+    mfaSecret?: SortOrderInput | SortOrder
     addressLine1?: SortOrderInput | SortOrder
     addressLine2?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -18590,6 +19813,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerOrderByRelationAggregateInput
     ProjectStaff?: ProjectStaffOrderByRelationAggregateInput
     Project?: ProjectOrderByRelationAggregateInput
+    TimeEntry?: TimeEntryOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -18605,6 +19829,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
     password?: StringFilter<"User"> | string
+    mfaEnabled?: BoolFilter<"User"> | boolean
+    mfaSecret?: StringNullableFilter<"User"> | string | null
     addressLine1?: StringNullableFilter<"User"> | string | null
     addressLine2?: StringNullableFilter<"User"> | string | null
     city?: StringNullableFilter<"User"> | string | null
@@ -18624,6 +19850,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerListRelationFilter
     ProjectStaff?: ProjectStaffListRelationFilter
     Project?: ProjectListRelationFilter
+    TimeEntry?: TimeEntryListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -18635,6 +19862,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
     password?: SortOrder
+    mfaEnabled?: SortOrder
+    mfaSecret?: SortOrderInput | SortOrder
     addressLine1?: SortOrderInput | SortOrder
     addressLine2?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -18665,6 +19894,8 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     birthDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     password?: StringWithAggregatesFilter<"User"> | string
+    mfaEnabled?: BoolWithAggregatesFilter<"User"> | boolean
+    mfaSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     addressLine1?: StringNullableWithAggregatesFilter<"User"> | string | null
     addressLine2?: StringNullableWithAggregatesFilter<"User"> | string | null
     city?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -18721,6 +19952,7 @@ export namespace Prisma {
     Supplier?: SupplierListRelationFilter
     CompanyProductCategory?: CompanyProductCategoryListRelationFilter
     Service?: ServiceListRelationFilter
+    TimeEntry?: TimeEntryListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -18761,6 +19993,7 @@ export namespace Prisma {
     Supplier?: SupplierOrderByRelationAggregateInput
     CompanyProductCategory?: CompanyProductCategoryOrderByRelationAggregateInput
     Service?: ServiceOrderByRelationAggregateInput
+    TimeEntry?: TimeEntryOrderByRelationAggregateInput
     _relevance?: CompanyOrderByRelevanceInput
   }
 
@@ -18805,6 +20038,7 @@ export namespace Prisma {
     Supplier?: SupplierListRelationFilter
     CompanyProductCategory?: CompanyProductCategoryListRelationFilter
     Service?: ServiceListRelationFilter
+    TimeEntry?: TimeEntryListRelationFilter
   }, "id" | "name" | "domain" | "supportEmail" | "salesEmail">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -19957,6 +21191,87 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ServiceTag"> | Date | string
   }
 
+  export type TimeEntryWhereInput = {
+    AND?: TimeEntryWhereInput | TimeEntryWhereInput[]
+    OR?: TimeEntryWhereInput[]
+    NOT?: TimeEntryWhereInput | TimeEntryWhereInput[]
+    id?: StringFilter<"TimeEntry"> | string
+    userId?: StringFilter<"TimeEntry"> | string
+    companyId?: StringFilter<"TimeEntry"> | string
+    startTime?: DateTimeFilter<"TimeEntry"> | Date | string
+    endTime?: DateTimeNullableFilter<"TimeEntry"> | Date | string | null
+    duration?: IntNullableFilter<"TimeEntry"> | number | null
+    description?: StringNullableFilter<"TimeEntry"> | string | null
+    createdAt?: DateTimeFilter<"TimeEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TimeEntry"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }
+
+  export type TimeEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    companyId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    company?: CompanyOrderByWithRelationInput
+    _relevance?: TimeEntryOrderByRelevanceInput
+  }
+
+  export type TimeEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TimeEntryWhereInput | TimeEntryWhereInput[]
+    OR?: TimeEntryWhereInput[]
+    NOT?: TimeEntryWhereInput | TimeEntryWhereInput[]
+    userId?: StringFilter<"TimeEntry"> | string
+    companyId?: StringFilter<"TimeEntry"> | string
+    startTime?: DateTimeFilter<"TimeEntry"> | Date | string
+    endTime?: DateTimeNullableFilter<"TimeEntry"> | Date | string | null
+    duration?: IntNullableFilter<"TimeEntry"> | number | null
+    description?: StringNullableFilter<"TimeEntry"> | string | null
+    createdAt?: DateTimeFilter<"TimeEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TimeEntry"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }, "id">
+
+  export type TimeEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    companyId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TimeEntryCountOrderByAggregateInput
+    _avg?: TimeEntryAvgOrderByAggregateInput
+    _max?: TimeEntryMaxOrderByAggregateInput
+    _min?: TimeEntryMinOrderByAggregateInput
+    _sum?: TimeEntrySumOrderByAggregateInput
+  }
+
+  export type TimeEntryScalarWhereWithAggregatesInput = {
+    AND?: TimeEntryScalarWhereWithAggregatesInput | TimeEntryScalarWhereWithAggregatesInput[]
+    OR?: TimeEntryScalarWhereWithAggregatesInput[]
+    NOT?: TimeEntryScalarWhereWithAggregatesInput | TimeEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TimeEntry"> | string
+    userId?: StringWithAggregatesFilter<"TimeEntry"> | string
+    companyId?: StringWithAggregatesFilter<"TimeEntry"> | string
+    startTime?: DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
+    endTime?: DateTimeNullableWithAggregatesFilter<"TimeEntry"> | Date | string | null
+    duration?: IntNullableWithAggregatesFilter<"TimeEntry"> | number | null
+    description?: StringNullableWithAggregatesFilter<"TimeEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TimeEntry"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -19966,6 +21281,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -19984,6 +21301,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -19995,6 +21313,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -20013,6 +21333,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -20024,6 +21345,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20042,6 +21365,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -20053,6 +21377,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20071,6 +21397,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -20082,6 +21409,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -20106,6 +21435,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20129,6 +21460,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20180,6 +21513,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -20218,6 +21552,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -20256,6 +21591,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -20294,6 +21630,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -21589,6 +22926,88 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TimeEntryCreateInput = {
+    id?: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTimeEntryInput
+    company: CompanyCreateNestedOneWithoutTimeEntryInput
+  }
+
+  export type TimeEntryUncheckedCreateInput = {
+    id?: string
+    userId: string
+    companyId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimeEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTimeEntryNestedInput
+    company?: CompanyUpdateOneRequiredWithoutTimeEntryNestedInput
+  }
+
+  export type TimeEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimeEntryCreateManyInput = {
+    id?: string
+    userId: string
+    companyId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimeEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimeEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -21682,6 +23101,12 @@ export namespace Prisma {
     none?: ProjectWhereInput
   }
 
+  export type TimeEntryListRelationFilter = {
+    every?: TimeEntryWhereInput
+    some?: TimeEntryWhereInput
+    none?: TimeEntryWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -21703,6 +23128,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type TimeEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserOrderByRelevanceInput = {
     fields: UserOrderByRelevanceFieldEnum | UserOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -21718,6 +23147,8 @@ export namespace Prisma {
     phone?: SortOrder
     birthDate?: SortOrder
     password?: SortOrder
+    mfaEnabled?: SortOrder
+    mfaSecret?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
@@ -21742,6 +23173,8 @@ export namespace Prisma {
     phone?: SortOrder
     birthDate?: SortOrder
     password?: SortOrder
+    mfaEnabled?: SortOrder
+    mfaSecret?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
@@ -21766,6 +23199,8 @@ export namespace Prisma {
     phone?: SortOrder
     birthDate?: SortOrder
     password?: SortOrder
+    mfaEnabled?: SortOrder
+    mfaSecret?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
@@ -23094,6 +24529,56 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type TimeEntryOrderByRelevanceInput = {
+    fields: TimeEntryOrderByRelevanceFieldEnum | TimeEntryOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type TimeEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    companyId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    duration?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TimeEntryAvgOrderByAggregateInput = {
+    duration?: SortOrder
+  }
+
+  export type TimeEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    companyId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    duration?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TimeEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    companyId?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    duration?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TimeEntrySumOrderByAggregateInput = {
+    duration?: SortOrder
+  }
+
   export type CompanyCreateNestedManyWithoutOwnerInput = {
     create?: XOR<CompanyCreateWithoutOwnerInput, CompanyUncheckedCreateWithoutOwnerInput> | CompanyCreateWithoutOwnerInput[] | CompanyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: CompanyCreateOrConnectWithoutOwnerInput | CompanyCreateOrConnectWithoutOwnerInput[]
@@ -23134,6 +24619,13 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
+  export type TimeEntryCreateNestedManyWithoutUserInput = {
+    create?: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput> | TimeEntryCreateWithoutUserInput[] | TimeEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutUserInput | TimeEntryCreateOrConnectWithoutUserInput[]
+    createMany?: TimeEntryCreateManyUserInputEnvelope
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+  }
+
   export type CompanyUncheckedCreateNestedManyWithoutOwnerInput = {
     create?: XOR<CompanyCreateWithoutOwnerInput, CompanyUncheckedCreateWithoutOwnerInput> | CompanyCreateWithoutOwnerInput[] | CompanyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: CompanyCreateOrConnectWithoutOwnerInput | CompanyCreateOrConnectWithoutOwnerInput[]
@@ -23166,6 +24658,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectCreateOrConnectWithoutManagerInput | ProjectCreateOrConnectWithoutManagerInput[]
     createMany?: ProjectCreateManyManagerInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type TimeEntryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput> | TimeEntryCreateWithoutUserInput[] | TimeEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutUserInput | TimeEntryCreateOrConnectWithoutUserInput[]
+    createMany?: TimeEntryCreateManyUserInputEnvelope
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -23271,6 +24770,20 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type TimeEntryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput> | TimeEntryCreateWithoutUserInput[] | TimeEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutUserInput | TimeEntryCreateOrConnectWithoutUserInput[]
+    upsert?: TimeEntryUpsertWithWhereUniqueWithoutUserInput | TimeEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TimeEntryCreateManyUserInputEnvelope
+    set?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    disconnect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    delete?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    update?: TimeEntryUpdateWithWhereUniqueWithoutUserInput | TimeEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TimeEntryUpdateManyWithWhereWithoutUserInput | TimeEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
+  }
+
   export type CompanyUncheckedUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<CompanyCreateWithoutOwnerInput, CompanyUncheckedCreateWithoutOwnerInput> | CompanyCreateWithoutOwnerInput[] | CompanyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: CompanyCreateOrConnectWithoutOwnerInput | CompanyCreateOrConnectWithoutOwnerInput[]
@@ -23338,6 +24851,20 @@ export namespace Prisma {
     update?: ProjectUpdateWithWhereUniqueWithoutManagerInput | ProjectUpdateWithWhereUniqueWithoutManagerInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutManagerInput | ProjectUpdateManyWithWhereWithoutManagerInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type TimeEntryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput> | TimeEntryCreateWithoutUserInput[] | TimeEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutUserInput | TimeEntryCreateOrConnectWithoutUserInput[]
+    upsert?: TimeEntryUpsertWithWhereUniqueWithoutUserInput | TimeEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TimeEntryCreateManyUserInputEnvelope
+    set?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    disconnect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    delete?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    update?: TimeEntryUpdateWithWhereUniqueWithoutUserInput | TimeEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TimeEntryUpdateManyWithWhereWithoutUserInput | TimeEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
   }
 
   export type CompanySubdomainCreateNestedManyWithoutCompanyInput = {
@@ -23414,6 +24941,13 @@ export namespace Prisma {
     connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
   }
 
+  export type TimeEntryCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput> | TimeEntryCreateWithoutCompanyInput[] | TimeEntryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutCompanyInput | TimeEntryCreateOrConnectWithoutCompanyInput[]
+    createMany?: TimeEntryCreateManyCompanyInputEnvelope
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+  }
+
   export type CompanySubdomainUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<CompanySubdomainCreateWithoutCompanyInput, CompanySubdomainUncheckedCreateWithoutCompanyInput> | CompanySubdomainCreateWithoutCompanyInput[] | CompanySubdomainUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: CompanySubdomainCreateOrConnectWithoutCompanyInput | CompanySubdomainCreateOrConnectWithoutCompanyInput[]
@@ -23474,6 +25008,13 @@ export namespace Prisma {
     connectOrCreate?: ServiceCreateOrConnectWithoutCompanyInput | ServiceCreateOrConnectWithoutCompanyInput[]
     createMany?: ServiceCreateManyCompanyInputEnvelope
     connect?: ServiceWhereUniqueInput | ServiceWhereUniqueInput[]
+  }
+
+  export type TimeEntryUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput> | TimeEntryCreateWithoutCompanyInput[] | TimeEntryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutCompanyInput | TimeEntryCreateOrConnectWithoutCompanyInput[]
+    createMany?: TimeEntryCreateManyCompanyInputEnvelope
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
   }
 
   export type NullableEnumCompanyCategoryFieldUpdateOperationsInput = {
@@ -23633,6 +25174,20 @@ export namespace Prisma {
     deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
   }
 
+  export type TimeEntryUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput> | TimeEntryCreateWithoutCompanyInput[] | TimeEntryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutCompanyInput | TimeEntryCreateOrConnectWithoutCompanyInput[]
+    upsert?: TimeEntryUpsertWithWhereUniqueWithoutCompanyInput | TimeEntryUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: TimeEntryCreateManyCompanyInputEnvelope
+    set?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    disconnect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    delete?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    update?: TimeEntryUpdateWithWhereUniqueWithoutCompanyInput | TimeEntryUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: TimeEntryUpdateManyWithWhereWithoutCompanyInput | TimeEntryUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
+  }
+
   export type CompanySubdomainUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<CompanySubdomainCreateWithoutCompanyInput, CompanySubdomainUncheckedCreateWithoutCompanyInput> | CompanySubdomainCreateWithoutCompanyInput[] | CompanySubdomainUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: CompanySubdomainCreateOrConnectWithoutCompanyInput | CompanySubdomainCreateOrConnectWithoutCompanyInput[]
@@ -23756,6 +25311,20 @@ export namespace Prisma {
     update?: ServiceUpdateWithWhereUniqueWithoutCompanyInput | ServiceUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: ServiceUpdateManyWithWhereWithoutCompanyInput | ServiceUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
+  }
+
+  export type TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput> | TimeEntryCreateWithoutCompanyInput[] | TimeEntryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: TimeEntryCreateOrConnectWithoutCompanyInput | TimeEntryCreateOrConnectWithoutCompanyInput[]
+    upsert?: TimeEntryUpsertWithWhereUniqueWithoutCompanyInput | TimeEntryUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: TimeEntryCreateManyCompanyInputEnvelope
+    set?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    disconnect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    delete?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    connect?: TimeEntryWhereUniqueInput | TimeEntryWhereUniqueInput[]
+    update?: TimeEntryUpdateWithWhereUniqueWithoutCompanyInput | TimeEntryUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: TimeEntryUpdateManyWithWhereWithoutCompanyInput | TimeEntryUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutCompanySubdomainInput = {
@@ -24442,6 +26011,34 @@ export namespace Prisma {
     deleteMany?: ServiceScalarWhereInput | ServiceScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutTimeEntryInput = {
+    create?: XOR<UserCreateWithoutTimeEntryInput, UserUncheckedCreateWithoutTimeEntryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTimeEntryInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CompanyCreateNestedOneWithoutTimeEntryInput = {
+    create?: XOR<CompanyCreateWithoutTimeEntryInput, CompanyUncheckedCreateWithoutTimeEntryInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutTimeEntryInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTimeEntryNestedInput = {
+    create?: XOR<UserCreateWithoutTimeEntryInput, UserUncheckedCreateWithoutTimeEntryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTimeEntryInput
+    upsert?: UserUpsertWithoutTimeEntryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTimeEntryInput, UserUpdateWithoutTimeEntryInput>, UserUncheckedUpdateWithoutTimeEntryInput>
+  }
+
+  export type CompanyUpdateOneRequiredWithoutTimeEntryNestedInput = {
+    create?: XOR<CompanyCreateWithoutTimeEntryInput, CompanyUncheckedCreateWithoutTimeEntryInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutTimeEntryInput
+    upsert?: CompanyUpsertWithoutTimeEntryInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutTimeEntryInput, CompanyUpdateWithoutTimeEntryInput>, CompanyUncheckedUpdateWithoutTimeEntryInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -24986,6 +26583,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutOwnerInput = {
@@ -25023,6 +26621,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutOwnerInput = {
@@ -25070,6 +26669,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -25107,6 +26707,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -25149,6 +26750,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutActiveUsersInput = {
@@ -25186,6 +26788,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutActiveUsersInput = {
@@ -25288,6 +26891,38 @@ export namespace Prisma {
 
   export type ProjectCreateManyManagerInputEnvelope = {
     data: ProjectCreateManyManagerInput | ProjectCreateManyManagerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TimeEntryCreateWithoutUserInput = {
+    id?: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutTimeEntryInput
+  }
+
+  export type TimeEntryUncheckedCreateWithoutUserInput = {
+    id?: string
+    companyId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimeEntryCreateOrConnectWithoutUserInput = {
+    where: TimeEntryWhereUniqueInput
+    create: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type TimeEntryCreateManyUserInputEnvelope = {
+    data: TimeEntryCreateManyUserInput | TimeEntryCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -25401,6 +27036,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutActiveUsersInput = {
@@ -25438,6 +27074,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ProjectCustomerUpsertWithWhereUniqueWithoutUserInput = {
@@ -25532,6 +27169,37 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
   }
 
+  export type TimeEntryUpsertWithWhereUniqueWithoutUserInput = {
+    where: TimeEntryWhereUniqueInput
+    update: XOR<TimeEntryUpdateWithoutUserInput, TimeEntryUncheckedUpdateWithoutUserInput>
+    create: XOR<TimeEntryCreateWithoutUserInput, TimeEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type TimeEntryUpdateWithWhereUniqueWithoutUserInput = {
+    where: TimeEntryWhereUniqueInput
+    data: XOR<TimeEntryUpdateWithoutUserInput, TimeEntryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TimeEntryUpdateManyWithWhereWithoutUserInput = {
+    where: TimeEntryScalarWhereInput
+    data: XOR<TimeEntryUpdateManyMutationInput, TimeEntryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TimeEntryScalarWhereInput = {
+    AND?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
+    OR?: TimeEntryScalarWhereInput[]
+    NOT?: TimeEntryScalarWhereInput | TimeEntryScalarWhereInput[]
+    id?: StringFilter<"TimeEntry"> | string
+    userId?: StringFilter<"TimeEntry"> | string
+    companyId?: StringFilter<"TimeEntry"> | string
+    startTime?: DateTimeFilter<"TimeEntry"> | Date | string
+    endTime?: DateTimeNullableFilter<"TimeEntry"> | Date | string | null
+    duration?: IntNullableFilter<"TimeEntry"> | number | null
+    description?: StringNullableFilter<"TimeEntry"> | string | null
+    createdAt?: DateTimeFilter<"TimeEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"TimeEntry"> | Date | string
+  }
+
   export type CompanySubdomainCreateWithoutCompanyInput = {
     id?: string
     subdomain: string
@@ -25561,6 +27229,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25578,6 +27248,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOwnedCompaniesInput = {
@@ -25589,6 +27260,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25606,6 +27279,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOwnedCompaniesInput = {
@@ -25622,6 +27296,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25639,6 +27315,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompanyInput = {
@@ -25650,6 +27327,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25667,6 +27346,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompanyInput = {
@@ -25688,6 +27368,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25705,6 +27387,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompaniesInput = {
@@ -25716,6 +27399,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -25733,6 +27418,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompaniesInput = {
@@ -26063,6 +27749,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TimeEntryCreateWithoutCompanyInput = {
+    id?: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTimeEntryInput
+  }
+
+  export type TimeEntryUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    userId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimeEntryCreateOrConnectWithoutCompanyInput = {
+    where: TimeEntryWhereUniqueInput
+    create: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type TimeEntryCreateManyCompanyInputEnvelope = {
+    data: TimeEntryCreateManyCompanyInput | TimeEntryCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CompanySubdomainUpsertWithWhereUniqueWithoutCompanyInput = {
     where: CompanySubdomainWhereUniqueInput
     update: XOR<CompanySubdomainUpdateWithoutCompanyInput, CompanySubdomainUncheckedUpdateWithoutCompanyInput>
@@ -26108,6 +27826,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26125,6 +27845,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedCompaniesInput = {
@@ -26136,6 +27857,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26153,6 +27876,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -26183,6 +27907,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"User"> | string | null
     birthDate?: DateTimeNullableFilter<"User"> | Date | string | null
     password?: StringFilter<"User"> | string
+    mfaEnabled?: BoolFilter<"User"> | boolean
+    mfaSecret?: StringNullableFilter<"User"> | string | null
     addressLine1?: StringNullableFilter<"User"> | string | null
     addressLine2?: StringNullableFilter<"User"> | string | null
     city?: StringNullableFilter<"User"> | string | null
@@ -26467,6 +28193,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Service"> | Date | string
   }
 
+  export type TimeEntryUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: TimeEntryWhereUniqueInput
+    update: XOR<TimeEntryUpdateWithoutCompanyInput, TimeEntryUncheckedUpdateWithoutCompanyInput>
+    create: XOR<TimeEntryCreateWithoutCompanyInput, TimeEntryUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type TimeEntryUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: TimeEntryWhereUniqueInput
+    data: XOR<TimeEntryUpdateWithoutCompanyInput, TimeEntryUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type TimeEntryUpdateManyWithWhereWithoutCompanyInput = {
+    where: TimeEntryScalarWhereInput
+    data: XOR<TimeEntryUpdateManyMutationInput, TimeEntryUncheckedUpdateManyWithoutCompanyInput>
+  }
+
   export type CompanyCreateWithoutCompanySubdomainInput = {
     id?: string
     name: string
@@ -26502,6 +28244,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanySubdomainInput = {
@@ -26539,6 +28282,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanySubdomainInput = {
@@ -26592,6 +28336,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanySubdomainInput = {
@@ -26629,6 +28374,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type FeatureCreateWithoutPlansInput = {
@@ -26691,6 +28437,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSubscriptionPlanInput = {
@@ -26728,6 +28475,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSubscriptionPlanInput = {
@@ -26903,6 +28651,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyLandingInput = {
@@ -26940,6 +28689,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyLandingInput = {
@@ -26993,6 +28743,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyLandingInput = {
@@ -27030,6 +28781,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutProjectInput = {
@@ -27067,6 +28819,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutProjectInput = {
@@ -27104,6 +28857,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutProjectInput = {
@@ -27120,6 +28874,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27137,6 +28893,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectInput = {
@@ -27148,6 +28905,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27165,6 +28924,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectInput = {
@@ -27263,6 +29023,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutProjectInput = {
@@ -27300,6 +29061,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type UserUpsertWithoutProjectInput = {
@@ -27322,6 +29084,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27339,6 +29103,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectInput = {
@@ -27350,6 +29115,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27367,6 +29134,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCustomerUpsertWithoutProjectInput = {
@@ -27464,6 +29232,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27481,6 +29251,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
     ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectStaffInput = {
@@ -27492,6 +29263,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27509,6 +29282,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectStaffInput = {
@@ -27585,6 +29359,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27602,6 +29378,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectStaffInput = {
@@ -27613,6 +29390,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27630,6 +29409,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutCustomerInput = {
@@ -27684,6 +29464,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27701,6 +29483,7 @@ export namespace Prisma {
     company?: CompanyCreateNestedOneWithoutActiveUsersInput
     ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
     Project?: ProjectCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectCustomerInput = {
@@ -27712,6 +29495,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -27729,6 +29514,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
     ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
     Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectCustomerInput = {
@@ -27805,6 +29591,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27822,6 +29610,7 @@ export namespace Prisma {
     company?: CompanyUpdateOneWithoutActiveUsersNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectCustomerInput = {
@@ -27833,6 +29622,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27850,6 +29641,7 @@ export namespace Prisma {
     companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SupplierCreateWithoutProductInput = {
@@ -27958,6 +29750,7 @@ export namespace Prisma {
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutProductInput = {
@@ -27995,6 +29788,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutProductInput = {
@@ -28113,6 +29907,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutProductInput = {
@@ -28150,6 +29945,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ProductCreateWithoutSupplierInput = {
@@ -28237,6 +30033,7 @@ export namespace Prisma {
     Product?: ProductCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutSupplierInput = {
@@ -28274,6 +30071,7 @@ export namespace Prisma {
     Product?: ProductUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutSupplierInput = {
@@ -28343,6 +30141,7 @@ export namespace Prisma {
     Product?: ProductUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSupplierInput = {
@@ -28380,6 +30179,7 @@ export namespace Prisma {
     Product?: ProductUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -28462,6 +30262,7 @@ export namespace Prisma {
     Product?: ProductCreateNestedManyWithoutCompanyInput
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     Service?: ServiceCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCompanyProductCategoryInput = {
@@ -28499,6 +30300,7 @@ export namespace Prisma {
     Product?: ProductUncheckedCreateNestedManyWithoutCompanyInput
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCompanyProductCategoryInput = {
@@ -28603,6 +30405,7 @@ export namespace Prisma {
     Product?: ProductUpdateManyWithoutCompanyNestedInput
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCompanyProductCategoryInput = {
@@ -28640,6 +30443,7 @@ export namespace Prisma {
     Product?: ProductUncheckedUpdateManyWithoutCompanyNestedInput
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ServiceTagCreateWithoutServiceInput = {
@@ -28719,6 +30523,7 @@ export namespace Prisma {
     Product?: ProductCreateNestedManyWithoutCompanyInput
     Supplier?: SupplierCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutServiceInput = {
@@ -28756,6 +30561,7 @@ export namespace Prisma {
     Product?: ProductUncheckedCreateNestedManyWithoutCompanyInput
     Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
+    TimeEntry?: TimeEntryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutServiceInput = {
@@ -28852,6 +30658,7 @@ export namespace Prisma {
     Product?: ProductUpdateManyWithoutCompanyNestedInput
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutServiceInput = {
@@ -28889,6 +30696,7 @@ export namespace Prisma {
     Product?: ProductUncheckedUpdateManyWithoutCompanyNestedInput
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ServiceCreateWithoutTagsInput = {
@@ -29018,6 +30826,314 @@ export namespace Prisma {
     data: XOR<ServiceUpdateManyMutationInput, ServiceUncheckedUpdateManyWithoutTagInput>
   }
 
+  export type UserCreateWithoutTimeEntryInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    phone?: string | null
+    birthDate?: Date | string | null
+    password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    state?: string | null
+    zipCode?: string | null
+    country?: string | null
+    isActive?: boolean
+    role?: $Enums.Role
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    ownedCompanies?: CompanyCreateNestedManyWithoutOwnerInput
+    companies?: CompanyCreateNestedManyWithoutUsersInput
+    company?: CompanyCreateNestedOneWithoutActiveUsersInput
+    ProjectCustomer?: ProjectCustomerCreateNestedManyWithoutUserInput
+    ProjectStaff?: ProjectStaffCreateNestedManyWithoutUserInput
+    Project?: ProjectCreateNestedManyWithoutManagerInput
+  }
+
+  export type UserUncheckedCreateWithoutTimeEntryInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: Date | string | null
+    image?: string | null
+    phone?: string | null
+    birthDate?: Date | string | null
+    password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    state?: string | null
+    zipCode?: string | null
+    country?: string | null
+    companyId?: string | null
+    isActive?: boolean
+    role?: $Enums.Role
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    ownedCompanies?: CompanyUncheckedCreateNestedManyWithoutOwnerInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutUsersInput
+    ProjectCustomer?: ProjectCustomerUncheckedCreateNestedManyWithoutUserInput
+    ProjectStaff?: ProjectStaffUncheckedCreateNestedManyWithoutUserInput
+    Project?: ProjectUncheckedCreateNestedManyWithoutManagerInput
+  }
+
+  export type UserCreateOrConnectWithoutTimeEntryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTimeEntryInput, UserUncheckedCreateWithoutTimeEntryInput>
+  }
+
+  export type CompanyCreateWithoutTimeEntryInput = {
+    id?: string
+    name: string
+    slogan?: string | null
+    category?: $Enums.CompanyCategory | null
+    type?: $Enums.BusinessType | null
+    logo?: string | null
+    domain?: string | null
+    isCustomDomain?: boolean | null
+    phone?: string | null
+    supportEmail?: string | null
+    salesEmail?: string | null
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    state?: string | null
+    zipCode?: string | null
+    country?: string | null
+    emailProvider?: $Enums.EmailProviders | null
+    isActive?: boolean
+    gmailConnected?: boolean
+    office365Connected?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    CompanySubdomain?: CompanySubdomainCreateNestedManyWithoutCompanyInput
+    owner: UserCreateNestedOneWithoutOwnedCompaniesInput
+    activeUsers?: UserCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompaniesInput
+    subscriptionPlan: SubscriptionPlanCreateNestedOneWithoutCompaniesInput
+    Project?: ProjectCreateNestedManyWithoutCompanyInput
+    CompanyLanding?: CompanyLandingCreateNestedManyWithoutCompanyInput
+    Product?: ProductCreateNestedManyWithoutCompanyInput
+    Supplier?: SupplierCreateNestedManyWithoutCompanyInput
+    CompanyProductCategory?: CompanyProductCategoryCreateNestedManyWithoutCompanyInput
+    Service?: ServiceCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutTimeEntryInput = {
+    id?: string
+    name: string
+    slogan?: string | null
+    category?: $Enums.CompanyCategory | null
+    type?: $Enums.BusinessType | null
+    logo?: string | null
+    domain?: string | null
+    isCustomDomain?: boolean | null
+    phone?: string | null
+    supportEmail?: string | null
+    salesEmail?: string | null
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    state?: string | null
+    zipCode?: string | null
+    country?: string | null
+    emailProvider?: $Enums.EmailProviders | null
+    isActive?: boolean
+    gmailConnected?: boolean
+    office365Connected?: boolean
+    ownerId: string
+    subscriptionPlanId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    CompanySubdomain?: CompanySubdomainUncheckedCreateNestedManyWithoutCompanyInput
+    activeUsers?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompaniesInput
+    Project?: ProjectUncheckedCreateNestedManyWithoutCompanyInput
+    CompanyLanding?: CompanyLandingUncheckedCreateNestedManyWithoutCompanyInput
+    Product?: ProductUncheckedCreateNestedManyWithoutCompanyInput
+    Supplier?: SupplierUncheckedCreateNestedManyWithoutCompanyInput
+    CompanyProductCategory?: CompanyProductCategoryUncheckedCreateNestedManyWithoutCompanyInput
+    Service?: ServiceUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutTimeEntryInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutTimeEntryInput, CompanyUncheckedCreateWithoutTimeEntryInput>
+  }
+
+  export type UserUpsertWithoutTimeEntryInput = {
+    update: XOR<UserUpdateWithoutTimeEntryInput, UserUncheckedUpdateWithoutTimeEntryInput>
+    create: XOR<UserCreateWithoutTimeEntryInput, UserUncheckedCreateWithoutTimeEntryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTimeEntryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTimeEntryInput, UserUncheckedUpdateWithoutTimeEntryInput>
+  }
+
+  export type UserUpdateWithoutTimeEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownedCompanies?: CompanyUpdateManyWithoutOwnerNestedInput
+    companies?: CompanyUpdateManyWithoutUsersNestedInput
+    company?: CompanyUpdateOneWithoutActiveUsersNestedInput
+    ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
+    ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
+    Project?: ProjectUpdateManyWithoutManagerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTimeEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownedCompanies?: CompanyUncheckedUpdateManyWithoutOwnerNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutUsersNestedInput
+    ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
+    ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
+    Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+  }
+
+  export type CompanyUpsertWithoutTimeEntryInput = {
+    update: XOR<CompanyUpdateWithoutTimeEntryInput, CompanyUncheckedUpdateWithoutTimeEntryInput>
+    create: XOR<CompanyCreateWithoutTimeEntryInput, CompanyUncheckedCreateWithoutTimeEntryInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutTimeEntryInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutTimeEntryInput, CompanyUncheckedUpdateWithoutTimeEntryInput>
+  }
+
+  export type CompanyUpdateWithoutTimeEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableEnumCompanyCategoryFieldUpdateOperationsInput | $Enums.CompanyCategory | null
+    type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    emailProvider?: NullableEnumEmailProvidersFieldUpdateOperationsInput | $Enums.EmailProviders | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    gmailConnected?: BoolFieldUpdateOperationsInput | boolean
+    office365Connected?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    CompanySubdomain?: CompanySubdomainUpdateManyWithoutCompanyNestedInput
+    owner?: UserUpdateOneRequiredWithoutOwnedCompaniesNestedInput
+    activeUsers?: UserUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompaniesNestedInput
+    subscriptionPlan?: SubscriptionPlanUpdateOneRequiredWithoutCompaniesNestedInput
+    Project?: ProjectUpdateManyWithoutCompanyNestedInput
+    CompanyLanding?: CompanyLandingUpdateManyWithoutCompanyNestedInput
+    Product?: ProductUpdateManyWithoutCompanyNestedInput
+    Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
+    CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
+    Service?: ServiceUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutTimeEntryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slogan?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableEnumCompanyCategoryFieldUpdateOperationsInput | $Enums.CompanyCategory | null
+    type?: NullableEnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomDomain?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    emailProvider?: NullableEnumEmailProvidersFieldUpdateOperationsInput | $Enums.EmailProviders | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    gmailConnected?: BoolFieldUpdateOperationsInput | boolean
+    office365Connected?: BoolFieldUpdateOperationsInput | boolean
+    ownerId?: StringFieldUpdateOperationsInput | string
+    subscriptionPlanId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    CompanySubdomain?: CompanySubdomainUncheckedUpdateManyWithoutCompanyNestedInput
+    activeUsers?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompaniesNestedInput
+    Project?: ProjectUncheckedUpdateManyWithoutCompanyNestedInput
+    CompanyLanding?: CompanyLandingUncheckedUpdateManyWithoutCompanyNestedInput
+    Product?: ProductUncheckedUpdateManyWithoutCompanyNestedInput
+    Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
+    CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
+    Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
   export type CompanyCreateManyOwnerInput = {
     id?: string
     name: string
@@ -29078,6 +31194,17 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
+  export type TimeEntryCreateManyUserInput = {
+    id?: string
+    companyId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CompanyUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -29113,6 +31240,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutOwnerInput = {
@@ -29150,6 +31278,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateManyWithoutOwnerInput = {
@@ -29215,6 +31344,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -29252,6 +31382,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateManyWithoutUsersInput = {
@@ -29383,6 +31514,39 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type TimeEntryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutTimeEntryNestedInput
+  }
+
+  export type TimeEntryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimeEntryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CompanySubdomainCreateManyCompanyInput = {
     id?: string
     subdomain: string
@@ -29397,6 +31561,8 @@ export namespace Prisma {
     phone?: string | null
     birthDate?: Date | string | null
     password: string
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
@@ -29514,6 +31680,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type TimeEntryCreateManyCompanyInput = {
+    id?: string
+    userId: string
+    startTime: Date | string
+    endTime?: Date | string | null
+    duration?: number | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CompanySubdomainUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     subdomain?: StringFieldUpdateOperationsInput | string
@@ -29538,6 +31715,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29555,6 +31734,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -29566,6 +31746,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29583,6 +31765,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -29594,6 +31777,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29617,6 +31802,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29634,6 +31821,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUpdateManyWithoutUserNestedInput
     Project?: ProjectUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompaniesInput = {
@@ -29645,6 +31833,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29662,6 +31852,7 @@ export namespace Prisma {
     ProjectCustomer?: ProjectCustomerUncheckedUpdateManyWithoutUserNestedInput
     ProjectStaff?: ProjectStaffUncheckedUpdateManyWithoutUserNestedInput
     Project?: ProjectUncheckedUpdateManyWithoutManagerNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompaniesInput = {
@@ -29673,6 +31864,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password?: StringFieldUpdateOperationsInput | string
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30009,6 +32202,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TimeEntryUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTimeEntryNestedInput
+  }
+
+  export type TimeEntryUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimeEntryUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CompanyCreateManySubscriptionPlanInput = {
     id?: string
     name: string
@@ -30102,6 +32328,7 @@ export namespace Prisma {
     Supplier?: SupplierUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutSubscriptionPlanInput = {
@@ -30139,6 +32366,7 @@ export namespace Prisma {
     Supplier?: SupplierUncheckedUpdateManyWithoutCompanyNestedInput
     CompanyProductCategory?: CompanyProductCategoryUncheckedUpdateManyWithoutCompanyNestedInput
     Service?: ServiceUncheckedUpdateManyWithoutCompanyNestedInput
+    TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateManyWithoutSubscriptionPlanInput = {

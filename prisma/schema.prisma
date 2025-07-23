@@ -17,6 +17,10 @@ model User {
   phone         String?   @db.VarChar(20)
   birthDate     DateTime?
   password      String    @db.VarChar(255)
+  
+  mfaEnabled   Boolean  @default(false)
+  mfaSecret    String?  
+
   addressLine1  String?   @db.VarChar(255)
   addressLine2  String?   @db.VarChar(255)
   city          String?   @db.VarChar(100)
@@ -32,7 +36,7 @@ model User {
 
   // Active company context
   companyId String?
-  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull) // Clear active company if company is deleted
+  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull)
 
   isActive        Boolean           @default(true)
   role            Role              @default(ERP_CUSTOMER)
@@ -45,6 +49,7 @@ model User {
   Project         Project[]
 
   @@map("users")
+  TimeEntry TimeEntry[]
 }
 
 model Company {
@@ -82,8 +87,7 @@ model Company {
   users User[] @relation("CompanyUsers")
 
   subscriptionPlanId String
-  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction) // Prevent plan deletion if companies exist
-
+  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction)
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   deletedAt              DateTime? // Added for soft deletes
@@ -95,6 +99,7 @@ model Company {
   Service                Service[]
 
   @@map("companies")
+  TimeEntry TimeEntry[]
 }
 
 model CompanySubdomain {
@@ -304,6 +309,26 @@ model ServiceTag {
 
   Service Service[]
 }
+
+
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?      // duration in minutes (optional convenience field)
+  description String?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 
 enum Role {
   SUPER_ADMIN

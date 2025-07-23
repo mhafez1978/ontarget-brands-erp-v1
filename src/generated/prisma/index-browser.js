@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.11.1
- * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
+ * Prisma Client JS version: 6.12.0
+ * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
  */
 Prisma.prismaVersion = {
-  client: "6.11.1",
-  engine: "f40f79ec31188888a2e33acda0ecc8fd10a853a9"
+  client: "6.12.0",
+  engine: "8047c96bbd92db98a2abc7c9323ce77c02c89dbc"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -129,6 +129,8 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   birthDate: 'birthDate',
   password: 'password',
+  mfaEnabled: 'mfaEnabled',
+  mfaSecret: 'mfaSecret',
   addressLine1: 'addressLine1',
   addressLine2: 'addressLine2',
   city: 'city',
@@ -342,6 +344,18 @@ exports.Prisma.ServiceTagScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TimeEntryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  companyId: 'companyId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -359,6 +373,7 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   image: 'image',
   phone: 'phone',
   password: 'password',
+  mfaSecret: 'mfaSecret',
   addressLine1: 'addressLine1',
   addressLine2: 'addressLine2',
   city: 'city',
@@ -497,6 +512,13 @@ exports.Prisma.ServiceTagOrderByRelevanceFieldEnum = {
   id: 'id',
   value: 'value',
   serviceId: 'serviceId'
+};
+
+exports.Prisma.TimeEntryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  companyId: 'companyId',
+  description: 'description'
 };
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
@@ -826,7 +848,8 @@ exports.Prisma.ModelName = {
   Supplier: 'Supplier',
   CompanyProductCategory: 'CompanyProductCategory',
   Service: 'Service',
-  ServiceTag: 'ServiceTag'
+  ServiceTag: 'ServiceTag',
+  TimeEntry: 'TimeEntry'
 };
 
 /**

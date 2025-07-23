@@ -24,10 +24,12 @@ import {
   CircleUserRound,
   ShieldUser,
   Clock,
+  Target,
+  ChevronDown,
 } from "lucide-react";
 
 // Icon mapping
-const allMenuIcons = {
+const allMenuIcons: Record<string, React.ElementType> = {
   Dashboard: LayoutDashboard,
   Profile: CircleUserRound,
   Company: Building2,
@@ -71,7 +73,7 @@ const routeMap: Record<string, string> = {
   "Hosting Settings": "/admin/settings/hosting",
   "Ai Settings": "/admin/settings/ai",
   "Ai Optimize": "/ai-content",
-  "Website/Store": "/business-website",
+  Website: "/business-website",
   "Clock In/Out": "/time-tracking",
   Inbox: "/inbox",
   "Assigned Tasks": "/project/assigned/tasks",
@@ -80,6 +82,12 @@ const routeMap: Record<string, string> = {
   "Manager Menu": "/manager/dashboard",
   "Customer Menu": "/customer/dashboard",
   Signout: "/signout",
+} as const;
+
+// no company yet
+
+const menuConfigBase: Record<string, string[]> = {
+  CUSTOMER_starter: ["Dashboard", "Profile", "Company", "Settings"],
 };
 
 // Role + Plan menu config
@@ -116,6 +124,8 @@ const menuConfig: Record<string, string[]> = {
     "Profile",
     "Company",
     "Staff",
+    "Products",
+    "Services",
     "Customers",
     "Orders",
     "Invoices",
@@ -132,7 +142,7 @@ const menuConfig: Record<string, string[]> = {
     "Customers",
     "Orders",
     "Invoices",
-    "Website/Store",
+    "Website",
     "Ai Optimize",
     "Reports",
     "Admin Menu",
@@ -149,7 +159,7 @@ const menuConfig: Record<string, string[]> = {
     "Customers",
     "Orders",
     "Invoices",
-    "Website/Store",
+    "Website",
     "Ai Optimize",
     "Reports",
     "Admin Menu",
@@ -212,7 +222,7 @@ const menuConfig: Record<string, string[]> = {
     "SuperAdmin Menu",
   ],
   GUEST_any: ["Dashboard", "Profile", "Inbox", "Signout"],
-};
+} as const;
 
 // Helpers
 const getIcon = (label: string) =>
@@ -222,7 +232,16 @@ const getHref = (label: string) => routeMap[label] || "/";
 
 const getMenuForUser = (role: string, plan?: string): string[] =>
   menuConfig[`${role}_${plan?.toLowerCase()}`] ||
-  menuConfig[`${role}_any`] || ["Dashboard"];
+  menuConfig[`${role}_any`] || ["Dashboard", "Profile", "Company", "Settings"];
+
+const getMenuForNewCustomer = (role: string, plan?: string): string[] =>
+  menuConfigBase[`${role}_${plan?.toLowerCase()}`] ||
+  menuConfigBase[`${role}_any`] || [
+    "Dashboard",
+    "Profile",
+    "Company",
+    "Settings",
+  ];
 
 // Layout component
 export default function RootLayout({
@@ -234,66 +253,147 @@ export default function RootLayout({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userRole, setUserRole] = useState("GUEST");
   const [planKey, setPlanKey] = useState("starter");
+  const [hasCompany, setHasCompany] = useState(false);
+
+  if (status === "loading")
+    return (
+      <div className="text-center text-xl w-full min-h-screen flex justify-center items-center">
+        Loading , please wait ...
+      </div>
+    );
+  if (!session?.user) {
+    redirect("/auth");
+    return null;
+  }
+  const customerMenuItems = getMenuForNewCustomer(userRole, planKey);
+  const menuItems = getMenuForUser(userRole, planKey);
 
   useEffect(() => {
     if (session?.user) {
       setUserRole(session.user.role || "GUEST");
-
       const rawKey = session.user.company?.subscriptionPlan?.key || "";
       const match = rawKey.toLowerCase().match(/starter|standard|premium/);
       setPlanKey(match?.[0] || "starter");
     }
   }, [session]);
 
-  if (status === "loading") return <div>Loading...</div>;
-  if (!session?.user) {
-    redirect("/auth");
-    return null;
-  }
-
-  const menuItems = getMenuForUser(userRole, planKey);
+  useEffect(() => {
+    if (session.user.company) {
+      setHasCompany(true);
+    }
+  }, [session]);
 
   return (
-    <div className="w-full flex min-h-screen">
-      <aside
-        className={`${
-          sidebarOpen ? "w-64" : "w-16"
-        } bg-black text-white transition-all duration-200 ease-in-out flex flex-col`}
-      >
-        <div className="p-2 flex justify-end">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white hover:text-gray-300"
-          >
-            {sidebarOpen ? (
-              <ChevronLeft size={20} />
-            ) : (
-              <ChevronRight size={20} />
-            )}
-          </button>
+    <div className="w-full">
+      <div className="w-full h-12 fixed top-0 flex flex-row items-center justify-between px-4 bg-[#484644] text-white z-40">
+        <div className="flex items-center gap-1">
+          <Target size={32} color={"white"} />
+          <h1 className="text-lg font-semibold">OnTarget ERP</h1>
         </div>
-
-        <nav className="flex flex-col gap-2 px-2">
-          {menuItems.map((label) => (
-            <MenuItem
-              key={label}
-              icon={getIcon(label)}
-              label={label}
-              href={getHref(label)}
-              open={sidebarOpen}
+        {session.user.name ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{session.user.name}</span>
+            <img
+              src={
+                session.user.image ||
+                `https://robohash.org/${session.user.name} || https://robohash.org/${session.user.id} || https://robohash.org/robot`
+              }
+              alt="User Avatar"
+              className="w-8 h-8 rounded-full"
             />
-          ))}
-          <MenuItem
-            icon={LogOut}
-            label="Signout"
-            href="/signout"
-            open={sidebarOpen}
-            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
-          />
-        </nav>
-      </aside>
+          </div>
+        ) : null}
+      </div>
+      <div className="w-full flex flex-row min-h-screen mt-12">
+        <aside
+          className={`${
+            sidebarOpen ? "w-64" : "w-16"
+          } pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col`}
+        >
+          <div
+            className={
+              sidebarOpen
+                ? "flex justify-end items-start"
+                : "flex justify-end items-start mr-4"
+            }
+          >
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="rounded-md pt-1 pb-1 pl-1 pr-1"
+            >
+              {sidebarOpen ? (
+                <ChevronLeft size={32} color={"black"} />
+              ) : (
+                <ChevronRight size={32} color={"black"} />
+              )}
+            </button>
+          </div>
+          {session.user.role === "COMPANY_CUSTOMER" && (
+            <>
+              <ul className="px-4">
+                <li>customer menu item 1</li>
+                <li>customer menu item 2</li>
+                <li>customer menu item 3</li>
+                <li>customer menu item 4</li>
+              </ul>
+              <MenuItem
+                icon={LogOut}
+                label="Signout"
+                href="/signout"
+                open={sidebarOpen}
+                onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
+              />
+            </>
+          )}
+          {session.user.role !== "COMPANY_CUSTOMER" && (
+            <>
+              <nav className="flex flex-col gap-4 px-2 pt-4">
+                {session.user.company?.id ? (
+                  <>
+                    {menuItems.map((label) => (
+                      <MenuItem
+                        key={label}
+                        icon={getIcon(label)}
+                        label={label}
+                        href={getHref(label)}
+                        open={sidebarOpen}
+                        className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {customerMenuItems.map((label) => (
+                      <MenuItem
+                        key={label}
+                        icon={getIcon(label)}
+                        label={label}
+                        href={getHref(label)}
+                        open={sidebarOpen}
+                        className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
+                      />
+                    ))}
+                  </>
+                )}
 
-      <main className="flex-1 p-4 h-screen overflow-y-scroll">{children}</main>
+                <MenuItem
+                  icon={LogOut}
+                  label="Signout"
+                  href="/signout"
+                  open={sidebarOpen}
+                  onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                  className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
+                />
+              </nav>
+            </>
+          )}
+        </aside>
+
+        <main className="flex-1 h-screen overflow-y-scroll. bg-gray-50">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
@@ -305,16 +405,18 @@ export function MenuItem({
   href,
   open,
   onClick,
+  className,
 }: {
   icon: React.ElementType;
   label: string;
   href?: string;
   open: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 }) {
   const content = (
     <>
-      <Icon className="h-5 w-5" />
+      <Icon className="h-6 w-6" />
       <span
         className={`ml-3 text-sm whitespace-nowrap transition-all ${
           open ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
@@ -328,16 +430,19 @@ export function MenuItem({
   return href === "/signout" ? (
     <button
       onClick={onClick}
-      className="flex items-center w-full p-2 rounded hover:bg-gray-800 transition-colors"
+      className="absolute bottom-8 flex items-center w-60 p-2 rounded"
     >
       {content}
     </button>
   ) : (
-    <Link
-      href={href ?? "#"}
-      className="flex items-center w-full p-2 rounded hover:bg-gray-800 transition-colors"
-    >
-      {content}
-    </Link>
+    <div className="flex items-center w-full">
+      <Link
+        href={href ?? "#"}
+        className="flex flex-row items-center w-full p-2 rounded"
+      >
+        {content}
+      </Link>
+      <ChevronDown />
+    </div>
   );
 }

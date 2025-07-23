@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Chrome, Github } from "lucide-react";
+import Image from "next/image";
 
 interface OAuthButtonsProps {
   isRegister?: boolean;
 }
 
-export const OAuthButtons = ({ isRegister = false }: OAuthButtonsProps) => {
+export const OAuthButtons = ({ isRegister }: OAuthButtonsProps) => {
   const handleOAuthLogin = (provider: string) => {
-    //console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
+    console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
   };
 
   return (
@@ -16,44 +17,40 @@ export const OAuthButtons = ({ isRegister = false }: OAuthButtonsProps) => {
         type="button"
         variant="outline"
         onClick={() => handleOAuthLogin("Google")}
-        className="w-full h-12 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
+        className="w-full h-12 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
       >
-        <div className="flex items-center justify-center space-x-3">
-          <Chrome className="w-5 h-5 text-gray-600" />
-          <span className="text-gray-700 font-medium">
-            {isRegister ? "Sign up" : "Continue"} with Google
-          </span>
-        </div>
+        <span className="w-1/3 flex justify-end">
+          <Image
+            src="/gmail.svg"
+            alt=""
+            width={52}
+            height={52}
+            className="object-cover border-0"
+          />
+        </span>
+        <span className="w-2/3 flex justify-start text-gray-700 font-medium">
+          {isRegister ? "Register" : "Login"} with Gmail
+        </span>
       </Button>
 
       <Button
         type="button"
         variant="outline"
         onClick={() => handleOAuthLogin("Microsoft")}
-        className="w-full h-12 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
+        className="w-full h-12 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
       >
-        <div className="flex items-center justify-center space-x-3">
-          <div className="w-5 h-5 bg-gradient-to-r from-blue-600 to-blue-500 rounded flex items-center justify-center">
-            <div className="w-2 h-2 bg-white rounded-sm"></div>
-          </div>
-          <span className="text-gray-700 font-medium">
-            {isRegister ? "Sign up" : "Continue"} with Microsoft
-          </span>
-        </div>
-      </Button>
-
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => handleOAuthLogin("GitHub")}
-        className="w-full h-12 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
-      >
-        <div className="flex items-center justify-center space-x-3">
-          <Github className="w-5 h-5 text-gray-700" />
-          <span className="text-gray-700 font-medium">
-            {isRegister ? "Sign up" : "Continue"} with GitHub
-          </span>
-        </div>
+        <span className="w-1/3 flex justify-end">
+          <Image
+            src="/microsoft.svg"
+            alt=""
+            width={50}
+            height={50}
+            className="border-0"
+          />
+        </span>
+        <span className="w-2/3 flex justify-start text-gray-700 font-medium">
+          {isRegister ? "Register" : "Login"} with Microsoft
+        </span>
       </Button>
     </div>
   );

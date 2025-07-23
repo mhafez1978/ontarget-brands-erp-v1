@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Pencil, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -11,6 +11,8 @@ import { OffCanvasBtn } from "../OffCanvasBtn";
 import { CreateCompanyForm } from "../forms/CreateCompanyForm";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { showToast } from "@/hooks/toast";
+import { OffCanvasMenu } from "../ui/OffCanvasMenu";
 
 type Company = PrismaCompany & {
   subscriptionPlan?: { name?: string };
@@ -65,50 +67,23 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
     console.log("#########" + companyId2Edit);
   };
 
-  // const handleDelete = async (company: Company) => {
-  //   console.log("Deleting company...", company);
-  //   try {
-  //     const res = await fetch(`/api/admin/company/${company.id}/delete`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(company),
-  //     });
-
-  //     if (!res.ok) {
-  //       const err = await res.json();
-  //       throw new Error(err.error || "Failed to delete company");
-  //     }
-  //     // console.log("##### Response body ######");
-  //     // console.log(res.body);
-  //     // console.log("###### Response JSON #####");
-  //     // console.log(res.json);
-  //     // console.log("######. Response Headers #####");
-  //     // console.log(res.headers);
-  //     console.log("Company deleted successfully.");
-
-  //     // Optional: refresh or update state here
-  //   } catch (err) {
-  //     console.error("Error deleting company:", err);
-  //   }
-  // };
-
   const handleDelete = async (company: Company) => {
     //console.log("Deleting company...", company);
     try {
       const res = await fetch(`/api/admin/company/${company.id}/delete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(company),
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user: session.user }),
       });
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Failed to delete company");
+        showToast("error", "Failed to delete company", err.error);
       }
 
-      //console.log("Company deleted successfully.");
-
-      // 🔥 Update local state to remove the deleted company
+      showToast("success", "Company was deleted successfully ...");
       setCompanies((prev) => prev.filter((c) => c.id !== company.id));
     } catch (err) {
       console.error("Error deleting company:", err);
@@ -119,7 +94,12 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
     setSelectedCompany(null);
   };
 
-  if (loading) return <p className="text-gray-500">Loading companies...</p>;
+  if (loading)
+    return (
+      <div className="text-gray-500 min-h-[80vh] w-full flex justify-center items-center text-lg">
+        Loading companies...
+      </div>
+    );
   if (error)
     return (
       <p id="err21" className="text-red-500">
@@ -169,15 +149,23 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
                   {company.slogan || "No slogan"}
                 </p>
               </div>
-              <div className="flex flex-row-gap-4">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleEdit(company)}
-                  className="text-muted-foreground"
-                >
-                  <Pencil size={18} />
-                </Button>
+              <div className="flex flex-row gap-4">
+                <OffCanvasMenu formName={"Edit Company"}>
+                  {(close) => (
+                    <EditCompanyForm
+                      companyId={company.id}
+                      company={company}
+                      onSuccess={() => {
+                        setSelectedCompany(null);
+                        fetchCompanies();
+                        close();
+                      }}
+                      userId={userId}
+                      close={close}
+                    />
+                  )}
+                </OffCanvasMenu>
+
                 <Button
                   size="icon"
                   variant="ghost"
@@ -259,29 +247,6 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
           </div>
         ))}
       </div>
-
-      <Sheet open={!!selectedCompany} onOpenChange={handleClose}>
-        <SheetTitle className="text-lg text-black font-semibold"></SheetTitle>
-        <SheetContent
-          side="right"
-          className="w-full px-4 lg:min-w-[30vw] pt-10"
-        >
-          {selectedCompany && (
-            <EditCompanyForm
-              companyId={selectedCompany.id}
-              company={selectedCompany}
-              onSuccess={() => {
-                setSelectedCompany(null);
-                fetchCompanies();
-              }}
-              userId={""}
-              close={function (): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
     </>
   );
 };

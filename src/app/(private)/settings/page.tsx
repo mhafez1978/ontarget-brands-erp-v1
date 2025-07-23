@@ -1,6 +1,13 @@
 import { Settings } from "@/components/erp/Settings";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+const SettingsPage = async () => {
+  const session = await auth();
 
-const SettingsPage = () => {
+  if (!session || !session.user) {
+    return redirect("/auth");
+  }
+
   return <Settings />;
 };
 

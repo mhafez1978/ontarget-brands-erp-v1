@@ -7,6 +7,7 @@ import { UserCompaniesList } from "../admin/UserCompaniesList";
 import { OffCanvasBtn } from "../OffCanvasBtn";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+
 interface Props {
   userId: string;
 }
@@ -28,7 +29,12 @@ export const CompanyManagementWrapper = ({ userId }: Props) => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Company Management</h1>
-          <p className="text-gray-600">Create and manage companies</p>
+          <p className="text-gray-600">
+            Create and manage your companies legal entities.
+          </p>
+          <p className="text-gray-500 text-xs">
+            You can have a single company entity or multiple company entities.
+          </p>
         </div>
         <OffCanvasBtn
           buttonText={"Create Company"}

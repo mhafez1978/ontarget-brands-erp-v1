@@ -2,28 +2,25 @@
 import { useState } from "react";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
+import { TargetIcon } from "lucide-react";
 
 const AuthClient = () => {
   const [isLogin, setIsLogin] = useState(true);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 bg-[url('/business.jpg')] bg-cover bg-center bg-no-repeat">
       <div className="w-full max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-xl mb-4">
-            <div className="w-8 h-8 bg-white rounded transform rotate-45"></div>
+        <div className="w-full text-center mb-8">
+          <div className="w-full flex flex-row items-center justify-center">
+            <TargetIcon size={58} color="#ffffff" />
+            <h1 className="text-5xl font-bold text-white mb-2">
+              n-Target Brands
+            </h1>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            On-Target Brands
-          </h1>
-          <p className="text-gray-600">
-            {isLogin ? "Sign in to your account" : "Create your account"}
-          </p>
         </div>
 
         {/* Auth Forms */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        <div className="block bg-white rounded-2xl shadow-xl overflow-hidden min-h-[55vh] border border-sky-500">
           {/* Tab Buttons */}
           <div className="flex border-b border-gray-200">
             <button
@@ -34,7 +31,7 @@ const AuthClient = () => {
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Login
+              <span className="hover:scale-150">Login</span>
             </button>
             <button
               onClick={() => setIsLogin(false)}
@@ -44,22 +41,14 @@ const AuthClient = () => {
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Resgister
+              <span className="hover:scale-150">Register</span>
             </button>
           </div>
 
           {/* Form Content */}
-          <div className="p-8">
+          <div className="p-8 h-full flex flex-col justify-center items-center">
             {isLogin ? <LoginForm /> : <RegisterForm />}
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} OnTarget Brands ERP. All rights
-            reserved.
-          </p>
         </div>
       </div>
     </div>

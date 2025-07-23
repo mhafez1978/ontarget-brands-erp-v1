@@ -225,27 +225,23 @@ export const EditCompanyForm = ({
 
   return (
     <>
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-      {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
+      {/* {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      {success && <p className="text-green-600 text-sm mb-4">{success}</p>} */}
 
-      <form onSubmit={handleSubmit} className="w-full flex flex-col px-6">
-        {/* Company Details */}
-        <div className="w-full flex flex-col items-start justify-center">
-          <h2 className="text-2xl font-bold">Edit Company</h2>
-          <p className="text-sm text-muted-foreground">
-            Update your company details below.
-          </p>
-        </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="min-h-20 md:col-span-2"></div>
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="w-full flex flex-col">
+          <div className=""></div>
           {(["name", "slogan", "domain", "phone"] as const).map((field) => (
             <div key={field} className="space-y-1">
-              <Label htmlFor={field}>{field.replace(/([A-Z])/g, " $1")}</Label>
+              <Label className="mb-4 capitalize" htmlFor={field}>
+                {field.replace(/([A-Z])/g, " $1")}
+              </Label>
               <Input
                 id={field}
                 name={field}
                 value={formData[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
+                className="mb-4"
               />
             </div>
           ))}
@@ -253,11 +249,6 @@ export const EditCompanyForm = ({
 
         {/* Contact & Address */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="md:col-span-2">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Contact &amp; Address
-            </h3>
-          </div>
           {(
             [
               "supportEmail",
@@ -269,12 +260,15 @@ export const EditCompanyForm = ({
             ] as const
           ).map((field) => (
             <div key={field} className="space-y-1">
-              <Label htmlFor={field}>{field.replace(/([A-Z])/g, " $1")}</Label>
+              <Label className="mb-4 capitalize" htmlFor={field}>
+                {field.replace(/([A-Z])/g, " $1")}
+              </Label>
               <Input
                 id={field}
                 name={field}
                 value={formData[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
+                className="mb-4"
               />
             </div>
           ))}
@@ -336,14 +330,14 @@ export const EditCompanyForm = ({
         </div>
 
         {/* Business Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Business Details
             </h3>
           </div>
           <div className="space-y-1">
-            <Label>Category</Label>
+            <Label className="mb-4">Category</Label>
             <Select
               value={formData.category}
               onValueChange={(val) => handleChange("category", val)}
@@ -362,7 +356,7 @@ export const EditCompanyForm = ({
           </div>
 
           <div className="space-y-1">
-            <Label>Business Type</Label>
+            <Label className="mb-4">Business Type</Label>
             <Select
               value={formData.type}
               onValueChange={(val) => handleChange("type", val)}
@@ -382,11 +376,11 @@ export const EditCompanyForm = ({
         </div>
 
         {/* Subscription */}
-        <div className="space-y-1">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <div className="mt-4 space-y-1">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-6 ">
             Subscription
           </h3>
-          <Label>Plan</Label>
+          <Label className="mb-4">Plan</Label>
           <Select
             value={formData.subscriptionPlanId}
             onValueChange={(val) => handleChange("subscriptionPlanId", val)}
@@ -406,34 +400,84 @@ export const EditCompanyForm = ({
 
         {/* Plan Summary */}
         {selectedPlan && (
-          <div className="text-sm bg-muted p-4 rounded border">
-            <h4 className="font-medium mb-2">Plan Features</h4>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong>Price:</strong> ${selectedPlan.pricePerMonth}/mo
-              </li>
-              <li>
-                <strong>Max Users:</strong> {selectedPlan.maxUsers}
-              </li>
-              <li>
-                <strong>Storage:</strong> {selectedPlan.storageLimitMB} MB
-              </li>
-              <li>
-                <strong>Projects:</strong> {selectedPlan.maxProjects}
-              </li>
-              {selectedPlan.features.map((f, index) => (
-                <li key={index}>{f.label}</li>
-              ))}
-            </ul>
-          </div>
+          <>
+            {selectedPlan.name === "Starter" && (
+              <div className="mt-8 text-sm bg-emerald-100 p-4 rounded border">
+                <h4 className="font-medium mb-2">Plan Features</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>
+                    <strong>Price:</strong> ${selectedPlan.pricePerMonth}/mo
+                  </li>
+                  <li>
+                    <strong>Max Users:</strong> {selectedPlan.maxUsers}
+                  </li>
+                  <li>
+                    <strong>Storage:</strong> {selectedPlan.storageLimitMB} MB
+                  </li>
+                  <li>
+                    <strong>Projects:</strong> {selectedPlan.maxProjects}
+                  </li>
+                  {selectedPlan.features.map((f, index) => (
+                    <li key={index}>{f.label}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {selectedPlan.name === "Standard" && (
+              <div className="mt-8 text-sm bg-indigo-300 p-4 rounded border">
+                <h4 className="font-medium mb-2">Plan Features</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>
+                    <strong>Price:</strong> ${selectedPlan.pricePerMonth}/mo
+                  </li>
+                  <li>
+                    <strong>Max Users:</strong> {selectedPlan.maxUsers}
+                  </li>
+                  <li>
+                    <strong>Storage:</strong> {selectedPlan.storageLimitMB} MB
+                  </li>
+                  <li>
+                    <strong>Projects:</strong> {selectedPlan.maxProjects}
+                  </li>
+                  {selectedPlan.features.map((f, index) => (
+                    <li key={index}>{f.label}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {selectedPlan.name === "Premium" && (
+              <div className="mt-8 text-sm bg-purple-100 p-4 rounded border">
+                <h4 className="font-medium mb-2">Plan Features</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>
+                    <strong>Price:</strong> ${selectedPlan.pricePerMonth}/mo
+                  </li>
+                  <li>
+                    <strong>Max Users:</strong> {selectedPlan.maxUsers}
+                  </li>
+                  <li>
+                    <strong>Storage:</strong> {selectedPlan.storageLimitMB} MB
+                  </li>
+                  <li>
+                    <strong>Projects:</strong> {selectedPlan.maxProjects}
+                  </li>
+                  {selectedPlan.features.map((f, index) => (
+                    <li key={index}>{f.label}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
         )}
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-10">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="ml-auto block"
+            className={
+              isSubmitting ? "ml-auto block" : " bg-sky-500 ml-auto block"
+            }
           >
             {isSubmitting ? "Saving ..." : "Update Company"}
           </Button>

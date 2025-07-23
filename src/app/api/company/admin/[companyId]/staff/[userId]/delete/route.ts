@@ -1,21 +1,39 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string; userId: string }> }
 ) {
   const { companyId, userId } = await params;
+  const session = await auth();
 
-  if (!companyId) {
-    return NextResponse.json({ error: "Missing companyId" }, { status: 400 });
+  if (!session || !session.user || !companyId || !userId) {
+    return NextResponse.json(
+      { error: "Unauthorized or missing parameters" },
+      { status: 401 }
+    );
+  }
+  if (!["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)) {
+    return NextResponse.json(
+      { error: "Forbidden: Insufficient permissions" },
+      { status: 403 }
+    );
+  }
+
+  if (userId === session.user.id) {
+    return NextResponse.json(
+      { error: "Cannot delete the currently logged-in user" },
+      { status: 403 }
+    );
   }
 
   try {
     const deleteUser = await prisma.user.delete({
       where: {
-        id: userId,
-        companyId: companyId,
+        id: userId as string,
+        companyId: companyId as string,
       },
     });
 

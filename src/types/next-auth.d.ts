@@ -1,15 +1,14 @@
 import { DefaultSession, DefaultUser } from "next-auth";
 
-// Extend the SubscriptionPlan type
+// Fix: Use `number` instead of `decimal`
 interface SubscriptionPlan {
   id: string;
   key: string;
   name: string;
   billingCycle: string;
-  pricePerMonth: decimal;
+  pricePerMonth: number;
 }
 
-// Extend the Company type to match the Prisma schema and authorize result
 interface Company {
   id: string;
   name: string;
@@ -47,6 +46,9 @@ declare module "next-auth" {
       email?: string | null;
       name?: string | null;
       image?: string | null;
+      mfaEnabled?: boolean;
+      mfaSecret?: string | null;
+      mfaPending?: boolean;
       isActive?: boolean;
       lastLogin?: Date | null;
       createdAt?: Date | null;
@@ -58,6 +60,7 @@ declare module "next-auth" {
       pricePerMonth: number | null;
       ownedCompanies: { id: string; name: string }[];
     } & DefaultSession["user"];
+    mfaPending?: boolean; // ✅ Must be outside `user`
   }
 
   interface User extends DefaultUser {
@@ -67,6 +70,9 @@ declare module "next-auth" {
     email?: string | null;
     name?: string | null;
     image?: string | null;
+    mfaEnabled?: boolean;
+    mfaSecret?: string | null;
+    mfaPending?: boolean;
     isActive?: boolean;
     lastLogin?: Date | null;
     createdAt?: Date | null;
@@ -86,18 +92,21 @@ declare module "next-auth/jwt" {
     email?: string;
     name?: string;
     image?: string | null;
-    role: string;
-    isActive?: boolean;
-    lastLogin?: Date | null;
+    company?: Company | null;
+    subscriptionPlan?: SubscriptionPlan | null;
+    billingCycle?: string | null;
+    pricePerMonth?: number | null;
+    plan?: string | null;
+    ownedCompanies?: { id: string; name: string }[];
     createdAt?: Date | null;
     updatedAt?: Date | null;
+    lastLogin?: Date | null;
+    mfaEnabled?: boolean;
+    mfaSecret?: string | null;
+    mfaPending?: boolean;
+    role: string;
+    isActive?: boolean;
     deletedAt?: Date | null;
-    company: Company | null;
-    plan: string | null;
-    subscriptionPlan: SubscriptionPlan | null;
-    billingCycle: string | null;
-    pricePerMonth: number | null;
-    ownedCompanies: { id: string; name: string }[];
   }
 }
 

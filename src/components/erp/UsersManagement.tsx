@@ -14,13 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Filter, Edit } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { OffCanvasBtn } from "@/components/OffCanvasBtn";
-import { CreateCompanyStaff } from "../forms/CreateCompanyStaff";
 import { showToast } from "@/hooks/toast";
 import { EditStaffForm } from "../forms/EditStaffForm";
 import { Role } from "@/generated/prisma";
+import { AddNewStaff } from "../forms/AddNewStaff";
+import { redirect } from "next/navigation";
 
 interface StaffData {
   id: string;
@@ -32,6 +33,8 @@ interface StaffData {
   country: string;
   birthDate: Date | null;
   password?: string;
+  mfaEnabled: boolean;
+  mfaSecret?: string;
   lastLogin?: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -59,59 +62,8 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
 
   const [editingStaff, setEditingStaff] = useState<StaffData | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
-
-  if (
-    !session ||
-    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
-  ) {
-    return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold text-gray-900">Access Denied</h1>
-        <p className="text-gray-600 mt-2">
-          You do not have permission to view this Staff.
-        </p>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    if (
-      !session ||
-      !session.user.ownedCompanies ||
-      session.user.ownedCompanies.length === 0
-    ) {
-      showToast("error", "No companies found for the user");
-      return;
-    }
-
-    const initialCompanyId = session.user.ownedCompanies[0].id;
-    setSelectedCompanyId(initialCompanyId);
-
-    const fetchStaff = async (companyId: string) => {
-      const res = await fetch(`/api/company/admin/${companyId}/staff`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        showToast("error", data.error || "Failed to fetch staff");
-        return;
-      }
-
-      setStaffByCompany((prev) => ({
-        ...prev,
-        [companyId]: data.staff || [],
-      }));
-    };
-
-    fetchStaff(initialCompanyId);
-  }, [session]);
 
   const handleEdit =
     ({ companyId, userId }: { companyId: string; userId: string }) =>
@@ -171,9 +123,8 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
   const statuses = ["all", "active", "inactive"];
 
   // Used to trigger a reload of staff data after editing
-  function setReload(_reload: boolean) {
+  const fetchCompanyStaff = async () => {
     if (selectedCompanyId) {
-      // Refetch staff for the selected company
       fetch(`/api/company/admin/${selectedCompanyId}/staff`, {
         method: "GET",
         headers: {
@@ -186,12 +137,84 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
             ...prev,
             [selectedCompanyId]: data.staff || [],
           }));
+          setIsLoading(false);
         })
         .catch(() => {
           showToast("error", "Failed to reload staff data");
         });
     }
+  };
+
+  useEffect(() => {
+    if (
+      !session ||
+      !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
+    ) {
+      return redirect("/auth");
+    }
+
+    if (
+      !session ||
+      !session.user.ownedCompanies ||
+      session.user.ownedCompanies.length === 0
+    ) {
+      showToast("error", "No companies found for the user");
+      return;
+    }
+
+    const initialCompanyId = session.user.ownedCompanies[0].id;
+    setSelectedCompanyId(initialCompanyId);
+
+    const fetchStaff = async (companyId: string) => {
+      const res = await fetch(`/api/company/admin/${companyId}/staff`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast("error", data.error || "Failed to fetch staff");
+        return;
+      }
+
+      setStaffByCompany((prev) => ({
+        ...prev,
+        [companyId]: data.staff || [],
+      }));
+    };
+
+    fetchStaff(initialCompanyId);
+  }, [session]);
+
+  useEffect(() => {
+    if (selectedCompanyId) {
+      fetchCompanyStaff();
+    }
+  }, [selectedCompanyId]);
+
+  if (isLoading) {
+    return (
+      <div className="p-8 space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Staff Management
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Manage employees, roles, and permissions
+            </p>
+          </div>
+        </div>
+        <div className="min-h-[80vh] w-full flex justify-center items-center text-lg">
+          <h2>Loading Company Staff ...</h2>
+        </div>
+      </div>
+    );
   }
+
   return (
     <div className="p-8 space-y-8">
       <div className="flex items-center justify-between">
@@ -201,9 +224,15 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
             Manage employees, roles, and permissions
           </p>
         </div>
-        <OffCanvasBtn buttonText="Add Staff" formName="Onboard New Staff">
+        <OffCanvasBtn
+          buttonText="Add New Staff Member"
+          formName="Add New Staff Member"
+        >
           {(close) => (
-            <CreateCompanyStaff
+            // <CreateCompanyStaff
+            //   companyId={selectedCompanyId ?? session?.user?.company?.id ?? ""}
+            // />
+            <AddNewStaff
               companyId={selectedCompanyId ?? session?.user?.company?.id ?? ""}
             />
           )}
@@ -340,17 +369,21 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
             phone: editingStaff.phone ?? "",
             birthDate: editingStaff.birthDate ?? null,
             password: editingStaff.password ?? "",
+            
+            mfaEnabled: editingStaff.mfaEnabled,
+            mfaSecret: editingStaff.mfaSecret ?? null,
+
             addressLine1: editingStaff.addressLine1 ?? "",
             addressLine2: editingStaff.addressLine2 ?? "",
             city: editingStaff.city ?? "",
             state: editingStaff.state ?? "",
-            country: editingStaff.country ?? "",
             zipCode: editingStaff.zipCode ?? "",
+            country: editingStaff.country ?? "",
+
             role: editingStaff.role as Role,
             isActive: editingStaff.isActive,
             companyId: editingStaff.companyId,
 
-            // Add missing required fields with default or null values
             lastLogin: null,
             createdAt: new Date(),
             updatedAt: new Date(),

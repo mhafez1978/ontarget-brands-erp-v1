@@ -7,7 +7,10 @@ export async function GET(
 ) {
   try {
     const { domain: subdomain } = await params;
-    console.log("fired..... validate subdomain API for:", subdomain);
+    console.log(
+      "###############fired..... validate subdomain API for:",
+      subdomain
+    );
     const findDomain = await prisma.companySubdomain.findFirst({
       where: { subdomain: subdomain },
       select: { id: true, subdomain: true },

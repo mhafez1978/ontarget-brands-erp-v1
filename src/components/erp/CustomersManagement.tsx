@@ -31,6 +31,7 @@ import {
 import { Search, Filter, Mail, Phone, MapPin, Star } from "lucide-react";
 import { OffCanvasBtn } from "@/components/OffCanvasBtn";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 countries.registerLocale(enLocale);
 
@@ -60,7 +61,7 @@ interface CustomerData {
 export const CustomersManagement = ({ companyId }: { companyId: string }) => {
   const { data: session } = useSession();
   if (!session || !session.user || !session.user.company?.id) {
-    return <div>Please log in to view and manage customers.</div>;
+    return redirect("/auth");
   }
   const [searchTerm, setSearchTerm] = useState("");
   const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
@@ -89,7 +90,7 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
     country: "",
     companyId: "",
     isActive: true,
-    role: "customer",
+    role: "COMPANY_CUSTOMER",
   });
 
   const formatPhone = (raw: string, countryName?: string) => {

@@ -17,12 +17,16 @@ model User {
   phone         String?   @db.VarChar(20)
   birthDate     DateTime?
   password      String    @db.VarChar(255)
-  addressLine1  String?   @db.VarChar(255)
-  addressLine2  String?   @db.VarChar(255)
-  city          String?   @db.VarChar(100)
-  state         String?   @db.VarChar(100)
-  zipCode       String?   @db.VarChar(20)
-  country       String?   @db.VarChar(100)
+
+  mfaEnabled Boolean @default(false)
+  mfaSecret  String?
+
+  addressLine1 String? @db.VarChar(255)
+  addressLine2 String? @db.VarChar(255)
+  city         String? @db.VarChar(100)
+  state        String? @db.VarChar(100)
+  zipCode      String? @db.VarChar(20)
+  country      String? @db.VarChar(100)
 
   // Multi-company ownership
   ownedCompanies Company[] @relation("CompanyOwner")
@@ -32,7 +36,7 @@ model User {
 
   // Active company context
   companyId String?
-  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull) // Clear active company if company is deleted
+  company   Company? @relation("UserActiveCompany", fields: [companyId], references: [id], onDelete: SetNull)
 
   isActive        Boolean           @default(true)
   role            Role              @default(ERP_CUSTOMER)
@@ -43,6 +47,7 @@ model User {
   ProjectCustomer ProjectCustomer[]
   ProjectStaff    ProjectStaff[]
   Project         Project[]
+  TimeEntry       TimeEntry[]
 
   @@map("users")
 }
@@ -81,9 +86,8 @@ model Company {
   // All users linked to this company
   users User[] @relation("CompanyUsers")
 
-  subscriptionPlanId String
-  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction) // Prevent plan deletion if companies exist
-
+  subscriptionPlanId     String
+  subscriptionPlan       SubscriptionPlan         @relation(fields: [subscriptionPlanId], references: [id], onDelete: NoAction)
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   deletedAt              DateTime? // Added for soft deletes
@@ -93,6 +97,7 @@ model Company {
   Supplier               Supplier[]
   CompanyProductCategory CompanyProductCategory[]
   Service                Service[]
+  TimeEntry              TimeEntry[]
 
   @@map("companies")
 }
@@ -302,6 +307,23 @@ model ServiceTag {
   updatedAt DateTime @updatedAt
 
   Service Service[]
+}
+
+model TimeEntry {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int? // duration in minutes (optional convenience field)
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {

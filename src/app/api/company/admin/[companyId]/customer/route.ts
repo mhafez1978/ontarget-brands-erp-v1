@@ -15,7 +15,7 @@ export async function POST(
     !companyId ||
     !session ||
     !body ||
-    ["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role) === false
+    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
   ) {
     return new Response(JSON.stringify({ error: "Company ID is required" }), {
       status: 400,
@@ -39,7 +39,7 @@ export async function POST(
         country: body.country,
         companyId: companyId,
         isActive: body.isActive,
-        role: body.role?.toUpperCase() as Role,
+        role: "COMPANY_CUSTOMER" as Role,
       },
       include: {
         company: true,

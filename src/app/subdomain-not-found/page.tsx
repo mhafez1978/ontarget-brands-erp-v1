@@ -12,7 +12,7 @@ export default function SubdomainNotFoundPage() {
           </div>
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-          Subdomain Not Found
+          Subdomain Not Found !
         </h1>
         <p className="mt-4 text-gray-600 text-base sm:text-lg">
           The subdomain you're trying to access doesn’t exist or is not active.

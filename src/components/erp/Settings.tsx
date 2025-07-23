@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react";
 // import { OffCanvasMenu } from "../ui/OffCanvasMenu";
 import { OffCanvas } from "../ui/offCanvas";
 import { showToast } from "@/hooks/toast";
+import { MFASetupForm } from "../forms/MFASetupForm";
 
 export const Settings = () => {
   const [isMFAEnabled, setIsMFAEnabled] = useState(false);
@@ -32,8 +33,7 @@ export const Settings = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [validationPin, setValidationPin] = useState<string>("");
   const [isLoadingQR, setIsLoadingQR] = useState(false);
-  const { update } = useSession();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
 
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,10 +75,9 @@ export const Settings = () => {
       const res = await fetch("/api/mfa/disable", {
         method: "POST",
       });
-
-      if (!res.ok) throw new Error("Failed to disable MFA");
-
-      await update(); // Refresh session
+      if (!res.ok) {
+        showToast("error", "sorry could not disable MFA ...");
+      }
       showToast("success", "MFA has been disabled");
       setIsMFAEnabled(false);
     } catch (error) {
@@ -210,61 +209,22 @@ export const Settings = () => {
           </div>
         </div>
       </div>
-      {isOffCanvasMenuOpen && (
+      {isOffCanvasMenuOpen ? (
         <OffCanvas
           formName="Setup MFA"
           open={isOffCanvasMenuOpen}
           onClose={() => setIsOffCanvasMenuOpen(false)}
         >
           {(close) => (
-            <div className="space-y-6">
-              {isLoadingQR ? (
-                <p className="text-sm text-muted-foreground">
-                  Loading QR code...
-                </p>
-              ) : qrCodeUrl ? (
-                <img
-                  src={qrCodeUrl}
-                  alt="MFA QR Code"
-                  className="mx-auto w-48 h-48"
-                />
-              ) : (
-                <p className="text-sm text-red-500 h-[300px]">
-                  Unable to load QR code.
-                </p>
-              )}
-              <div>
-                <h2>Step 1</h2>
-                <p className="text-gray-700 text-sm">
-                  Scan the QR code below with your authenticator app (like
-                  Google Authenticator or Authy).
-                </p>
-              </div>
-              <div>
-                <h2>Step 2</h2>
-                <p className="text-sm text-gray-600">
-                  After scanning, enter the 6-digit code from your app into the
-                  form below to confirm MFA setup.
-                </p>
-              </div>
-
-              <div>
-                <form onSubmit={validateMFAPin} className="flex flex-col gap-2">
-                  <Label htmlFor="qrCodeVerify">Enter Code:</Label>
-                  <Input
-                    name="validationPin"
-                    value={validationPin}
-                    type="text"
-                    placeholder="enter your app code"
-                    onChange={handlePinChange}
-                  />
-                  <Button type="submit">Validate</Button>
-                </form>
-              </div>
-            </div>
+            <MFASetupForm
+              qrCodeUrl={qrCodeUrl}
+              isLoadingQR={isLoadingQR}
+              onClose={() => setIsOffCanvasMenuOpen(false)}
+              onSuccess={() => setIsMFAEnabled(true)}
+            />
           )}
         </OffCanvas>
-      )}
+      ) : null}
     </>
   );
 };

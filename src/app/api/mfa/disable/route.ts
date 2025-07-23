@@ -9,8 +9,10 @@ export async function POST() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const userId = session.user.id;
+
   await prisma.user.update({
-    where: { id: session.user.id },
+    where: { id: userId },
     data: {
       mfaEnabled: false,
       mfaSecret: null,

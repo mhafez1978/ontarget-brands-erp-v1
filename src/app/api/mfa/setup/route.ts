@@ -37,7 +37,7 @@ export async function POST() {
     // ✅ Generate QR code from existing or newly saved secret
     const otpAuthUrl = speakeasy.otpauthURL({
       secret,
-      label: `OnTarget Brands ERP`,
+      label: `OnTarget - ${email}`,
       encoding: "base32",
     });
 

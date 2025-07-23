@@ -116,37 +116,41 @@ export default function MfaPage() {
   if (status === "loading" || !session?.mfaPending) return null;
 
   return (
-    <div className="max-w-md mx-auto mt-24 p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-semibold mb-4 text-center">
-        Multi-Factor Authentication
-      </h1>
-      <p className="text-sm text-gray-600 mb-4 text-center">
-        Enter the 6-digit code from your authenticator app.
-      </p>
-      <input
-        type="text"
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
-        placeholder="123456"
-        inputMode="numeric"
-        maxLength={6}
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 text-center tracking-widest text-lg"
-        disabled={loading}
-      />
-      {error && (
-        <p className="text-red-500 text-sm mb-2 text-center">{error}</p>
-      )}
-      <button
-        onClick={handleVerify}
-        disabled={loading || token.length !== 6}
-        className={`w-full py-2 rounded-md text-white font-medium transition ${
-          loading || token.length !== 6
-            ? "bg-blue-300 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700"
-        }`}
-      >
-        {loading ? "Verifying..." : "Verify & Continue"}
-      </button>
+    <div className="w-full min-h-screen flex flex-col bg-[url('/business.jpg')] bg-cover bg-center bg-no-repeat pt-[33vh]">
+      <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h1 className="text-2xl font-semibold mb-4 text-center">
+          Multi-Factor Authentication
+        </h1>
+        <p className="text-sm text-gray-600 mb-4 text-center">
+          Enter the 6-digit code from your authenticator app.
+        </p>
+        <form onSubmit={handleVerify}>
+          <input
+            type="text"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="123456"
+            inputMode="numeric"
+            maxLength={6}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 text-center tracking-widest text-lg"
+            disabled={loading}
+          />
+          {error && (
+            <p className="text-red-500 text-sm mb-2 text-center">{error}</p>
+          )}
+          <button
+            type="submit"
+            disabled={loading || token.length !== 6}
+            className={`w-full py-2 rounded-md text-white font-medium transition ${
+              loading || token.length !== 6
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {loading ? "Verifying..." : "Verify & Continue"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

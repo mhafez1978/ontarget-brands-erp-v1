@@ -54,7 +54,7 @@ export async function GET(req: Request) {
       console.error("❌ No valid company found for user ID", userId);
       return new Response("Company not found for this user", { status: 404 });
     }
-    console.log("✅ Company found:", company.id);
+    //console.log("✅ Company found:", company.id);
     return new Response("Company found", { status: 200 });
   } catch (err) {
     console.error("❌ Error fetching company:", err);

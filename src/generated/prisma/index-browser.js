@@ -279,14 +279,18 @@ exports.Prisma.ProductScalarFieldEnum = {
   description: 'description',
   sku: 'sku',
   upc: 'upc',
+  serial: 'serial',
+  model: 'model',
+  macAddress: 'macAddress',
   unit: 'unit',
   quantity: 'quantity',
   cost: 'cost',
   price: 'price',
   brand: 'brand',
-  status: 'status',
+  weight: 'weight',
+  isActive: 'isActive',
+  availability: 'availability',
   supplierId: 'supplierId',
-  deliveryMethod: 'deliveryMethod',
   companyId: 'companyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -297,6 +301,7 @@ exports.Prisma.SupplierScalarFieldEnum = {
   id: 'id',
   name: 'name',
   tagline: 'tagline',
+  phone: 'phone',
   website: 'website',
   salesEmail: 'salesEmail',
   supportEmail: 'supportEmail',
@@ -475,6 +480,9 @@ exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   description: 'description',
   sku: 'sku',
   upc: 'upc',
+  serial: 'serial',
+  model: 'model',
+  macAddress: 'macAddress',
   brand: 'brand',
   supplierId: 'supplierId',
   companyId: 'companyId'
@@ -484,6 +492,7 @@ exports.Prisma.SupplierOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   tagline: 'tagline',
+  phone: 'phone',
   website: 'website',
   salesEmail: 'salesEmail',
   supportEmail: 'supportEmail',
@@ -604,23 +613,12 @@ exports.ProductUnit = exports.$Enums.ProductUnit = {
   UNIT: 'UNIT'
 };
 
-exports.ProductStatus = exports.$Enums.ProductStatus = {
-  ACTIVE: 'ACTIVE',
+exports.ProductAvailability = exports.$Enums.ProductAvailability = {
   LIMITED_OFFER: 'LIMITED_OFFER',
   REGION_BASED: 'REGION_BASED',
   BACK_ORDER: 'BACK_ORDER',
   DISCONTINUED: 'DISCONTINUED',
   OUT_OF_STOCK: 'OUT_OF_STOCK'
-};
-
-exports.DeliveryMethod = exports.$Enums.DeliveryMethod = {
-  ONSITE: 'ONSITE',
-  REMOTE: 'REMOTE',
-  HYBRID: 'HYBRID',
-  DIGITAL: 'DIGITAL',
-  PICKUP: 'PICKUP',
-  SHIP_TO_CUSTOMER: 'SHIP_TO_CUSTOMER',
-  DELIVERY: 'DELIVERY'
 };
 
 exports.ProductCategory = exports.$Enums.ProductCategory = {
@@ -649,6 +647,16 @@ exports.ProductCategory = exports.$Enums.ProductCategory = {
   ART_CRAFTS: 'ART_CRAFTS',
   STATIONERY: 'STATIONERY',
   OTHER: 'OTHER'
+};
+
+exports.DeliveryMethod = exports.$Enums.DeliveryMethod = {
+  ONSITE: 'ONSITE',
+  REMOTE: 'REMOTE',
+  HYBRID: 'HYBRID',
+  DIGITAL: 'DIGITAL',
+  PICKUP: 'PICKUP',
+  SHIP_TO_CUSTOMER: 'SHIP_TO_CUSTOMER',
+  DELIVERY: 'DELIVERY'
 };
 
 exports.Currency = exports.$Enums.Currency = {

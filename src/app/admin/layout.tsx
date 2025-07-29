@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { MenuItem } from "@/components/MenuItem";
 import {
   LayoutDashboard,
   Building2,
@@ -24,10 +24,13 @@ import {
   CircleUserRound,
   ShieldUser,
   Clock,
+  Target,
+  ChevronDown,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Icon mapping
-const allMenuIcons = {
+const allMenuIcons: Record<string, React.ElementType> = {
   Dashboard: LayoutDashboard,
   Profile: CircleUserRound,
   Company: Building2,
@@ -43,7 +46,7 @@ const allMenuIcons = {
   "Hosting Settings": Globe,
   "Ai Settings": Bot,
   "Ai Optimize": Bot,
-  "Website/Store": Globe,
+  Website: Globe,
   "Clock In/Out": Clock,
   Inbox: Bot,
   "Assigned Tasks": FolderKanban,
@@ -71,7 +74,7 @@ const routeMap: Record<string, string> = {
   "Hosting Settings": "/admin/settings/hosting",
   "Ai Settings": "/admin/settings/ai",
   "Ai Optimize": "/ai-content",
-  "Website/Store": "/business-website",
+  Website: "/business-website",
   "Clock In/Out": "/time-tracking",
   Inbox: "/inbox",
   "Assigned Tasks": "/project/assigned/tasks",
@@ -82,47 +85,9 @@ const routeMap: Record<string, string> = {
   Signout: "/signout",
 };
 
-// Role + Plan menu config
-const menuConfig: Record<string, string[]> = {
-  ERP_CUSTOMER_starter: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ERP_CUSTOMER_standard: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ERP_CUSTOMER_premium: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ADMIN_starter: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Staff",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Admin Menu",
-    "Settings",
-  ],
-  ADMIN_standard: [
+// Base menus per role
+const baseMenuConfig: Record<string, string[]> = {
+  ADMIN: [
     "Dashboard",
     "Profile",
     "Company",
@@ -132,30 +97,10 @@ const menuConfig: Record<string, string[]> = {
     "Customers",
     "Orders",
     "Invoices",
-    "Website/Store",
-    "Ai Optimize",
-    "Reports",
     "Admin Menu",
     "Settings",
   ],
-  ADMIN_premium: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Staff",
-    "Products",
-    "Services",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Website/Store",
-    "Ai Optimize",
-    "Reports",
-    "Admin Menu",
-    "Settings",
-  ],
-  MANAGER_starter: [
+  MANAGER: [
     "Dashboard",
     "Profile",
     "Customers",
@@ -163,29 +108,7 @@ const menuConfig: Record<string, string[]> = {
     "Manager Menu",
     "Settings",
   ],
-  MANAGER_standard: [
-    "Dashboard",
-    "Profile",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Reports",
-    "Manager Menu",
-    "Settings",
-  ],
-  MANAGER_premium: [
-    "Dashboard",
-    "Profile",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Reports",
-    "Manager Menu",
-    "Settings",
-  ],
-  STAFF_any: [
+  STAFF: [
     "Dashboard",
     "Profile",
     "Clock In/Out",
@@ -194,7 +117,7 @@ const menuConfig: Record<string, string[]> = {
     "Assigned Tasks",
     "Settings",
   ],
-  SUPER_ADMIN_any: [
+  SUPER_ADMIN: [
     "Dashboard",
     "Profile",
     "Company",
@@ -211,18 +134,56 @@ const menuConfig: Record<string, string[]> = {
     "Ai Settings",
     "SuperAdmin Menu",
   ],
-  GUEST_any: ["Dashboard", "Profile", "Inbox", "Signout"],
+  GUEST: ["Dashboard", "Profile", "Inbox", "Signout"],
+
+  // New roles:
+  ERP_CUSTOMER: [
+    "Dashboard",
+    "Profile",
+    "Company",
+    "Orders",
+    "Invoices",
+    "Customer Menu",
+    "Settings",
+  ],
+  COMPANY_CUSTOMER: [
+    "Dashboard",
+    "Profile",
+    "Company",
+    "Orders",
+    "Invoices",
+    "Customer Menu",
+    "Settings",
+  ],
 };
 
-// Helpers
+// Optional plan-based extensions
+const planExtensions: Record<string, Partial<Record<string, string[]>>> = {
+  ADMIN: {
+    standard: ["Website", "Ai Optimize", "Reports"],
+    premium: ["Website", "Ai Optimize", "Reports", "Projects"],
+  },
+  MANAGER: {
+    standard: ["Projects", "Invoices", "Reports"],
+    premium: ["Projects", "Invoices", "Reports"],
+  },
+  ERP_CUSTOMER: {
+    standard: ["Website"],
+    premium: ["Website", "Ai Optimize"],
+  },
+};
+
+const getMenuForUser = (role: string, plan?: string): string[] => {
+  const base = baseMenuConfig[role] || ["Dashboard", "Profile"];
+  const planKey = plan?.toLowerCase() || "starter";
+  const extras = planExtensions[role]?.[planKey] || [];
+  return [...new Set([...base, ...extras, "Signout"])];
+};
+
 const getIcon = (label: string) =>
   allMenuIcons[label as keyof typeof allMenuIcons] || LayoutDashboard;
 
 const getHref = (label: string) => routeMap[label] || "/";
-
-const getMenuForUser = (role: string, plan?: string): string[] =>
-  menuConfig[`${role}_${plan?.toLowerCase()}`] ||
-  menuConfig[`${role}_any`] || ["Dashboard"];
 
 // Layout component
 export default function RootLayout({
@@ -231,69 +192,148 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [userRole, setUserRole] = useState("GUEST");
-  const [planKey, setPlanKey] = useState("starter");
+  const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
-  useEffect(() => {
-    if (session?.user) {
-      setUserRole(session.user.role || "GUEST");
+  if (status === "loading") {
+    return (
+      <div className="text-center text-xl w-full min-h-screen flex justify-center items-center">
+        Loading, please wait ...
+      </div>
+    );
+  }
 
-      const rawKey = session.user.company?.subscriptionPlan?.key || "";
-      const match = rawKey.toLowerCase().match(/starter|standard|premium/);
-      setPlanKey(match?.[0] || "starter");
-    }
-  }, [session]);
-
-  if (status === "loading") return <div>Loading...</div>;
   if (!session?.user) {
     redirect("/auth");
     return null;
   }
 
-  const menuItems = getMenuForUser(userRole, planKey);
+  const role = session.user.role || "GUEST";
+  const rawKey = session.user.company?.subscriptionPlan?.key || "";
+  const match = rawKey.toLowerCase().match(/starter|standard|premium/);
+  const plan = match?.[0] || "starter";
+
+  const menuItems = getMenuForUser(role, plan);
 
   return (
-    <div className="w-full flex min-h-screen">
-      <aside
-        className={`${
-          sidebarOpen ? "w-64" : "w-16"
-        } bg-black text-white transition-all duration-200 ease-in-out flex flex-col`}
-      >
-        <div className="p-2 flex justify-end">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white hover:text-gray-300"
-          >
-            {sidebarOpen ? (
-              <ChevronLeft size={20} />
-            ) : (
-              <ChevronRight size={20} />
-            )}
-          </button>
+    <div className="w-full">
+      {/* Header */}
+      <div className="w-full h-12 top-0 flex flex-row items-center justify-between px-4 bg-[#484644] text-white">
+        <div className="flex items-center gap-1">
+          <Target size={32} color={"white"} />
+          <h1 className="text-lg font-semibold">OnTarget ERP</h1>
         </div>
-
-        <nav className="flex flex-col gap-2 px-2">
-          {menuItems.map((label) => (
-            <MenuItem
-              key={label}
-              icon={getIcon(label)}
-              label={label}
-              href={getHref(label)}
-              open={sidebarOpen}
+        {session.user.name && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{session.user.name}</span>
+            <img
+              src={
+                session.user.image || `https://robohash.org/${session.user.id}`
+              }
+              alt="User Avatar"
+              className="w-8 h-8 rounded-full"
             />
-          ))}
-          <MenuItem
-            icon={LogOut}
-            label="Signout"
-            href="/signout"
-            open={sidebarOpen}
-            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
-          />
-        </nav>
-      </aside>
+          </div>
+        )}
+      </div>
 
-      <main className="flex-1 p-4 h-screen overflow-y-scroll">{children}</main>
+      {/* Sidebar + Content */}
+      <div className="w-full flex flex-row max-h-screen">
+        <aside
+          className={`${
+            sidebarOpen ? "w-64" : "w-16"
+          }  pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col h-screen max-h-screen`}
+        >
+          {/* Toggle Button */}
+          <div className="flex justify-end items-start px-2">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="rounded-md p-1"
+            >
+              {sidebarOpen ? (
+                <ChevronLeft size={32} />
+              ) : (
+                <ChevronRight size={32} />
+              )}
+            </button>
+          </div>
+
+          {/* Menu Items */}
+          <div className="flex flex-col">
+            {menuItems.map((label) => (
+              <MenuItem
+                key={label}
+                icon={getIcon(label)}
+                label={label}
+                href={getHref(label)}
+                open={sidebarOpen}
+                onClick={
+                  label === "Signout"
+                    ? () => signOut({ redirect: true, callbackUrl: "/" })
+                    : undefined
+                }
+                className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
+              />
+            ))}
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="w-full flex flex-col h-screen overflow-y-scroll bg-gray-50">
+          {children}
+        </main>
+      </div>
     </div>
+  );
+}
+
+// MenuItem component
+export function MenuItem({
+  icon: Icon,
+  label,
+  href,
+  open,
+  onClick,
+  className,
+}: {
+  icon: React.ElementType;
+  label: string;
+  href?: string;
+  open: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}) {
+  const content = (
+    <>
+      <Icon className="h-6 w-6" />
+      <span
+        className={`ml-3 text-sm whitespace-nowrap transition-all ${
+          open ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+        }`}
+      >
+        {label}
+      </span>
+    </>
+  );
+
+  if (href === "/signout") {
+    return (
+      <div className="w-full absolute bottom-32">
+        <button
+          onClick={onClick}
+          className={`w-full flex items-center p-2 rounded hover:text-emerald-600 ${className}`}
+        >
+          {content}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={href ?? "#"}
+      className={`flex flex-row items-center w-full p-2 ${className}`}
+    >
+      {content}
+    </Link>
   );
 }

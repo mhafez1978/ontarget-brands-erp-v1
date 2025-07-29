@@ -40,11 +40,6 @@ export const POST = async (
     isActive: body.isActive === "true",
   };
 
-  console.log(
-    "Creating new hire with payload:",
-    JSON.stringify(payload, null, 2)
-  );
-
   try {
     const staff = await prisma.user.create({
       data: {
@@ -63,6 +58,9 @@ export const POST = async (
         companyId: companyId,
         isActive: payload.isActive,
         role: payload.role?.toUpperCase() as Role,
+        companies: {
+          connect: [{ id: companyId }],
+        },
       },
       include: {
         company: {

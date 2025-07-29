@@ -167,10 +167,10 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
       isActive: formData.isActive,
     };
     try {
-      console.log(
-        "Creating new hire with payload:",
-        JSON.stringify(payload, null, 2)
-      );
+      //console.log(
+      //   "Creating new hire with payload:",
+      //   JSON.stringify(payload, null, 2)
+      // );
       const res = await fetch(`/api/company/admin/${companyId}/staff/create`, {
         method: "POST",
         headers: {
@@ -229,223 +229,222 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
     setSelectedState(""); // Reset on country change
   }, [selectedCountry]);
 
-  5;
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-2xl mx-auto m-10 border border-emerald-600 rounded p-4 flex flex-col gap-3"
-    >
-      <div className="flex flex-row">
-        <Label className="w-1/4">Name</Label>
-        <Input
-          name="name"
-          value={formData.name ?? ""}
-          onChange={(e) => handleInputChange("name", e.target.value)}
-          placeholder="Name"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Email</Label>
-        <Input
-          type="email"
-          name="email"
-          value={formData.email ?? ""}
-          onChange={(e) => handleInputChange("email", e.target.value)}
-          placeholder="Email"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Password</Label>
-        <Input
-          type="Password"
-          name="password"
-          value={formData.password ?? ""}
-          onChange={(e) => handleInputChange("password", e.target.value)}
-          placeholder="Password"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Confirm Password</Label>
-        <Input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword ?? ""}
-          onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-          placeholder="Confirm Password"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Phone</Label>
-        <Input
-          name="phone"
-          value={formData.phone ?? ""}
-          onChange={(e) => handleInputChange("phone", e.target.value)}
-          placeholder="Phone"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Birth Date</Label>
-        <Input
-          type="date"
-          name="birthDate"
-          value={formData.birthDate ?? ""}
-          onChange={(e) => handleInputChange("birthDate", e.target.value)}
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Avatar URL</Label>
-        <Input
-          name="image"
-          value={formData.image ?? ""}
-          onChange={(e) => handleInputChange("image", e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Street Address</Label>
-        <Input
-          name="addressLine1"
-          value={formData.addressLine1 ?? ""}
-          onChange={(e) => handleInputChange("addressLine1", e.target.value)}
-          placeholder="Street Address"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Apt/Suite/Unit #</Label>
-        <Input
-          name="addressLine2"
-          value={formData.addressLine2 ?? ""}
-          onChange={(e) => handleInputChange("addressLine2", e.target.value)}
-          placeholder="Address continued"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">City</Label>
-        <Input
-          name="city"
-          value={formData.city ?? ""}
-          onChange={(e) => handleInputChange("city", e.target.value)}
-          placeholder="City"
-        />
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">State</Label>
-        <Select value={selectedState} onValueChange={setSelectedState}>
-          <SelectTrigger className="h-9 w-full">
-            <SelectValue placeholder="Select State" />
-          </SelectTrigger>
-          <SelectContent>
-            {states.map((s) => (
-              <SelectItem key={s.name} value={s.name}>
-                {s.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Zip Code</Label>
-        <Input
-          name="zipCode"
-          value={formData.zipCode ?? ""}
-          onChange={(e) => handleInputChange("zipCode", e.target.value)}
-          placeholder="Postal Code"
-        />
-      </div>
-
-      <div className="flex flex-row">
-        <Label className="w-1/4">Country</Label>
-        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-          <SelectTrigger className="h-9 w-full">
-            <SelectValue placeholder="Select Country" />
-          </SelectTrigger>
-          <SelectContent>
-            {countryOptions.map((c) => (
-              <SelectItem key={c.value} value={c.value}>
-                <span className="flex items-center gap-2">
-                  <img
-                    src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
-                    alt={c.label}
-                    className="w-5 h-4 rounded-sm border"
-                  />
-                  {c.label}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Role</Label>
-        <Select value={selectedRole} onValueChange={setSelectedRole}>
-          <SelectTrigger className="h-9 w-full">
-            <SelectValue placeholder="Select User Role" />
-          </SelectTrigger>
-          <SelectContent>
-            {userRoles.map((role) => (
-              <SelectItem key={role} value={role}>
-                {role}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex flex-row">
-        <Label className="w-1/4">Account Status</Label>
-        <Select
-          value={formData.isActive ? "true" : "false"}
-          onValueChange={(val) => handleInputChange("isActive", val)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Account Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="true">Active</SelectItem>
-            <SelectItem value="false">Inactive</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex flex-row">
-        <Label className="w-1/4">Company</Label>
-        <Select
-          value={formData.companyId ?? ""}
-          onValueChange={(val) => handleInputChange("companyId", val)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select Company" />
-          </SelectTrigger>
-          <SelectContent>
-            {Array.isArray(session.user.ownedCompanies) &&
-              session.user.ownedCompanies.map(
-                (company: { id: string; name: string }) => (
-                  <SelectItem key={company.id} value={company.id}>
-                    {company.name}
-                  </SelectItem>
-                )
-              )}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Button
-          type="submit"
-          className="w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 transition-colors"
-        >
-          Add Staff Member
-        </Button>
-      </div>
-      {formErrors.length > 0 && (
-        <div className="text-red-600">
-          <ul>
-            {formErrors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
+    <div className="w-full px-4 bg-white top-0 bottom-0 right-0 pb-14">
+      <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Label className="">Name</Label>
+          <Input
+            name="name"
+            value={formData.name ?? ""}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            placeholder="Name"
+          />
         </div>
-      )}
-    </form>
+        <div className="flex flex-col gap-2">
+          <Label className="">Email</Label>
+          <Input
+            type="email"
+            name="email"
+            value={formData.email ?? ""}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            placeholder="Email"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Password</Label>
+          <Input
+            type="Password"
+            name="password"
+            value={formData.password ?? ""}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            placeholder="Password"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Confirm Password</Label>
+          <Input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword ?? ""}
+            onChange={(e) =>
+              handleInputChange("confirmPassword", e.target.value)
+            }
+            placeholder="Confirm Password"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Phone</Label>
+          <Input
+            name="phone"
+            value={formData.phone ?? ""}
+            onChange={(e) => handleInputChange("phone", e.target.value)}
+            placeholder="Phone"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Birth Date</Label>
+          <Input
+            type="date"
+            name="birthDate"
+            value={formData.birthDate ?? ""}
+            onChange={(e) => handleInputChange("birthDate", e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Avatar URL</Label>
+          <Input
+            name="image"
+            value={formData.image ?? ""}
+            onChange={(e) => handleInputChange("image", e.target.value)}
+            placeholder="https://..."
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Street Address</Label>
+          <Input
+            name="addressLine1"
+            value={formData.addressLine1 ?? ""}
+            onChange={(e) => handleInputChange("addressLine1", e.target.value)}
+            placeholder="Street Address"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Apt/Suite/Unit #</Label>
+          <Input
+            name="addressLine2"
+            value={formData.addressLine2 ?? ""}
+            onChange={(e) => handleInputChange("addressLine2", e.target.value)}
+            placeholder="Address continued"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">City</Label>
+          <Input
+            name="city"
+            value={formData.city ?? ""}
+            onChange={(e) => handleInputChange("city", e.target.value)}
+            placeholder="City"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">State</Label>
+          <Select value={selectedState} onValueChange={setSelectedState}>
+            <SelectTrigger className="h-9 w-full">
+              <SelectValue placeholder="Select State" />
+            </SelectTrigger>
+            <SelectContent>
+              {states.map((s) => (
+                <SelectItem key={s.name} value={s.name}>
+                  {s.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Zip Code</Label>
+          <Input
+            name="zipCode"
+            value={formData.zipCode ?? ""}
+            onChange={(e) => handleInputChange("zipCode", e.target.value)}
+            placeholder="Postal Code"
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label className="">Country</Label>
+          <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+            <SelectTrigger className="h-9 w-full">
+              <SelectValue placeholder="Select Country" />
+            </SelectTrigger>
+            <SelectContent>
+              {countryOptions.map((c) => (
+                <SelectItem key={c.value} value={c.value}>
+                  <span className="flex items-center gap-2">
+                    <img
+                      src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
+                      alt={c.label}
+                      className="w-5 h-4 rounded-sm border"
+                    />
+                    {c.label}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Role</Label>
+          <Select value={selectedRole} onValueChange={setSelectedRole}>
+            <SelectTrigger className="h-9 w-full">
+              <SelectValue placeholder="Select User Role" />
+            </SelectTrigger>
+            <SelectContent>
+              {userRoles.map((role) => (
+                <SelectItem key={role} value={role}>
+                  {role}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label className="">Account Status</Label>
+          <Select
+            value={formData.isActive ? "true" : "false"}
+            onValueChange={(val) => handleInputChange("isActive", val)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Account Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="true">Active</SelectItem>
+              <SelectItem value="false">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="">Company</Label>
+          <Select
+            value={formData.companyId ?? ""}
+            onValueChange={(val) => handleInputChange("companyId", val)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Company" />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.isArray(session.user.ownedCompanies) &&
+                session.user.ownedCompanies.map(
+                  (company: { id: string; name: string }) => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.name}
+                    </SelectItem>
+                  )
+                )}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Button
+            type="submit"
+            className="w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 transition-colors"
+          >
+            Add Staff Member
+          </Button>
+        </div>
+        {formErrors.length > 0 && (
+          <div className="text-red-600">
+            <ul>
+              {formErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };

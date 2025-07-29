@@ -91,8 +91,19 @@ export const Dashboard = ({ session }: DashboardProps) => {
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-500">Last updated</p>
-          <p className="font-semibold">2 minutes ago</p>
+          <p className="text-sm text-gray-500">Last Login</p>
+          <p className="font-semibold">
+            {session?.user?.lastLogin
+              ? new Date(session.user.lastLogin).toLocaleString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+              : "Never"}
+          </p>
         </div>
       </div>
 

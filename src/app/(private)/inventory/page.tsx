@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { InventoryManagement } from "@/components/erp/InventoryManagement";
+
 import { redirect } from "next/navigation";
 
 const InventoryPage = async () => {
@@ -7,13 +8,14 @@ const InventoryPage = async () => {
   if (!session || !session.user) {
     return redirect("/auth");
   }
-  //const userId = session.user.id;
+  //console.log(session);
   const userRole = session.user.role;
-  const subscriptionPlan = session.user.subscriptionPlan;
+  const subscriptionPlan = session.user.company?.subscriptionPlan;
+  const companies = session.user.ownedCompanies || [];
+
   if (
     !userRole ||
-    !["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(userRole) ||
-    !subscriptionPlan
+    !["ADMIN", "SUPER_ADMIN", "MANAGER", "ERP_CUSTOMER"].includes(userRole)
   ) {
     // Access denied
     return (
@@ -30,7 +32,8 @@ const InventoryPage = async () => {
       </>
     );
   }
-  return <InventoryManagement />;
+
+  return <InventoryManagement companies={companies} />;
 };
 
 export default InventoryPage;

@@ -18,7 +18,7 @@ export const ConfigureDomainForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Domain config:", JSON.stringify(formData, null, 2));
+    //console.log("Domain config:", JSON.stringify(formData, null, 2));
     onSuccess?.();
   };
 

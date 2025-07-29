@@ -144,7 +144,7 @@ export const UserProfile = () => {
               <img
                 src={formData.image}
                 alt="User Avatar"
-                className="w-40 h-40 rounded-full border-4 border-slate-800"
+                className="w-40 h-40 rounded-full border-2 border-sky-300 drop-shadow-sky-600"
               />
               <input
                 id="dropzone-file"
@@ -248,7 +248,7 @@ export const UserProfile = () => {
         </div>
 
         <label className="flex flex-col">
-          Address Line 1:
+          Street Address:
           <input
             type="text"
             value={formData.addressLine1 ?? ""}
@@ -258,7 +258,7 @@ export const UserProfile = () => {
         </label>
 
         <label className="flex flex-col">
-          Address Line 2:
+          Apt/Suite/Unit:
           <input
             type="text"
             value={formData.addressLine2 ?? ""}

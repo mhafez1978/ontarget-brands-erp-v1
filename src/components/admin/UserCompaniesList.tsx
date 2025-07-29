@@ -64,7 +64,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   const handleEdit = (company: Company) => {
     setSelectedCompany(company);
     setCompanyId2Edit(company.id);
-    console.log("#########" + companyId2Edit);
+    //console.log("#########" + companyId2Edit);
   };
 
   const handleDelete = async (company: Company) => {
@@ -118,14 +118,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
               formName={"Create New Company"}
               buttonText={"Create Company"}
             >
-              {(close) => (
-                <CreateCompanyForm
-                  userId={session.user.id}
-                  close={function (): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                />
-              )}
+              {(close) => <CreateCompanyForm userId={session.user.id} />}
             </OffCanvasBtn>
           </div>
         </div>
@@ -182,7 +175,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
                 <dt className="font-black text-gray-600">Domain</dt>
                 <dd>
                   <Link
-                    href={`http://${company.domain || ""}`}
+                    href={`http://${company.domain}`}
                     target="_blank"
                     className="text-blue-600 underline"
                   >

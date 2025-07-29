@@ -24,7 +24,15 @@ export async function DELETE(
 
   if (userId === session.user.id) {
     return NextResponse.json(
-      { error: "Cannot delete the currently logged-in user" },
+      { error: "Cannot delete your own account..." },
+      { status: 403 }
+    );
+  }
+
+  // if someone tries to delete company owner they should fail
+  if (session.user.company?.ownerId === userId) {
+    return NextResponse.json(
+      { error: "Cannot delete the company owner..." },
       { status: 403 }
     );
   }

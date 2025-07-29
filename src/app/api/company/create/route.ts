@@ -97,9 +97,16 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    if (!newCompany.domain) {
+      return NextResponse.json(
+        { error: "Company domain is required to create subdomain." },
+        { status: 400 }
+      );
+    }
+
     const addSubdomain = await prisma.companySubdomain.create({
       data: {
-        subdomain: domain,
+        subdomain: newCompany.domain,
         company: {
           connect: { id: newCompany.id },
         },
@@ -140,12 +147,13 @@ export async function POST(req: NextRequest) {
       let message = "A unique constraint failed.";
       if (Array.isArray(target)) {
         if (target.includes("domain")) message = "Domain is already in use.";
-        else if (target.includes("supportEmail"))
-          message = "Support email is already registered.";
-        else if (target.includes("salesEmail"))
-          message = "Sales email is already registered.";
+        else if (target.includes("Email"))
+          message = "This Email is already registered.";
+      } else if (typeof target === "string") {
+        if (target === "domain") message = "Domain is already in use.";
+        else if (target.toLowerCase().includes("email"))
+          message = "This Email is already registered.";
       }
-
       return NextResponse.json({ error: message }, { status: 400 });
     }
     return NextResponse.json(

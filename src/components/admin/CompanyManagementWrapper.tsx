@@ -47,9 +47,6 @@ export const CompanyManagementWrapper = ({ userId }: Props) => {
                 handleSuccess();
                 close(); // close the drawer after successful creation
               }}
-              close={function (): void {
-                throw new Error("Function not implemented.");
-              }}
             />
           )}
         </OffCanvasBtn>

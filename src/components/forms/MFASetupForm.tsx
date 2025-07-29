@@ -45,7 +45,7 @@ export const MFASetupForm = ({
   return (
     <div className="space-y-6">
       {isLoadingQR ? (
-        <p className="text-sm text-muted-foreground">Loading QR code...</p>
+        <p className="text-sm text-muted-foreground h-24">Loading QR code...</p>
       ) : qrCodeUrl ? (
         <img src={qrCodeUrl} alt="QR" className="mx-auto w-48 h-48" />
       ) : (
@@ -75,6 +75,7 @@ export const MFASetupForm = ({
           value={validationPin}
           onChange={handlePinChange}
           placeholder="123456"
+          className="border-2 border-indigo-400 h-12"
         />
         <Button type="submit">Validate</Button>
       </form>

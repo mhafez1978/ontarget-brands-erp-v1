@@ -202,7 +202,7 @@ export const EditCompanyForm = ({
     setSuccess("");
 
     try {
-      console.log("Submitting form data:", JSON.stringify(formData, null, 2));
+      //console.log("Submitting form data:", JSON.stringify(formData, null, 2));
       const res = await fetch(`/api/admin/company/${companyId}/update`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

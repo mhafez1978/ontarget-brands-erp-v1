@@ -92,10 +92,10 @@ export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
       isActive: formData.isActive === "true",
     };
     try {
-      console.log(
-        "Creating new hire with payload:",
-        JSON.stringify(payload, null, 2)
-      );
+      // console.log(
+      //   "Creating new hire with payload:",
+      //   JSON.stringify(payload, null, 2)
+      // );
       const res = await fetch(`/api/company/admin/${companyId}/staff/create`, {
         method: "POST",
         headers: {

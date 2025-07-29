@@ -226,32 +226,38 @@ model ProjectCustomer {
 }
 
 model Product {
-  id             String                   @id @default(uuid())
-  name           String
-  description    String?
-  sku            String?
-  upc            String?
-  unit           ProductUnit?
-  quantity       Int?
-  cost           Float?
-  price          Float?
-  brand          String?
-  status         ProductStatus?
-  supplierId     String?
-  supplier       Supplier?                @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  deliveryMethod DeliveryMethod
-  category       CompanyProductCategory[]
-  companyId      String
-  company        Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  createdAt      DateTime                 @default(now())
-  updatedAt      DateTime                 @updatedAt
-  deletedAt      DateTime?
+  id           String               @id @default(uuid())
+  name         String
+  description  String?
+  sku          String?
+  upc          String?
+  serial       String?
+  model        String?
+  macAddress   String?
+  unit         ProductUnit?
+  quantity     Int?
+  cost         Float?
+  price        Float?
+  brand        String?
+  weight       Float?
+  isActive     Boolean              @default(true)
+  availability ProductAvailability?
+  supplierId   String?
+  supplier     Supplier?            @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  companyId    String
+  company      Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  deletedAt    DateTime?
+
+  companyProductCategories CompanyProductCategory[] // Added relation field
 }
 
 model Supplier {
   id           String    @id @default(uuid())
   name         String
   tagline      String?
+  phone        String?
   website      String?
   salesEmail   String?
   supportEmail String?
@@ -403,6 +409,19 @@ enum BusinessType {
   OTHER
 }
 
+enum PaymentType {
+  CASH
+  CHECK
+  COMPANY_CREDIT
+  DEBIT_CARD
+  CREDIT_CARD
+  ACH_TRANSFER
+  WIRE_TRANSFER
+  BANK_TRANSFERz
+  MOBILE_PAYMENT
+  OTHER
+}
+
 enum BillingCycle {
   ONE_TIME
   NET_7
@@ -421,8 +440,7 @@ enum ProjectStatus {
   ARCHIVED
 }
 
-enum ProductStatus {
-  ACTIVE
+enum ProductAvailability {
   LIMITED_OFFER
   REGION_BASED
   BACK_ORDER

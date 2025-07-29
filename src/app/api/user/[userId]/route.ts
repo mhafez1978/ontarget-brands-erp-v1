@@ -94,10 +94,10 @@ export async function PATCH(
     });
 
     if (!updatedUser) {
-      console.log(`User with ID ${userId} not found for update`);
+      //console.log(`User with ID ${userId} not found for update`);
       return new Response("User not found", { status: 404 });
     }
-    console.log("User profile updated successfully:", updatedUser);
+    // console.log("User profile updated successfully:", updatedUser);
     return Response.json(updatedUser);
   } catch (error) {
     console.error("Update error", error);

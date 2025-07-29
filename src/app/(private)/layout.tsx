@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -27,6 +27,7 @@ import {
   Target,
   ChevronDown,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Icon mapping
 const allMenuIcons: Record<string, React.ElementType> = {
@@ -45,7 +46,7 @@ const allMenuIcons: Record<string, React.ElementType> = {
   "Hosting Settings": Globe,
   "Ai Settings": Bot,
   "Ai Optimize": Bot,
-  "Website/Store": Globe,
+  Website: Globe,
   "Clock In/Out": Clock,
   Inbox: Bot,
   "Assigned Tasks": FolderKanban,
@@ -82,44 +83,11 @@ const routeMap: Record<string, string> = {
   "Manager Menu": "/manager/dashboard",
   "Customer Menu": "/customer/dashboard",
   Signout: "/signout",
-} as const;
-
-// no company yet
-
-const menuConfigBase: Record<string, string[]> = {
-  CUSTOMER_starter: ["Dashboard", "Profile", "Company", "Settings"],
 };
 
-// Role + Plan menu config
-const menuConfig: Record<string, string[]> = {
-  ERP_CUSTOMER_starter: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ERP_CUSTOMER_standard: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ERP_CUSTOMER_premium: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Orders",
-    "Invoices",
-    "Customer Menu",
-    "Settings",
-  ],
-  ADMIN_starter: [
+// Base menus per role
+const baseMenuConfig: Record<string, string[]> = {
+  ADMIN: [
     "Dashboard",
     "Profile",
     "Company",
@@ -132,40 +100,7 @@ const menuConfig: Record<string, string[]> = {
     "Admin Menu",
     "Settings",
   ],
-  ADMIN_standard: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Staff",
-    "Products",
-    "Services",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Website",
-    "Ai Optimize",
-    "Reports",
-    "Admin Menu",
-    "Settings",
-  ],
-  ADMIN_premium: [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Staff",
-    "Products",
-    "Services",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Website",
-    "Ai Optimize",
-    "Reports",
-    "Admin Menu",
-    "Settings",
-  ],
-  MANAGER_starter: [
+  MANAGER: [
     "Dashboard",
     "Profile",
     "Customers",
@@ -173,29 +108,7 @@ const menuConfig: Record<string, string[]> = {
     "Manager Menu",
     "Settings",
   ],
-  MANAGER_standard: [
-    "Dashboard",
-    "Profile",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Reports",
-    "Manager Menu",
-    "Settings",
-  ],
-  MANAGER_premium: [
-    "Dashboard",
-    "Profile",
-    "Projects",
-    "Customers",
-    "Orders",
-    "Invoices",
-    "Reports",
-    "Manager Menu",
-    "Settings",
-  ],
-  STAFF_any: [
+  STAFF: [
     "Dashboard",
     "Profile",
     "Clock In/Out",
@@ -204,7 +117,7 @@ const menuConfig: Record<string, string[]> = {
     "Assigned Tasks",
     "Settings",
   ],
-  SUPER_ADMIN_any: [
+  SUPER_ADMIN: [
     "Dashboard",
     "Profile",
     "Company",
@@ -221,27 +134,56 @@ const menuConfig: Record<string, string[]> = {
     "Ai Settings",
     "SuperAdmin Menu",
   ],
-  GUEST_any: ["Dashboard", "Profile", "Inbox", "Signout"],
-} as const;
+  GUEST: ["Dashboard", "Profile", "Inbox", "Signout"],
 
-// Helpers
+  // New roles:
+  ERP_CUSTOMER: [
+    "Dashboard",
+    "Profile",
+    "Company",
+    "Orders",
+    "Invoices",
+    "Customer Menu",
+    "Settings",
+  ],
+  COMPANY_CUSTOMER: [
+    "Dashboard",
+    "Profile",
+    "Company",
+    "Orders",
+    "Invoices",
+    "Customer Menu",
+    "Settings",
+  ],
+};
+
+// Optional plan-based extensions
+const planExtensions: Record<string, Partial<Record<string, string[]>>> = {
+  ADMIN: {
+    standard: ["Website", "Ai Optimize", "Reports"],
+    premium: ["Website", "Ai Optimize", "Reports", "Projects"],
+  },
+  MANAGER: {
+    standard: ["Projects", "Invoices", "Reports"],
+    premium: ["Projects", "Invoices", "Reports"],
+  },
+  ERP_CUSTOMER: {
+    standard: ["Website"],
+    premium: ["Website", "Ai Optimize"],
+  },
+};
+
+const getMenuForUser = (role: string, plan?: string): string[] => {
+  const base = baseMenuConfig[role] || ["Dashboard", "Profile"];
+  const planKey = plan?.toLowerCase() || "starter";
+  const extras = planExtensions[role]?.[planKey] || [];
+  return [...new Set([...base, ...extras, "Signout"])];
+};
+
 const getIcon = (label: string) =>
   allMenuIcons[label as keyof typeof allMenuIcons] || LayoutDashboard;
 
 const getHref = (label: string) => routeMap[label] || "/";
-
-const getMenuForUser = (role: string, plan?: string): string[] =>
-  menuConfig[`${role}_${plan?.toLowerCase()}`] ||
-  menuConfig[`${role}_any`] || ["Dashboard", "Profile", "Company", "Settings"];
-
-const getMenuForNewCustomer = (role: string, plan?: string): string[] =>
-  menuConfigBase[`${role}_${plan?.toLowerCase()}`] ||
-  menuConfigBase[`${role}_any`] || [
-    "Dashboard",
-    "Profile",
-    "Company",
-    "Settings",
-  ];
 
 // Layout component
 export default function RootLayout({
@@ -250,147 +192,93 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [userRole, setUserRole] = useState("GUEST");
-  const [planKey, setPlanKey] = useState("starter");
-  const [hasCompany, setHasCompany] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
-  if (status === "loading")
+  if (status === "loading") {
     return (
       <div className="text-center text-xl w-full min-h-screen flex justify-center items-center">
-        Loading , please wait ...
+        Loading, please wait ...
       </div>
     );
+  }
+
   if (!session?.user) {
     redirect("/auth");
     return null;
   }
-  const customerMenuItems = getMenuForNewCustomer(userRole, planKey);
-  const menuItems = getMenuForUser(userRole, planKey);
 
-  useEffect(() => {
-    if (session?.user) {
-      setUserRole(session.user.role || "GUEST");
-      const rawKey = session.user.company?.subscriptionPlan?.key || "";
-      const match = rawKey.toLowerCase().match(/starter|standard|premium/);
-      setPlanKey(match?.[0] || "starter");
-    }
-  }, [session]);
+  const role = session.user.role || "GUEST";
+  const rawKey = session.user.company?.subscriptionPlan?.key || "";
+  const match = rawKey.toLowerCase().match(/starter|standard|premium/);
+  const plan = match?.[0] || "starter";
 
-  useEffect(() => {
-    if (session.user.company) {
-      setHasCompany(true);
-    }
-  }, [session]);
+  const menuItems = getMenuForUser(role, plan);
 
   return (
     <div className="w-full">
-      <div className="w-full h-12 fixed top-0 flex flex-row items-center justify-between px-4 bg-[#484644] text-white z-40">
+      {/* Header */}
+      <div className="w-full h-12 top-0 flex flex-row items-center justify-between px-4 bg-[#484644] text-white">
         <div className="flex items-center gap-1">
           <Target size={32} color={"white"} />
           <h1 className="text-lg font-semibold">OnTarget ERP</h1>
         </div>
-        {session.user.name ? (
+        {session.user.name && (
           <div className="flex items-center gap-2">
             <span className="text-sm">{session.user.name}</span>
             <img
               src={
-                session.user.image ||
-                `https://robohash.org/${session.user.name} || https://robohash.org/${session.user.id} || https://robohash.org/robot`
+                session.user.image || `https://robohash.org/${session.user.id}`
               }
               alt="User Avatar"
               className="w-8 h-8 rounded-full"
             />
           </div>
-        ) : null}
+        )}
       </div>
-      <div className="w-full flex flex-row min-h-screen mt-12">
+
+      {/* Sidebar + Content */}
+      <div className="w-full flex flex-row max-h-screen">
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-16"
-          } pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col`}
+          }  pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col h-screen max-h-screen`}
         >
-          <div
-            className={
-              sidebarOpen
-                ? "flex justify-end items-start"
-                : "flex justify-end items-start mr-4"
-            }
-          >
+          {/* Toggle Button */}
+          <div className="flex justify-end items-start px-2">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="rounded-md pt-1 pb-1 pl-1 pr-1"
+              className="rounded-md p-1"
             >
               {sidebarOpen ? (
-                <ChevronLeft size={32} color={"black"} />
+                <ChevronLeft size={32} />
               ) : (
-                <ChevronRight size={32} color={"black"} />
+                <ChevronRight size={32} />
               )}
             </button>
           </div>
-          {session.user.role === "COMPANY_CUSTOMER" && (
-            <>
-              <ul className="px-4">
-                <li>customer menu item 1</li>
-                <li>customer menu item 2</li>
-                <li>customer menu item 3</li>
-                <li>customer menu item 4</li>
-              </ul>
+
+          {/* Menu Items */}
+          <div className="flex flex-col">
+            {menuItems.map((label) => (
               <MenuItem
-                icon={LogOut}
-                label="Signout"
-                href="/signout"
+                key={label}
+                icon={getIcon(label)}
+                label={label}
+                href={getHref(label)}
                 open={sidebarOpen}
-                onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                onClick={
+                  label === "Signout"
+                    ? () => signOut({ redirect: true, callbackUrl: "/" })
+                    : undefined
+                }
                 className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
               />
-            </>
-          )}
-          {session.user.role !== "COMPANY_CUSTOMER" && (
-            <>
-              <nav className="flex flex-col gap-4 px-2 pt-4">
-                {session.user.company?.id ? (
-                  <>
-                    {menuItems.map((label) => (
-                      <MenuItem
-                        key={label}
-                        icon={getIcon(label)}
-                        label={label}
-                        href={getHref(label)}
-                        open={sidebarOpen}
-                        className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    {customerMenuItems.map((label) => (
-                      <MenuItem
-                        key={label}
-                        icon={getIcon(label)}
-                        label={label}
-                        href={getHref(label)}
-                        open={sidebarOpen}
-                        className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
-                      />
-                    ))}
-                  </>
-                )}
-
-                <MenuItem
-                  icon={LogOut}
-                  label="Signout"
-                  href="/signout"
-                  open={sidebarOpen}
-                  onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
-                  className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"
-                />
-              </nav>
-            </>
-          )}
+            ))}
+          </div>
         </aside>
 
-        <main className="flex-1 h-screen overflow-y-scroll. bg-gray-50">
+        {/* Main Content */}
+        <main className="w-full flex flex-col h-screen overflow-y-scroll bg-gray-50">
           {children}
         </main>
       </div>
@@ -427,22 +315,25 @@ export function MenuItem({
     </>
   );
 
-  return href === "/signout" ? (
-    <button
-      onClick={onClick}
-      className="absolute bottom-8 flex items-center w-60 p-2 rounded"
+  if (href === "/signout") {
+    return (
+      <div className="w-full absolute bottom-32">
+        <button
+          onClick={onClick}
+          className={`w-full flex items-center p-2 rounded hover:text-emerald-600 ${className}`}
+        >
+          {content}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={href ?? "#"}
+      className={`flex flex-row items-center w-full p-2 ${className}`}
     >
       {content}
-    </button>
-  ) : (
-    <div className="flex items-center w-full">
-      <Link
-        href={href ?? "#"}
-        className="flex flex-row items-center w-full p-2 rounded"
-      >
-        {content}
-      </Link>
-      <ChevronDown />
-    </div>
+    </Link>
   );
 }

@@ -41,7 +41,7 @@ export const CreateCustomerLandingContent = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(JSON.stringify(formData, null, 2));
+    //console.log(JSON.stringify(formData, null, 2));
   };
 
   return (

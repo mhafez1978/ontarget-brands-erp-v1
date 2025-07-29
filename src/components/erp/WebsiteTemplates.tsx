@@ -169,14 +169,14 @@ export const WebsiteTemplates = () => {
   const handleSelectTemplate = (templateId: string) => {
     setActiveTemplate(templateId);
     const template = templates.find((t) => t.id === templateId);
-    console.log("Selected Template:", template);
+    //console.log("Selected Template:", template);
   };
 
   const handleCustomizeTemplate = (templateId: string) => {
     setSelectedTemplate(templateId);
   };
 
-  console.log("Selected Template:", selectedTemplate);
+  //console.log("Selected Template:", selectedTemplate);
 
   return (
     <div className="p-6 space-y-6">

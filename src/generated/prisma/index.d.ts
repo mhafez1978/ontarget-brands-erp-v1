@@ -185,6 +185,22 @@ export const BusinessType: {
 export type BusinessType = (typeof BusinessType)[keyof typeof BusinessType]
 
 
+export const PaymentType: {
+  CASH: 'CASH',
+  CHECK: 'CHECK',
+  COMPANY_CREDIT: 'COMPANY_CREDIT',
+  DEBIT_CARD: 'DEBIT_CARD',
+  CREDIT_CARD: 'CREDIT_CARD',
+  ACH_TRANSFER: 'ACH_TRANSFER',
+  WIRE_TRANSFER: 'WIRE_TRANSFER',
+  BANK_TRANSFERz: 'BANK_TRANSFERz',
+  MOBILE_PAYMENT: 'MOBILE_PAYMENT',
+  OTHER: 'OTHER'
+};
+
+export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
+
+
 export const BillingCycle: {
   ONE_TIME: 'ONE_TIME',
   NET_7: 'NET_7',
@@ -209,8 +225,7 @@ export const ProjectStatus: {
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
 
-export const ProductStatus: {
-  ACTIVE: 'ACTIVE',
+export const ProductAvailability: {
   LIMITED_OFFER: 'LIMITED_OFFER',
   REGION_BASED: 'REGION_BASED',
   BACK_ORDER: 'BACK_ORDER',
@@ -218,7 +233,7 @@ export const ProductStatus: {
   OUT_OF_STOCK: 'OUT_OF_STOCK'
 };
 
-export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]
+export type ProductAvailability = (typeof ProductAvailability)[keyof typeof ProductAvailability]
 
 
 export const ProductUnit: {
@@ -475,6 +490,10 @@ export type BusinessType = $Enums.BusinessType
 
 export const BusinessType: typeof $Enums.BusinessType
 
+export type PaymentType = $Enums.PaymentType
+
+export const PaymentType: typeof $Enums.PaymentType
+
 export type BillingCycle = $Enums.BillingCycle
 
 export const BillingCycle: typeof $Enums.BillingCycle
@@ -483,9 +502,9 @@ export type ProjectStatus = $Enums.ProjectStatus
 
 export const ProjectStatus: typeof $Enums.ProjectStatus
 
-export type ProductStatus = $Enums.ProductStatus
+export type ProductAvailability = $Enums.ProductAvailability
 
-export const ProductStatus: typeof $Enums.ProductStatus
+export const ProductAvailability: typeof $Enums.ProductAvailability
 
 export type ProductUnit = $Enums.ProductUnit
 
@@ -2731,11 +2750,11 @@ export namespace Prisma {
    */
 
   export type ProductCountOutputType = {
-    category: number
+    companyProductCategories: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    category?: boolean | ProductCountOutputTypeCountCategoryArgs
+    companyProductCategories?: boolean | ProductCountOutputTypeCountCompanyProductCategoriesArgs
   }
 
   // Custom InputTypes
@@ -2752,7 +2771,7 @@ export namespace Prisma {
   /**
    * ProductCountOutputType without action
    */
-  export type ProductCountOutputTypeCountCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ProductCountOutputTypeCountCompanyProductCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompanyProductCategoryWhereInput
   }
 
@@ -12866,12 +12885,14 @@ export namespace Prisma {
     quantity: number | null
     cost: number | null
     price: number | null
+    weight: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     quantity: number | null
     cost: number | null
     price: number | null
+    weight: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -12880,14 +12901,18 @@ export namespace Prisma {
     description: string | null
     sku: string | null
     upc: string | null
+    serial: string | null
+    model: string | null
+    macAddress: string | null
     unit: $Enums.ProductUnit | null
     quantity: number | null
     cost: number | null
     price: number | null
     brand: string | null
-    status: $Enums.ProductStatus | null
+    weight: number | null
+    isActive: boolean | null
+    availability: $Enums.ProductAvailability | null
     supplierId: string | null
-    deliveryMethod: $Enums.DeliveryMethod | null
     companyId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12900,14 +12925,18 @@ export namespace Prisma {
     description: string | null
     sku: string | null
     upc: string | null
+    serial: string | null
+    model: string | null
+    macAddress: string | null
     unit: $Enums.ProductUnit | null
     quantity: number | null
     cost: number | null
     price: number | null
     brand: string | null
-    status: $Enums.ProductStatus | null
+    weight: number | null
+    isActive: boolean | null
+    availability: $Enums.ProductAvailability | null
     supplierId: string | null
-    deliveryMethod: $Enums.DeliveryMethod | null
     companyId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12920,14 +12949,18 @@ export namespace Prisma {
     description: number
     sku: number
     upc: number
+    serial: number
+    model: number
+    macAddress: number
     unit: number
     quantity: number
     cost: number
     price: number
     brand: number
-    status: number
+    weight: number
+    isActive: number
+    availability: number
     supplierId: number
-    deliveryMethod: number
     companyId: number
     createdAt: number
     updatedAt: number
@@ -12940,12 +12973,14 @@ export namespace Prisma {
     quantity?: true
     cost?: true
     price?: true
+    weight?: true
   }
 
   export type ProductSumAggregateInputType = {
     quantity?: true
     cost?: true
     price?: true
+    weight?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -12954,14 +12989,18 @@ export namespace Prisma {
     description?: true
     sku?: true
     upc?: true
+    serial?: true
+    model?: true
+    macAddress?: true
     unit?: true
     quantity?: true
     cost?: true
     price?: true
     brand?: true
-    status?: true
+    weight?: true
+    isActive?: true
+    availability?: true
     supplierId?: true
-    deliveryMethod?: true
     companyId?: true
     createdAt?: true
     updatedAt?: true
@@ -12974,14 +13013,18 @@ export namespace Prisma {
     description?: true
     sku?: true
     upc?: true
+    serial?: true
+    model?: true
+    macAddress?: true
     unit?: true
     quantity?: true
     cost?: true
     price?: true
     brand?: true
-    status?: true
+    weight?: true
+    isActive?: true
+    availability?: true
     supplierId?: true
-    deliveryMethod?: true
     companyId?: true
     createdAt?: true
     updatedAt?: true
@@ -12994,14 +13037,18 @@ export namespace Prisma {
     description?: true
     sku?: true
     upc?: true
+    serial?: true
+    model?: true
+    macAddress?: true
     unit?: true
     quantity?: true
     cost?: true
     price?: true
     brand?: true
-    status?: true
+    weight?: true
+    isActive?: true
+    availability?: true
     supplierId?: true
-    deliveryMethod?: true
     companyId?: true
     createdAt?: true
     updatedAt?: true
@@ -13101,14 +13148,18 @@ export namespace Prisma {
     description: string | null
     sku: string | null
     upc: string | null
+    serial: string | null
+    model: string | null
+    macAddress: string | null
     unit: $Enums.ProductUnit | null
     quantity: number | null
     cost: number | null
     price: number | null
     brand: string | null
-    status: $Enums.ProductStatus | null
+    weight: number | null
+    isActive: boolean
+    availability: $Enums.ProductAvailability | null
     supplierId: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     companyId: string
     createdAt: Date
     updatedAt: Date
@@ -13140,21 +13191,25 @@ export namespace Prisma {
     description?: boolean
     sku?: boolean
     upc?: boolean
+    serial?: boolean
+    model?: boolean
+    macAddress?: boolean
     unit?: boolean
     quantity?: boolean
     cost?: boolean
     price?: boolean
     brand?: boolean
-    status?: boolean
+    weight?: boolean
+    isActive?: boolean
+    availability?: boolean
     supplierId?: boolean
-    deliveryMethod?: boolean
     companyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
     supplier?: boolean | Product$supplierArgs<ExtArgs>
-    category?: boolean | Product$categoryArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    companyProductCategories?: boolean | Product$companyProductCategoriesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -13166,25 +13221,29 @@ export namespace Prisma {
     description?: boolean
     sku?: boolean
     upc?: boolean
+    serial?: boolean
+    model?: boolean
+    macAddress?: boolean
     unit?: boolean
     quantity?: boolean
     cost?: boolean
     price?: boolean
     brand?: boolean
-    status?: boolean
+    weight?: boolean
+    isActive?: boolean
+    availability?: boolean
     supplierId?: boolean
-    deliveryMethod?: boolean
     companyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "upc" | "unit" | "quantity" | "cost" | "price" | "brand" | "status" | "supplierId" | "deliveryMethod" | "companyId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sku" | "upc" | "serial" | "model" | "macAddress" | "unit" | "quantity" | "cost" | "price" | "brand" | "weight" | "isActive" | "availability" | "supplierId" | "companyId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     supplier?: boolean | Product$supplierArgs<ExtArgs>
-    category?: boolean | Product$categoryArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    companyProductCategories?: boolean | Product$companyProductCategoriesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -13192,8 +13251,8 @@ export namespace Prisma {
     name: "Product"
     objects: {
       supplier: Prisma.$SupplierPayload<ExtArgs> | null
-      category: Prisma.$CompanyProductCategoryPayload<ExtArgs>[]
       company: Prisma.$CompanyPayload<ExtArgs>
+      companyProductCategories: Prisma.$CompanyProductCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13201,14 +13260,18 @@ export namespace Prisma {
       description: string | null
       sku: string | null
       upc: string | null
+      serial: string | null
+      model: string | null
+      macAddress: string | null
       unit: $Enums.ProductUnit | null
       quantity: number | null
       cost: number | null
       price: number | null
       brand: string | null
-      status: $Enums.ProductStatus | null
+      weight: number | null
+      isActive: boolean
+      availability: $Enums.ProductAvailability | null
       supplierId: string | null
-      deliveryMethod: $Enums.DeliveryMethod
       companyId: string
       createdAt: Date
       updatedAt: Date
@@ -13554,8 +13617,8 @@ export namespace Prisma {
   export interface Prisma__ProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     supplier<T extends Product$supplierArgs<ExtArgs> = {}>(args?: Subset<T, Product$supplierArgs<ExtArgs>>): Prisma__SupplierClient<$Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    category<T extends Product$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Product$categoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyProductCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    companyProductCategories<T extends Product$companyProductCategoriesArgs<ExtArgs> = {}>(args?: Subset<T, Product$companyProductCategoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyProductCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13590,14 +13653,18 @@ export namespace Prisma {
     readonly description: FieldRef<"Product", 'String'>
     readonly sku: FieldRef<"Product", 'String'>
     readonly upc: FieldRef<"Product", 'String'>
+    readonly serial: FieldRef<"Product", 'String'>
+    readonly model: FieldRef<"Product", 'String'>
+    readonly macAddress: FieldRef<"Product", 'String'>
     readonly unit: FieldRef<"Product", 'ProductUnit'>
     readonly quantity: FieldRef<"Product", 'Int'>
     readonly cost: FieldRef<"Product", 'Float'>
     readonly price: FieldRef<"Product", 'Float'>
     readonly brand: FieldRef<"Product", 'String'>
-    readonly status: FieldRef<"Product", 'ProductStatus'>
+    readonly weight: FieldRef<"Product", 'Float'>
+    readonly isActive: FieldRef<"Product", 'Boolean'>
+    readonly availability: FieldRef<"Product", 'ProductAvailability'>
     readonly supplierId: FieldRef<"Product", 'String'>
-    readonly deliveryMethod: FieldRef<"Product", 'DeliveryMethod'>
     readonly companyId: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
@@ -13964,9 +14031,9 @@ export namespace Prisma {
   }
 
   /**
-   * Product.category
+   * Product.companyProductCategories
    */
-  export type Product$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Product$companyProductCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CompanyProductCategory
      */
@@ -14020,6 +14087,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     tagline: string | null
+    phone: string | null
     website: string | null
     salesEmail: string | null
     supportEmail: string | null
@@ -14039,6 +14107,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     tagline: string | null
+    phone: string | null
     website: string | null
     salesEmail: string | null
     supportEmail: string | null
@@ -14058,6 +14127,7 @@ export namespace Prisma {
     id: number
     name: number
     tagline: number
+    phone: number
     website: number
     salesEmail: number
     supportEmail: number
@@ -14079,6 +14149,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tagline?: true
+    phone?: true
     website?: true
     salesEmail?: true
     supportEmail?: true
@@ -14098,6 +14169,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tagline?: true
+    phone?: true
     website?: true
     salesEmail?: true
     supportEmail?: true
@@ -14117,6 +14189,7 @@ export namespace Prisma {
     id?: true
     name?: true
     tagline?: true
+    phone?: true
     website?: true
     salesEmail?: true
     supportEmail?: true
@@ -14209,6 +14282,7 @@ export namespace Prisma {
     id: string
     name: string
     tagline: string | null
+    phone: string | null
     website: string | null
     salesEmail: string | null
     supportEmail: string | null
@@ -14245,6 +14319,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     tagline?: boolean
+    phone?: boolean
     website?: boolean
     salesEmail?: boolean
     supportEmail?: boolean
@@ -14269,6 +14344,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     tagline?: boolean
+    phone?: boolean
     website?: boolean
     salesEmail?: boolean
     supportEmail?: boolean
@@ -14284,7 +14360,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type SupplierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "website" | "salesEmail" | "supportEmail" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["supplier"]>
+  export type SupplierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "tagline" | "phone" | "website" | "salesEmail" | "supportEmail" | "addressLine1" | "addressLine2" | "city" | "state" | "zipCode" | "country" | "companyId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["supplier"]>
   export type SupplierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | Supplier$productArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -14301,6 +14377,7 @@ export namespace Prisma {
       id: string
       name: string
       tagline: string | null
+      phone: string | null
       website: string | null
       salesEmail: string | null
       supportEmail: string | null
@@ -14688,6 +14765,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Supplier", 'String'>
     readonly name: FieldRef<"Supplier", 'String'>
     readonly tagline: FieldRef<"Supplier", 'String'>
+    readonly phone: FieldRef<"Supplier", 'String'>
     readonly website: FieldRef<"Supplier", 'String'>
     readonly salesEmail: FieldRef<"Supplier", 'String'>
     readonly supportEmail: FieldRef<"Supplier", 'String'>
@@ -19302,14 +19380,18 @@ export namespace Prisma {
     description: 'description',
     sku: 'sku',
     upc: 'upc',
+    serial: 'serial',
+    model: 'model',
+    macAddress: 'macAddress',
     unit: 'unit',
     quantity: 'quantity',
     cost: 'cost',
     price: 'price',
     brand: 'brand',
-    status: 'status',
+    weight: 'weight',
+    isActive: 'isActive',
+    availability: 'availability',
     supplierId: 'supplierId',
-    deliveryMethod: 'deliveryMethod',
     companyId: 'companyId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -19323,6 +19405,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     tagline: 'tagline',
+    phone: 'phone',
     website: 'website',
     salesEmail: 'salesEmail',
     supportEmail: 'supportEmail',
@@ -19549,6 +19632,9 @@ export namespace Prisma {
     description: 'description',
     sku: 'sku',
     upc: 'upc',
+    serial: 'serial',
+    model: 'model',
+    macAddress: 'macAddress',
     brand: 'brand',
     supplierId: 'supplierId',
     companyId: 'companyId'
@@ -19561,6 +19647,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     tagline: 'tagline',
+    phone: 'phone',
     website: 'website',
     salesEmail: 'salesEmail',
     supportEmail: 'supportEmail',
@@ -19710,16 +19797,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ProductStatus'
+   * Reference to a field of type 'ProductAvailability'
    */
-  export type EnumProductStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'DeliveryMethod'
-   */
-  export type EnumDeliveryMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryMethod'>
+  export type EnumProductAvailabilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductAvailability'>
     
 
 
@@ -19727,6 +19807,13 @@ export namespace Prisma {
    * Reference to a field of type 'ProductCategory'
    */
   export type EnumProductCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'DeliveryMethod'
+   */
+  export type EnumDeliveryMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryMethod'>
     
 
 
@@ -20740,21 +20827,25 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     sku?: StringNullableFilter<"Product"> | string | null
     upc?: StringNullableFilter<"Product"> | string | null
+    serial?: StringNullableFilter<"Product"> | string | null
+    model?: StringNullableFilter<"Product"> | string | null
+    macAddress?: StringNullableFilter<"Product"> | string | null
     unit?: EnumProductUnitNullableFilter<"Product"> | $Enums.ProductUnit | null
     quantity?: IntNullableFilter<"Product"> | number | null
     cost?: FloatNullableFilter<"Product"> | number | null
     price?: FloatNullableFilter<"Product"> | number | null
     brand?: StringNullableFilter<"Product"> | string | null
-    status?: EnumProductStatusNullableFilter<"Product"> | $Enums.ProductStatus | null
+    weight?: FloatNullableFilter<"Product"> | number | null
+    isActive?: BoolFilter<"Product"> | boolean
+    availability?: EnumProductAvailabilityNullableFilter<"Product"> | $Enums.ProductAvailability | null
     supplierId?: StringNullableFilter<"Product"> | string | null
-    deliveryMethod?: EnumDeliveryMethodFilter<"Product"> | $Enums.DeliveryMethod
     companyId?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     supplier?: XOR<SupplierNullableScalarRelationFilter, SupplierWhereInput> | null
-    category?: CompanyProductCategoryListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    companyProductCategories?: CompanyProductCategoryListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -20763,21 +20854,25 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     sku?: SortOrderInput | SortOrder
     upc?: SortOrderInput | SortOrder
+    serial?: SortOrderInput | SortOrder
+    model?: SortOrderInput | SortOrder
+    macAddress?: SortOrderInput | SortOrder
     unit?: SortOrderInput | SortOrder
     quantity?: SortOrderInput | SortOrder
     cost?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     brand?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
+    weight?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    availability?: SortOrderInput | SortOrder
     supplierId?: SortOrderInput | SortOrder
-    deliveryMethod?: SortOrder
     companyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     supplier?: SupplierOrderByWithRelationInput
-    category?: CompanyProductCategoryOrderByRelationAggregateInput
     company?: CompanyOrderByWithRelationInput
+    companyProductCategories?: CompanyProductCategoryOrderByRelationAggregateInput
     _relevance?: ProductOrderByRelevanceInput
   }
 
@@ -20790,21 +20885,25 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     sku?: StringNullableFilter<"Product"> | string | null
     upc?: StringNullableFilter<"Product"> | string | null
+    serial?: StringNullableFilter<"Product"> | string | null
+    model?: StringNullableFilter<"Product"> | string | null
+    macAddress?: StringNullableFilter<"Product"> | string | null
     unit?: EnumProductUnitNullableFilter<"Product"> | $Enums.ProductUnit | null
     quantity?: IntNullableFilter<"Product"> | number | null
     cost?: FloatNullableFilter<"Product"> | number | null
     price?: FloatNullableFilter<"Product"> | number | null
     brand?: StringNullableFilter<"Product"> | string | null
-    status?: EnumProductStatusNullableFilter<"Product"> | $Enums.ProductStatus | null
+    weight?: FloatNullableFilter<"Product"> | number | null
+    isActive?: BoolFilter<"Product"> | boolean
+    availability?: EnumProductAvailabilityNullableFilter<"Product"> | $Enums.ProductAvailability | null
     supplierId?: StringNullableFilter<"Product"> | string | null
-    deliveryMethod?: EnumDeliveryMethodFilter<"Product"> | $Enums.DeliveryMethod
     companyId?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     supplier?: XOR<SupplierNullableScalarRelationFilter, SupplierWhereInput> | null
-    category?: CompanyProductCategoryListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    companyProductCategories?: CompanyProductCategoryListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -20813,14 +20912,18 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     sku?: SortOrderInput | SortOrder
     upc?: SortOrderInput | SortOrder
+    serial?: SortOrderInput | SortOrder
+    model?: SortOrderInput | SortOrder
+    macAddress?: SortOrderInput | SortOrder
     unit?: SortOrderInput | SortOrder
     quantity?: SortOrderInput | SortOrder
     cost?: SortOrderInput | SortOrder
     price?: SortOrderInput | SortOrder
     brand?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
+    weight?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    availability?: SortOrderInput | SortOrder
     supplierId?: SortOrderInput | SortOrder
-    deliveryMethod?: SortOrder
     companyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20841,14 +20944,18 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     sku?: StringNullableWithAggregatesFilter<"Product"> | string | null
     upc?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    serial?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    model?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    macAddress?: StringNullableWithAggregatesFilter<"Product"> | string | null
     unit?: EnumProductUnitNullableWithAggregatesFilter<"Product"> | $Enums.ProductUnit | null
     quantity?: IntNullableWithAggregatesFilter<"Product"> | number | null
     cost?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     price?: FloatNullableWithAggregatesFilter<"Product"> | number | null
     brand?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    status?: EnumProductStatusNullableWithAggregatesFilter<"Product"> | $Enums.ProductStatus | null
+    weight?: FloatNullableWithAggregatesFilter<"Product"> | number | null
+    isActive?: BoolWithAggregatesFilter<"Product"> | boolean
+    availability?: EnumProductAvailabilityNullableWithAggregatesFilter<"Product"> | $Enums.ProductAvailability | null
     supplierId?: StringNullableWithAggregatesFilter<"Product"> | string | null
-    deliveryMethod?: EnumDeliveryMethodWithAggregatesFilter<"Product"> | $Enums.DeliveryMethod
     companyId?: StringWithAggregatesFilter<"Product"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -20862,6 +20969,7 @@ export namespace Prisma {
     id?: StringFilter<"Supplier"> | string
     name?: StringFilter<"Supplier"> | string
     tagline?: StringNullableFilter<"Supplier"> | string | null
+    phone?: StringNullableFilter<"Supplier"> | string | null
     website?: StringNullableFilter<"Supplier"> | string | null
     salesEmail?: StringNullableFilter<"Supplier"> | string | null
     supportEmail?: StringNullableFilter<"Supplier"> | string | null
@@ -20883,6 +20991,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tagline?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     salesEmail?: SortOrderInput | SortOrder
     supportEmail?: SortOrderInput | SortOrder
@@ -20908,6 +21017,7 @@ export namespace Prisma {
     NOT?: SupplierWhereInput | SupplierWhereInput[]
     name?: StringFilter<"Supplier"> | string
     tagline?: StringNullableFilter<"Supplier"> | string | null
+    phone?: StringNullableFilter<"Supplier"> | string | null
     website?: StringNullableFilter<"Supplier"> | string | null
     salesEmail?: StringNullableFilter<"Supplier"> | string | null
     supportEmail?: StringNullableFilter<"Supplier"> | string | null
@@ -20929,6 +21039,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tagline?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
     salesEmail?: SortOrderInput | SortOrder
     supportEmail?: SortOrderInput | SortOrder
@@ -20954,6 +21065,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Supplier"> | string
     name?: StringWithAggregatesFilter<"Supplier"> | string
     tagline?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
     website?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
     salesEmail?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
     supportEmail?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
@@ -22422,19 +22534,23 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     supplier?: SupplierCreateNestedOneWithoutProductInput
-    category?: CompanyProductCategoryCreateNestedManyWithoutProductInput
     company: CompanyCreateNestedOneWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -22443,19 +22559,23 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     supplierId?: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    category?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -22464,19 +22584,23 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     supplier?: SupplierUpdateOneWithoutProductNestedInput
-    category?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
     company?: CompanyUpdateOneRequiredWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -22485,19 +22609,23 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     supplierId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    category?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -22506,14 +22634,18 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     supplierId?: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22526,13 +22658,17 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22544,14 +22680,18 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     supplierId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22562,6 +22702,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -22582,6 +22723,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -22602,6 +22744,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22622,6 +22765,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22642,6 +22786,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -22661,6 +22806,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22679,6 +22825,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22700,7 +22847,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    product: ProductCreateNestedOneWithoutCategoryInput
+    product: ProductCreateNestedOneWithoutCompanyProductCategoriesInput
     company: CompanyCreateNestedOneWithoutCompanyProductCategoryInput
   }
 
@@ -22720,7 +22867,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    product?: ProductUpdateOneRequiredWithoutCategoryNestedInput
+    product?: ProductUpdateOneRequiredWithoutCompanyProductCategoriesNestedInput
     company?: CompanyUpdateOneRequiredWithoutCompanyProductCategoryNestedInput
   }
 
@@ -24111,18 +24258,11 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type EnumProductStatusNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ProductStatus[] | null
-    notIn?: $Enums.ProductStatus[] | null
-    not?: NestedEnumProductStatusNullableFilter<$PrismaModel> | $Enums.ProductStatus | null
-  }
-
-  export type EnumDeliveryMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.DeliveryMethod | EnumDeliveryMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.DeliveryMethod[]
-    notIn?: $Enums.DeliveryMethod[]
-    not?: NestedEnumDeliveryMethodFilter<$PrismaModel> | $Enums.DeliveryMethod
+  export type EnumProductAvailabilityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductAvailability | EnumProductAvailabilityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductAvailability[] | null
+    notIn?: $Enums.ProductAvailability[] | null
+    not?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel> | $Enums.ProductAvailability | null
   }
 
   export type SupplierNullableScalarRelationFilter = {
@@ -24142,14 +24282,18 @@ export namespace Prisma {
     description?: SortOrder
     sku?: SortOrder
     upc?: SortOrder
+    serial?: SortOrder
+    model?: SortOrder
+    macAddress?: SortOrder
     unit?: SortOrder
     quantity?: SortOrder
     cost?: SortOrder
     price?: SortOrder
     brand?: SortOrder
-    status?: SortOrder
+    weight?: SortOrder
+    isActive?: SortOrder
+    availability?: SortOrder
     supplierId?: SortOrder
-    deliveryMethod?: SortOrder
     companyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24160,6 +24304,7 @@ export namespace Prisma {
     quantity?: SortOrder
     cost?: SortOrder
     price?: SortOrder
+    weight?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -24168,14 +24313,18 @@ export namespace Prisma {
     description?: SortOrder
     sku?: SortOrder
     upc?: SortOrder
+    serial?: SortOrder
+    model?: SortOrder
+    macAddress?: SortOrder
     unit?: SortOrder
     quantity?: SortOrder
     cost?: SortOrder
     price?: SortOrder
     brand?: SortOrder
-    status?: SortOrder
+    weight?: SortOrder
+    isActive?: SortOrder
+    availability?: SortOrder
     supplierId?: SortOrder
-    deliveryMethod?: SortOrder
     companyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24188,14 +24337,18 @@ export namespace Prisma {
     description?: SortOrder
     sku?: SortOrder
     upc?: SortOrder
+    serial?: SortOrder
+    model?: SortOrder
+    macAddress?: SortOrder
     unit?: SortOrder
     quantity?: SortOrder
     cost?: SortOrder
     price?: SortOrder
     brand?: SortOrder
-    status?: SortOrder
+    weight?: SortOrder
+    isActive?: SortOrder
+    availability?: SortOrder
     supplierId?: SortOrder
-    deliveryMethod?: SortOrder
     companyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24206,6 +24359,7 @@ export namespace Prisma {
     quantity?: SortOrder
     cost?: SortOrder
     price?: SortOrder
+    weight?: SortOrder
   }
 
   export type EnumProductUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -24234,24 +24388,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type EnumProductStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ProductStatus[] | null
-    notIn?: $Enums.ProductStatus[] | null
-    not?: NestedEnumProductStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductStatus | null
+  export type EnumProductAvailabilityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductAvailability | EnumProductAvailabilityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductAvailability[] | null
+    notIn?: $Enums.ProductAvailability[] | null
+    not?: NestedEnumProductAvailabilityNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductAvailability | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumProductStatusNullableFilter<$PrismaModel>
-    _max?: NestedEnumProductStatusNullableFilter<$PrismaModel>
-  }
-
-  export type EnumDeliveryMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DeliveryMethod | EnumDeliveryMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.DeliveryMethod[]
-    notIn?: $Enums.DeliveryMethod[]
-    not?: NestedEnumDeliveryMethodWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDeliveryMethodFilter<$PrismaModel>
-    _max?: NestedEnumDeliveryMethodFilter<$PrismaModel>
+    _min?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel>
   }
 
   export type SupplierOrderByRelevanceInput = {
@@ -24264,6 +24408,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tagline?: SortOrder
+    phone?: SortOrder
     website?: SortOrder
     salesEmail?: SortOrder
     supportEmail?: SortOrder
@@ -24283,6 +24428,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tagline?: SortOrder
+    phone?: SortOrder
     website?: SortOrder
     salesEmail?: SortOrder
     supportEmail?: SortOrder
@@ -24302,6 +24448,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     tagline?: SortOrder
+    phone?: SortOrder
     website?: SortOrder
     salesEmail?: SortOrder
     supportEmail?: SortOrder
@@ -25679,17 +25826,17 @@ export namespace Prisma {
     connect?: SupplierWhereUniqueInput
   }
 
+  export type CompanyCreateNestedOneWithoutProductInput = {
+    create?: XOR<CompanyCreateWithoutProductInput, CompanyUncheckedCreateWithoutProductInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProductInput
+    connect?: CompanyWhereUniqueInput
+  }
+
   export type CompanyProductCategoryCreateNestedManyWithoutProductInput = {
     create?: XOR<CompanyProductCategoryCreateWithoutProductInput, CompanyProductCategoryUncheckedCreateWithoutProductInput> | CompanyProductCategoryCreateWithoutProductInput[] | CompanyProductCategoryUncheckedCreateWithoutProductInput[]
     connectOrCreate?: CompanyProductCategoryCreateOrConnectWithoutProductInput | CompanyProductCategoryCreateOrConnectWithoutProductInput[]
     createMany?: CompanyProductCategoryCreateManyProductInputEnvelope
     connect?: CompanyProductCategoryWhereUniqueInput | CompanyProductCategoryWhereUniqueInput[]
-  }
-
-  export type CompanyCreateNestedOneWithoutProductInput = {
-    create?: XOR<CompanyCreateWithoutProductInput, CompanyUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutProductInput
-    connect?: CompanyWhereUniqueInput
   }
 
   export type CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput = {
@@ -25711,12 +25858,8 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type NullableEnumProductStatusFieldUpdateOperationsInput = {
-    set?: $Enums.ProductStatus | null
-  }
-
-  export type EnumDeliveryMethodFieldUpdateOperationsInput = {
-    set?: $Enums.DeliveryMethod
+  export type NullableEnumProductAvailabilityFieldUpdateOperationsInput = {
+    set?: $Enums.ProductAvailability | null
   }
 
   export type SupplierUpdateOneWithoutProductNestedInput = {
@@ -25727,6 +25870,14 @@ export namespace Prisma {
     delete?: SupplierWhereInput | boolean
     connect?: SupplierWhereUniqueInput
     update?: XOR<XOR<SupplierUpdateToOneWithWhereWithoutProductInput, SupplierUpdateWithoutProductInput>, SupplierUncheckedUpdateWithoutProductInput>
+  }
+
+  export type CompanyUpdateOneRequiredWithoutProductNestedInput = {
+    create?: XOR<CompanyCreateWithoutProductInput, CompanyUncheckedCreateWithoutProductInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutProductInput
+    upsert?: CompanyUpsertWithoutProductInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutProductInput, CompanyUpdateWithoutProductInput>, CompanyUncheckedUpdateWithoutProductInput>
   }
 
   export type CompanyProductCategoryUpdateManyWithoutProductNestedInput = {
@@ -25741,14 +25892,6 @@ export namespace Prisma {
     update?: CompanyProductCategoryUpdateWithWhereUniqueWithoutProductInput | CompanyProductCategoryUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: CompanyProductCategoryUpdateManyWithWhereWithoutProductInput | CompanyProductCategoryUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: CompanyProductCategoryScalarWhereInput | CompanyProductCategoryScalarWhereInput[]
-  }
-
-  export type CompanyUpdateOneRequiredWithoutProductNestedInput = {
-    create?: XOR<CompanyCreateWithoutProductInput, CompanyUncheckedCreateWithoutProductInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutProductInput
-    upsert?: CompanyUpsertWithoutProductInput
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutProductInput, CompanyUpdateWithoutProductInput>, CompanyUncheckedUpdateWithoutProductInput>
   }
 
   export type CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput = {
@@ -25821,9 +25964,9 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
-  export type ProductCreateNestedOneWithoutCategoryInput = {
-    create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput
+  export type ProductCreateNestedOneWithoutCompanyProductCategoriesInput = {
+    create?: XOR<ProductCreateWithoutCompanyProductCategoriesInput, ProductUncheckedCreateWithoutCompanyProductCategoriesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCompanyProductCategoriesInput
     connect?: ProductWhereUniqueInput
   }
 
@@ -25837,12 +25980,12 @@ export namespace Prisma {
     set?: $Enums.ProductCategory
   }
 
-  export type ProductUpdateOneRequiredWithoutCategoryNestedInput = {
-    create?: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
-    connectOrCreate?: ProductCreateOrConnectWithoutCategoryInput
-    upsert?: ProductUpsertWithoutCategoryInput
+  export type ProductUpdateOneRequiredWithoutCompanyProductCategoriesNestedInput = {
+    create?: XOR<ProductCreateWithoutCompanyProductCategoriesInput, ProductUncheckedCreateWithoutCompanyProductCategoriesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCompanyProductCategoriesInput
+    upsert?: ProductUpsertWithoutCompanyProductCategoriesInput
     connect?: ProductWhereUniqueInput
-    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutCategoryInput, ProductUpdateWithoutCategoryInput>, ProductUncheckedUpdateWithoutCategoryInput>
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutCompanyProductCategoriesInput, ProductUpdateWithoutCompanyProductCategoriesInput>, ProductUncheckedUpdateWithoutCompanyProductCategoriesInput>
   }
 
   export type CompanyUpdateOneRequiredWithoutCompanyProductCategoryNestedInput = {
@@ -26420,18 +26563,11 @@ export namespace Prisma {
     not?: NestedEnumProductUnitNullableFilter<$PrismaModel> | $Enums.ProductUnit | null
   }
 
-  export type NestedEnumProductStatusNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ProductStatus[] | null
-    notIn?: $Enums.ProductStatus[] | null
-    not?: NestedEnumProductStatusNullableFilter<$PrismaModel> | $Enums.ProductStatus | null
-  }
-
-  export type NestedEnumDeliveryMethodFilter<$PrismaModel = never> = {
-    equals?: $Enums.DeliveryMethod | EnumDeliveryMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.DeliveryMethod[]
-    notIn?: $Enums.DeliveryMethod[]
-    not?: NestedEnumDeliveryMethodFilter<$PrismaModel> | $Enums.DeliveryMethod
+  export type NestedEnumProductAvailabilityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductAvailability | EnumProductAvailabilityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductAvailability[] | null
+    notIn?: $Enums.ProductAvailability[] | null
+    not?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel> | $Enums.ProductAvailability | null
   }
 
   export type NestedEnumProductUnitNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -26460,24 +26596,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumProductStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ProductStatus[] | null
-    notIn?: $Enums.ProductStatus[] | null
-    not?: NestedEnumProductStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductStatus | null
+  export type NestedEnumProductAvailabilityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductAvailability | EnumProductAvailabilityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProductAvailability[] | null
+    notIn?: $Enums.ProductAvailability[] | null
+    not?: NestedEnumProductAvailabilityNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProductAvailability | null
     _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumProductStatusNullableFilter<$PrismaModel>
-    _max?: NestedEnumProductStatusNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumDeliveryMethodWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DeliveryMethod | EnumDeliveryMethodFieldRefInput<$PrismaModel>
-    in?: $Enums.DeliveryMethod[]
-    notIn?: $Enums.DeliveryMethod[]
-    not?: NestedEnumDeliveryMethodWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryMethod
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDeliveryMethodFilter<$PrismaModel>
-    _max?: NestedEnumDeliveryMethodFilter<$PrismaModel>
+    _min?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel>
+    _max?: NestedEnumProductAvailabilityNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumProductCategoryFilter<$PrismaModel = never> = {
@@ -27589,18 +27715,22 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
     supplier?: SupplierCreateNestedOneWithoutProductInput
-    category?: CompanyProductCategoryCreateNestedManyWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCompanyInput = {
@@ -27609,18 +27739,22 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     supplierId?: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    category?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCompanyInput = {
@@ -27637,6 +27771,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -27656,6 +27791,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -27687,7 +27823,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    product: ProductCreateNestedOneWithoutCategoryInput
+    product: ProductCreateNestedOneWithoutCompanyProductCategoriesInput
   }
 
   export type CompanyProductCategoryUncheckedCreateWithoutCompanyInput = {
@@ -28079,14 +28215,18 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     sku?: StringNullableFilter<"Product"> | string | null
     upc?: StringNullableFilter<"Product"> | string | null
+    serial?: StringNullableFilter<"Product"> | string | null
+    model?: StringNullableFilter<"Product"> | string | null
+    macAddress?: StringNullableFilter<"Product"> | string | null
     unit?: EnumProductUnitNullableFilter<"Product"> | $Enums.ProductUnit | null
     quantity?: IntNullableFilter<"Product"> | number | null
     cost?: FloatNullableFilter<"Product"> | number | null
     price?: FloatNullableFilter<"Product"> | number | null
     brand?: StringNullableFilter<"Product"> | string | null
-    status?: EnumProductStatusNullableFilter<"Product"> | $Enums.ProductStatus | null
+    weight?: FloatNullableFilter<"Product"> | number | null
+    isActive?: BoolFilter<"Product"> | boolean
+    availability?: EnumProductAvailabilityNullableFilter<"Product"> | $Enums.ProductAvailability | null
     supplierId?: StringNullableFilter<"Product"> | string | null
-    deliveryMethod?: EnumDeliveryMethodFilter<"Product"> | $Enums.DeliveryMethod
     companyId?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
@@ -28116,6 +28256,7 @@ export namespace Prisma {
     id?: StringFilter<"Supplier"> | string
     name?: StringFilter<"Supplier"> | string
     tagline?: StringNullableFilter<"Supplier"> | string | null
+    phone?: StringNullableFilter<"Supplier"> | string | null
     website?: StringNullableFilter<"Supplier"> | string | null
     salesEmail?: StringNullableFilter<"Supplier"> | string | null
     supportEmail?: StringNullableFilter<"Supplier"> | string | null
@@ -29648,6 +29789,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -29667,6 +29809,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -29685,34 +29828,6 @@ export namespace Prisma {
   export type SupplierCreateOrConnectWithoutProductInput = {
     where: SupplierWhereUniqueInput
     create: XOR<SupplierCreateWithoutProductInput, SupplierUncheckedCreateWithoutProductInput>
-  }
-
-  export type CompanyProductCategoryCreateWithoutProductInput = {
-    id?: string
-    productCategory: $Enums.ProductCategory
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    company: CompanyCreateNestedOneWithoutCompanyProductCategoryInput
-  }
-
-  export type CompanyProductCategoryUncheckedCreateWithoutProductInput = {
-    id?: string
-    productCategory: $Enums.ProductCategory
-    companyId: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type CompanyProductCategoryCreateOrConnectWithoutProductInput = {
-    where: CompanyProductCategoryWhereUniqueInput
-    create: XOR<CompanyProductCategoryCreateWithoutProductInput, CompanyProductCategoryUncheckedCreateWithoutProductInput>
-  }
-
-  export type CompanyProductCategoryCreateManyProductInputEnvelope = {
-    data: CompanyProductCategoryCreateManyProductInput | CompanyProductCategoryCreateManyProductInput[]
-    skipDuplicates?: boolean
   }
 
   export type CompanyCreateWithoutProductInput = {
@@ -29796,6 +29911,34 @@ export namespace Prisma {
     create: XOR<CompanyCreateWithoutProductInput, CompanyUncheckedCreateWithoutProductInput>
   }
 
+  export type CompanyProductCategoryCreateWithoutProductInput = {
+    id?: string
+    productCategory: $Enums.ProductCategory
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    company: CompanyCreateNestedOneWithoutCompanyProductCategoryInput
+  }
+
+  export type CompanyProductCategoryUncheckedCreateWithoutProductInput = {
+    id?: string
+    productCategory: $Enums.ProductCategory
+    companyId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type CompanyProductCategoryCreateOrConnectWithoutProductInput = {
+    where: CompanyProductCategoryWhereUniqueInput
+    create: XOR<CompanyProductCategoryCreateWithoutProductInput, CompanyProductCategoryUncheckedCreateWithoutProductInput>
+  }
+
+  export type CompanyProductCategoryCreateManyProductInputEnvelope = {
+    data: CompanyProductCategoryCreateManyProductInput | CompanyProductCategoryCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SupplierUpsertWithoutProductInput = {
     update: XOR<SupplierUpdateWithoutProductInput, SupplierUncheckedUpdateWithoutProductInput>
     create: XOR<SupplierCreateWithoutProductInput, SupplierUncheckedCreateWithoutProductInput>
@@ -29811,6 +29954,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29830,6 +29974,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29843,22 +29988,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type CompanyProductCategoryUpsertWithWhereUniqueWithoutProductInput = {
-    where: CompanyProductCategoryWhereUniqueInput
-    update: XOR<CompanyProductCategoryUpdateWithoutProductInput, CompanyProductCategoryUncheckedUpdateWithoutProductInput>
-    create: XOR<CompanyProductCategoryCreateWithoutProductInput, CompanyProductCategoryUncheckedCreateWithoutProductInput>
-  }
-
-  export type CompanyProductCategoryUpdateWithWhereUniqueWithoutProductInput = {
-    where: CompanyProductCategoryWhereUniqueInput
-    data: XOR<CompanyProductCategoryUpdateWithoutProductInput, CompanyProductCategoryUncheckedUpdateWithoutProductInput>
-  }
-
-  export type CompanyProductCategoryUpdateManyWithWhereWithoutProductInput = {
-    where: CompanyProductCategoryScalarWhereInput
-    data: XOR<CompanyProductCategoryUpdateManyMutationInput, CompanyProductCategoryUncheckedUpdateManyWithoutProductInput>
   }
 
   export type CompanyUpsertWithoutProductInput = {
@@ -29948,24 +30077,44 @@ export namespace Prisma {
     TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
+  export type CompanyProductCategoryUpsertWithWhereUniqueWithoutProductInput = {
+    where: CompanyProductCategoryWhereUniqueInput
+    update: XOR<CompanyProductCategoryUpdateWithoutProductInput, CompanyProductCategoryUncheckedUpdateWithoutProductInput>
+    create: XOR<CompanyProductCategoryCreateWithoutProductInput, CompanyProductCategoryUncheckedCreateWithoutProductInput>
+  }
+
+  export type CompanyProductCategoryUpdateWithWhereUniqueWithoutProductInput = {
+    where: CompanyProductCategoryWhereUniqueInput
+    data: XOR<CompanyProductCategoryUpdateWithoutProductInput, CompanyProductCategoryUncheckedUpdateWithoutProductInput>
+  }
+
+  export type CompanyProductCategoryUpdateManyWithWhereWithoutProductInput = {
+    where: CompanyProductCategoryScalarWhereInput
+    data: XOR<CompanyProductCategoryUpdateManyMutationInput, CompanyProductCategoryUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutSupplierInput = {
     id?: string
     name: string
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    category?: CompanyProductCategoryCreateNestedManyWithoutProductInput
     company: CompanyCreateNestedOneWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutSupplierInput = {
@@ -29974,18 +30123,22 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    category?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
+    companyProductCategories?: CompanyProductCategoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutSupplierInput = {
@@ -30182,19 +30335,23 @@ export namespace Prisma {
     TimeEntry?: TimeEntryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
-  export type ProductCreateWithoutCategoryInput = {
+  export type ProductCreateWithoutCompanyProductCategoriesInput = {
     id?: string
     name: string
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -30202,29 +30359,33 @@ export namespace Prisma {
     company: CompanyCreateNestedOneWithoutProductInput
   }
 
-  export type ProductUncheckedCreateWithoutCategoryInput = {
+  export type ProductUncheckedCreateWithoutCompanyProductCategoriesInput = {
     id?: string
     name: string
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     supplierId?: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
   }
 
-  export type ProductCreateOrConnectWithoutCategoryInput = {
+  export type ProductCreateOrConnectWithoutCompanyProductCategoriesInput = {
     where: ProductWhereUniqueInput
-    create: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
+    create: XOR<ProductCreateWithoutCompanyProductCategoriesInput, ProductUncheckedCreateWithoutCompanyProductCategoriesInput>
   }
 
   export type CompanyCreateWithoutCompanyProductCategoryInput = {
@@ -30308,30 +30469,34 @@ export namespace Prisma {
     create: XOR<CompanyCreateWithoutCompanyProductCategoryInput, CompanyUncheckedCreateWithoutCompanyProductCategoryInput>
   }
 
-  export type ProductUpsertWithoutCategoryInput = {
-    update: XOR<ProductUpdateWithoutCategoryInput, ProductUncheckedUpdateWithoutCategoryInput>
-    create: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
+  export type ProductUpsertWithoutCompanyProductCategoriesInput = {
+    update: XOR<ProductUpdateWithoutCompanyProductCategoriesInput, ProductUncheckedUpdateWithoutCompanyProductCategoriesInput>
+    create: XOR<ProductCreateWithoutCompanyProductCategoriesInput, ProductUncheckedCreateWithoutCompanyProductCategoriesInput>
     where?: ProductWhereInput
   }
 
-  export type ProductUpdateToOneWithWhereWithoutCategoryInput = {
+  export type ProductUpdateToOneWithWhereWithoutCompanyProductCategoriesInput = {
     where?: ProductWhereInput
-    data: XOR<ProductUpdateWithoutCategoryInput, ProductUncheckedUpdateWithoutCategoryInput>
+    data: XOR<ProductUpdateWithoutCompanyProductCategoriesInput, ProductUncheckedUpdateWithoutCompanyProductCategoriesInput>
   }
 
-  export type ProductUpdateWithoutCategoryInput = {
+  export type ProductUpdateWithoutCompanyProductCategoriesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30339,20 +30504,24 @@ export namespace Prisma {
     company?: CompanyUpdateOneRequiredWithoutProductNestedInput
   }
 
-  export type ProductUncheckedUpdateWithoutCategoryInput = {
+  export type ProductUncheckedUpdateWithoutCompanyProductCategoriesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     supplierId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31627,14 +31796,18 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     supplierId?: string | null
-    deliveryMethod: $Enums.DeliveryMethod
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -31644,6 +31817,7 @@ export namespace Prisma {
     id?: string
     name: string
     tagline?: string | null
+    phone?: string | null
     website?: string | null
     salesEmail?: string | null
     supportEmail?: string | null
@@ -32023,18 +32197,22 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     supplier?: SupplierUpdateOneWithoutProductNestedInput
-    category?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCompanyInput = {
@@ -32043,18 +32221,22 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     supplierId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    category?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCompanyInput = {
@@ -32063,14 +32245,18 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     supplierId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32080,6 +32266,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32099,6 +32286,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32118,6 +32306,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     tagline?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
     salesEmail?: NullableStringFieldUpdateOperationsInput | string | null
     supportEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32138,7 +32327,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    product?: ProductUpdateOneRequiredWithoutCategoryNestedInput
+    product?: ProductUpdateOneRequiredWithoutCompanyProductCategoriesNestedInput
   }
 
   export type CompanyProductCategoryUncheckedUpdateWithoutCompanyInput = {
@@ -32526,13 +32715,17 @@ export namespace Prisma {
     description?: string | null
     sku?: string | null
     upc?: string | null
+    serial?: string | null
+    model?: string | null
+    macAddress?: string | null
     unit?: $Enums.ProductUnit | null
     quantity?: number | null
     cost?: number | null
     price?: number | null
     brand?: string | null
-    status?: $Enums.ProductStatus | null
-    deliveryMethod: $Enums.DeliveryMethod
+    weight?: number | null
+    isActive?: boolean
+    availability?: $Enums.ProductAvailability | null
     companyId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32545,18 +32738,22 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    category?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
     company?: CompanyUpdateOneRequiredWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutSupplierInput = {
@@ -32565,18 +32762,22 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    category?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
+    companyProductCategories?: CompanyProductCategoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutSupplierInput = {
@@ -32585,13 +32786,17 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     upc?: NullableStringFieldUpdateOperationsInput | string | null
+    serial?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    macAddress?: NullableStringFieldUpdateOperationsInput | string | null
     unit?: NullableEnumProductUnitFieldUpdateOperationsInput | $Enums.ProductUnit | null
     quantity?: NullableIntFieldUpdateOperationsInput | number | null
     cost?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: NullableFloatFieldUpdateOperationsInput | number | null
     brand?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus | null
-    deliveryMethod?: EnumDeliveryMethodFieldUpdateOperationsInput | $Enums.DeliveryMethod
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    availability?: NullableEnumProductAvailabilityFieldUpdateOperationsInput | $Enums.ProductAvailability | null
     companyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

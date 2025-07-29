@@ -22,7 +22,7 @@ export const ConfigureSMTPForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("SMTP config:", JSON.stringify(formData, null, 2));
+    //console.log("SMTP config:", JSON.stringify(formData, null, 2));
     onSuccess?.();
   };
 

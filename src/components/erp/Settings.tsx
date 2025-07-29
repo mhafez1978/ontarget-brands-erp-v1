@@ -138,9 +138,6 @@ export const Settings = () => {
               Manage your ERP system configuration
             </p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            Save Changes
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

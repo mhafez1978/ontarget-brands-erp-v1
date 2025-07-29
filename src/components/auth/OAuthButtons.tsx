@@ -8,7 +8,7 @@ interface OAuthButtonsProps {
 
 export const OAuthButtons = ({ isRegister }: OAuthButtonsProps) => {
   const handleOAuthLogin = (provider: string) => {
-    console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
+    //console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
   };
 
   return (

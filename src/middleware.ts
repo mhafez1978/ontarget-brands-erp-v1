@@ -20,7 +20,7 @@ export default auth(async (request: NextRequest) => {
   let valid = false;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/${subdomain}/validate`);
+    const res = await fetch(`/api/${subdomain}/validate`);
     const data = await res.json();
     valid = data.valid;
   } catch (err) {

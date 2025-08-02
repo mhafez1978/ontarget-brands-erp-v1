@@ -5,10 +5,10 @@ import { ProductCategory } from "@/generated/prisma";
 
 export async function POST(
   req: Request,
-  { params }: { params: { companyId: string } }
+  { params }: { params: Promise<{ companyId: string }> }
 ) {
   try {
-    const { companyId } = params;
+    const { companyId } = await params;
     const body = await req.json();
 
     const {

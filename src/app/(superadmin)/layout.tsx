@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
@@ -27,7 +27,8 @@ import {
   Target,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
+import { MenuItem } from "@/components/ui/MenuItem";
 
 // Icon mapping
 const allMenuIcons: Record<string, React.ElementType> = {
@@ -283,57 +284,5 @@ export default function RootLayout({
         </main>
       </div>
     </div>
-  );
-}
-
-// MenuItem component
-export function MenuItem({
-  icon: Icon,
-  label,
-  href,
-  open,
-  onClick,
-  className,
-}: {
-  icon: React.ElementType;
-  label: string;
-  href?: string;
-  open: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  className?: string;
-}) {
-  const content = (
-    <>
-      <Icon className="h-6 w-6" />
-      <span
-        className={`ml-3 text-sm whitespace-nowrap transition-all ${
-          open ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-        }`}
-      >
-        {label}
-      </span>
-    </>
-  );
-
-  if (href === "/signout") {
-    return (
-      <div className="w-full absolute bottom-32">
-        <button
-          onClick={onClick}
-          className={`w-full flex items-center p-2 rounded hover:text-emerald-600 ${className}`}
-        >
-          {content}
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <Link
-      href={href ?? "#"}
-      className={`flex flex-row items-center w-full p-2 ${className}`}
-    >
-      {content}
-    </Link>
   );
 }

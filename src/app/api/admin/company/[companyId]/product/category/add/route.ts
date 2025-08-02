@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { companyId: string } }
+  { params }: { params: Promise<{ companyId: string }> }
 ) {
   const session = await auth();
 
@@ -16,7 +16,7 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const { companyId } = params;
+  const { companyId } = await params;
 
   if (!companyId) {
     return NextResponse.json({ error: "Missing companyId" }, { status: 400 });

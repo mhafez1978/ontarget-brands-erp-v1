@@ -18,9 +18,37 @@ export default function MfaPage() {
     }
   }, [status, session, router]);
 
-  const handleVerify = async () => {
+  // const handleVerify = async () => {
+  //   setError("");
+  //   setLoading(true);
+  //   try {
+  //     const res = await fetch("/api/mfa/verify-login", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ token }),
+  //     });
+
+  //     if (!res.ok) {
+  //       const msg = await res.text();
+  //       throw new Error(msg || "Failed to verify code");
+  //     }
+
+  //     // 🔁 Refresh session after verification to clear `mfaPending`
+  //     await update();
+
+  //     router.push("/dashboard");
+  //   } catch (err: any) {
+  //     setError(err.message || "Error verifying code");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       const res = await fetch("/api/mfa/verify-login", {
         method: "POST",
@@ -28,15 +56,15 @@ export default function MfaPage() {
         body: JSON.stringify({ token }),
       });
 
+      if (res.redirected) {
+        router.push(res.url); // will be /dashboard
+        return;
+      }
+
       if (!res.ok) {
         const msg = await res.text();
         throw new Error(msg || "Failed to verify code");
       }
-
-      // 🔁 Refresh session after verification to clear `mfaPending`
-      await update();
-
-      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Error verifying code");
     } finally {

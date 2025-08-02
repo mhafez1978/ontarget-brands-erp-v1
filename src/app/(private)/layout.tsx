@@ -242,7 +242,7 @@ export default function RootLayout({
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-16"
-          }  pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col h-screen max-h-screen`}
+          }  pt-4 bg-[#e9e9e9] text-gray-900 font-semibold transition-all duration-200 ease-in-out flex flex-col h-screen max-h-screen overflow-hidden`}
         >
           {/* Toggle Button */}
           <div className="flex justify-end items-start px-2">
@@ -259,7 +259,7 @@ export default function RootLayout({
           </div>
 
           {/* Menu Items */}
-          <div className="flex flex-col">
+          <div className="flex flex-col overflow-hidden">
             {menuItems.map((label) => (
               <MenuItem
                 key={label}
@@ -269,7 +269,8 @@ export default function RootLayout({
                 open={sidebarOpen}
                 onClick={
                   label === "Signout"
-                    ? () => signOut({ redirect: true, callbackUrl: "/" })
+                    ? async () =>
+                        await signOut({ redirect: true, callbackUrl: "/" })
                     : undefined
                 }
                 className="hover:bg-gray-50 hover:rounded hover:drop-shadow transition-colors"

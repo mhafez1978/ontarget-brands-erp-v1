@@ -31,7 +31,7 @@ export const MenuItem = ({
 
   if (href === "/signout") {
     return (
-      <div className="w-full absolute bottom-32">
+      <div className="mt-6 bottom-32 ">
         <button
           onClick={onClick}
           className={`w-full flex items-center p-2 rounded hover:text-emerald-600 ${className}`}

@@ -6,7 +6,11 @@ export const config = {
   matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
 };
 
-const allowedDomains = ["localhost:3000"];
+const allowedDomains = [
+  "https://ontargeterp.netlify.app",
+  "https://ontarget-brands.com",
+  "http://localhost:3000",
+];
 
 export default auth(async (request: NextRequest) => {
   const { pathname } = request.nextUrl;

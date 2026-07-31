@@ -1,0 +1,26 @@
+# Build settings live here rather than in the Netlify UI so they stay in sync
+# with the repo.
+#
+# This project uses npm, and only npm: package.json pins "packageManager" to
+# npm and package-lock.json is the committed lockfile. A stale pnpm-lock.yaml
+# used to sit alongside it and broke this build (it pinned next 15.x against a
+# package.json requiring 16.2.12); it has been removed.
+
+[build]
+  command = "npm ci && npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires Node >= 20.9.
+  NODE_VERSION = "22"
+
+  # `next build` runs the TypeScript check in a worker that exceeded Node's
+  # default ~2 GB heap on the Netlify builder and died with SIGABRT
+  # ("Ineffective mark-compacts near heap limit"). The project type-checks the
+  # generated Prisma client, which is large, and CI has no incremental
+  # tsconfig.tsbuildinfo to reuse, so a cold check is much heavier than a local
+  # one. Give it headroom.
+  NODE_OPTIONS = "--max-old-space-size=4096"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

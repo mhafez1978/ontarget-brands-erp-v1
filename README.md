@@ -29,25 +29,41 @@ A production multi-tenant SaaS ERP built with Next.js, TypeScript, Prisma, and M
 - `src/app/[domain]/` — tenant-facing routes resolved per subdomain
 - `src/app/(superadmin)/` — platform administration console
 - `src/app/(private)/` — authenticated tenant workspace
-- `src/middleware.ts` — subdomain resolution and route protection
+- `src/proxy.ts` — subdomain resolution and route protection
 - `prisma/schema.prisma` — 15+ models (User, Company, CompanySubdomain, SubscriptionPlan, Feature, Project, Product, Supplier, Service, TimeEntry, …)
 
 ## Running locally
 
+This project uses **npm**. Do not use pnpm or yarn — `package.json` pins
+`packageManager` to npm and `package-lock.json` is the committed lockfile.
+
+Start a local MySQL (the production database is not reachable from a dev
+machine), then install and run:
+
 ```bash
-pnpm install
-pnpm prisma migrate dev
-pnpm dev
+docker start ontarget-mysql || docker run -d --name ontarget-mysql \
+  -e MYSQL_ROOT_PASSWORD=123456789 -e MYSQL_DATABASE=ontarget_db \
+  -p 3307:3306 mysql:8.4
+npm install
+npx prisma migrate deploy
+npm run db:seed
+npm run dev
 ```
 
-Create a `.env` file with:
+The app runs on <http://localhost:3030>. `npm run db:seed` creates a sign-in
+(`admin@ontarget.local` / `Admin123!`) and refuses to run against anything
+other than a local database.
+
+Copy `.env.example` to `.env.local` and fill it in. Note that next-auth v5
+reads `AUTH_SECRET` — the older `NEXTAUTH_SECRET` / `NEXTAUTH_URL` names are
+ignored:
 
 ```
-DATABASE_URL="mysql://user:password@localhost:3306/ontarget"
+DATABASE_URL="mysql://root:123456789@127.0.0.1:3307/ontarget_db"
 AUTH_SECRET="generate-with: openssl rand -base64 32"
 GOOGLE_CLIENT_ID="..."
 GOOGLE_CLIENT_SECRET="..."
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+NEXT_PUBLIC_BASE_URL="http://localhost:3030"
 ```
 
 ## Status

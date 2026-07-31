@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -47,7 +48,14 @@ export const MFASetupForm = ({
       {isLoadingQR ? (
         <p className="text-sm text-muted-foreground h-24">Loading QR code...</p>
       ) : qrCodeUrl ? (
-        <img src={qrCodeUrl} alt="QR" className="mx-auto w-48 h-48" />
+        <Image
+          src={qrCodeUrl}
+          alt="QR"
+          width={192}
+          height={192}
+          unoptimized
+          className="mx-auto w-48 h-48"
+        />
       ) : (
         <p className="text-sm text-red-500 h-[300px]">
           Unable to load QR code.

@@ -191,7 +191,7 @@ export const FinancialOverview = () => {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip
-                  formatter={(value) => [`$${value.toLocaleString()}`, ""]}
+                  formatter={(value) => [`$${(value ?? 0).toLocaleString()}`, ""]}
                 />
                 <Line
                   type="monotone"
@@ -242,7 +242,7 @@ export const FinancialOverview = () => {
                 </Pie>
                 <Tooltip
                   formatter={(value) => [
-                    `$${value.toLocaleString()}`,
+                    `$${(value ?? 0).toLocaleString()}`,
                     "Amount",
                   ]}
                 />
@@ -286,7 +286,7 @@ export const FinancialOverview = () => {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip
-                formatter={(value) => [`$${value.toLocaleString()}`, "Profit"]}
+                formatter={(value) => [`$${(value ?? 0).toLocaleString()}`, "Profit"]}
               />
               <Bar dataKey="profit" fill="#10B981" />
             </BarChart>

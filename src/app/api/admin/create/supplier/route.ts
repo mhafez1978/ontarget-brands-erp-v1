@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-
-  if (
-    !session ||
-    !["SUPER_ADMIN", "ADMIN", "MANAGER"].includes(session.user.role)
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
-
   const body = await req.json();
 
   const {
@@ -36,6 +28,13 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
 
   try {
     const supplier = await prisma.supplier.create({

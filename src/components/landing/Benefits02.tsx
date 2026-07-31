@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 
 const Benefits02 = () => {
@@ -34,9 +35,11 @@ const Benefits02 = () => {
           </div>
           <div className="relative">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop"
                 alt="Business Analytics Dashboard"
+                width={600}
+                height={400}
                 className="w-full rounded-lg shadow-2xl"
               />
             </div>

@@ -80,7 +80,7 @@
 //   const handleDelete =
 //     ({ companyId, userId }: { companyId: string; userId: string }) =>
 //     async () => {
-//       if (!selectedCompanyId) return;
+//       if (!activeCompanyId) return;
 //       const confirmed = window.confirm(
 //         "Are you sure you want to delete this staff member?"
 //       );
@@ -369,7 +369,7 @@
 //                                   variant="default"
 //                                   size="sm"
 //                                   onClick={handleEdit({
-//                                     companyId: selectedCompanyId!,
+//                                     companyId: activeCompanyId!,
 //                                     userId: s.id,
 //                                   })}
 //                                 >
@@ -379,7 +379,7 @@
 //                                   variant="destructive"
 //                                   size="sm"
 //                                   onClick={handleDelete({
-//                                     companyId: selectedCompanyId!,
+//                                     companyId: activeCompanyId!,
 //                                     userId: s.id,
 //                                   })}
 //                                 >
@@ -499,6 +499,9 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
 
+  const activeCompanyId =
+    selectedCompanyId ?? session?.user?.ownedCompanies?.[0]?.id ?? companyId;
+
   const handleEdit =
     ({ companyId, userId }: { companyId: string; userId: string }) =>
     () => {
@@ -514,7 +517,7 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
   const handleDelete =
     ({ companyId, userId }: { companyId: string; userId: string }) =>
     async () => {
-      if (!selectedCompanyId) return;
+      if (!activeCompanyId) return;
       const confirmed = window.confirm(
         "Are you sure you want to delete this staff member?"
       );
@@ -535,14 +538,14 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
       showToast("success", "Staff member deleted");
       setStaffByCompany((prev) => ({
         ...prev,
-        [selectedCompanyId]: (prev[selectedCompanyId] || []).filter(
+        [activeCompanyId]: (prev[activeCompanyId] || []).filter(
           (s) => s.id !== userId
         ),
       }));
     };
 
-  const filteredStaff = Array.isArray(staffByCompany[selectedCompanyId ?? ""])
-    ? staffByCompany[selectedCompanyId!].filter((s) => {
+  const filteredStaff = Array.isArray(staffByCompany[activeCompanyId ?? ""])
+    ? staffByCompany[activeCompanyId!].filter((s) => {
         const matchesSearch =
           s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -556,30 +559,6 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
 
   const statuses = ["all", "active", "inactive"];
 
-  const fetchCompanyStaff = async (companyId: string) => {
-    try {
-      const res = await fetch(`/api/company/admin/${companyId}/staff`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        showToast("error", data.error || "Failed to fetch staff");
-        return;
-      }
-      setStaffByCompany((prev) => ({
-        ...prev,
-        [companyId]: Array.isArray(data.staff) ? data.staff : [],
-      }));
-    } catch {
-      showToast("error", "Failed to reload staff data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (
       !session ||
@@ -589,24 +568,45 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
     }
 
     if (
-      !session ||
       !session.user.ownedCompanies ||
       session.user.ownedCompanies.length === 0
     ) {
       showToast("error", "No companies found for the user");
-      return;
     }
-
-    const initialCompanyId = session.user.ownedCompanies[0].id;
-    setSelectedCompanyId(initialCompanyId);
-    fetchCompanyStaff(initialCompanyId);
   }, [session]);
 
   useEffect(() => {
-    if (selectedCompanyId) {
-      fetchCompanyStaff(selectedCompanyId);
-    }
-  }, [selectedCompanyId]);
+    if (!activeCompanyId) return;
+
+    const fetchCompanyStaff = async (targetCompanyId: string) => {
+      try {
+        const res = await fetch(
+          `/api/company/admin/${targetCompanyId}/staff`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          showToast("error", data.error || "Failed to fetch staff");
+          return;
+        }
+        setStaffByCompany((prev) => ({
+          ...prev,
+          [targetCompanyId]: Array.isArray(data.staff) ? data.staff : [],
+        }));
+      } catch {
+        showToast("error", "Failed to reload staff data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCompanyStaff(activeCompanyId);
+  }, [activeCompanyId]);
 
   if (isLoading) {
     return (
@@ -632,9 +632,9 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
           buttonText="Add New Staff Member"
           formName="Add New Staff Member"
         >
-          {(close) => (
+          {() => (
             <AddNewStaff
-              companyId={selectedCompanyId ?? session?.user?.company?.id ?? ""}
+              companyId={activeCompanyId ?? session?.user?.company?.id ?? ""}
             />
           )}
         </OffCanvasBtn>
@@ -762,7 +762,7 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
                                 variant="default"
                                 size="sm"
                                 onClick={handleEdit({
-                                  companyId: selectedCompanyId!,
+                                  companyId: activeCompanyId!,
                                   userId: s.id,
                                 })}
                               >
@@ -772,7 +772,7 @@ export const UsersManagement = ({ companyId }: { companyId: string }) => {
                                 variant="destructive"
                                 size="sm"
                                 onClick={handleDelete({
-                                  companyId: selectedCompanyId!,
+                                  companyId: activeCompanyId!,
                                   userId: s.id,
                                 })}
                               >

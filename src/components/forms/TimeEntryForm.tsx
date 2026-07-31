@@ -26,7 +26,6 @@ import {
   LogOut,
   Save,
   X,
-  AlertCircle,
   Trash2,
 } from "lucide-react";
 
@@ -102,8 +101,10 @@ const EditEntryModal = ({
         duration,
       });
       onClose();
-    } catch (error: any) {
-      setLocalError(error.message || "Failed to save.");
+    } catch (error) {
+      setLocalError(
+        error instanceof Error ? error.message : "Failed to save."
+      );
     } finally {
       setIsProcessing(false);
     }
@@ -113,7 +114,7 @@ const EditEntryModal = ({
     setIsProcessing(true);
     try {
       await onDelete(entry.id);
-    } catch (error) {
+    } catch {
       setLocalError("Failed to delete entry.");
       setIsProcessing(false);
     }
@@ -256,8 +257,9 @@ export const TimeEntryForm = () => {
           }
         }
         setEntryMap(newEntryMap);
-      } catch (err: any) {
-        if (err.name !== "AbortError") setError("Failed to load time entries.");
+      } catch (err) {
+        const name = err instanceof Error ? err.name : "";
+        if (name !== "AbortError") setError("Failed to load time entries.");
       } finally {
         setIsLoading(false);
       }
@@ -266,11 +268,12 @@ export const TimeEntryForm = () => {
   );
 
   useEffect(() => {
-    if (status === "authenticated") {
-      const controller = new AbortController();
-      fetchEntries(controller.signal);
-      return () => controller.abort();
-    }
+    if (status !== "authenticated") return;
+    const controller = new AbortController();
+    // Defer to a microtask so the loading flag isn't set synchronously
+    // during the effect (which would cause a cascading render).
+    queueMicrotask(() => void fetchEntries(controller.signal));
+    return () => controller.abort();
   }, [status, fetchEntries]);
 
   const runMutation = useCallback(
@@ -282,8 +285,8 @@ export const TimeEntryForm = () => {
         if (!res.ok)
           throw new Error((await res.json()).message || "Action failed");
         await fetchEntries();
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Action failed");
         throw err; // re-throw to be caught by caller if needed
       } finally {
         setIsMutating(false);
@@ -292,7 +295,7 @@ export const TimeEntryForm = () => {
     [fetchEntries]
   );
 
-  const handleClockIn = (date: Date) =>
+  const handleClockIn = () =>
     runMutation(() =>
       fetch("/api/time-mgmt", {
         method: "POST",
@@ -424,7 +427,7 @@ export const TimeEntryForm = () => {
                         ) : (
                           <button
                             className="w-full mt-auto flex items-center justify-center gap-1.5 text-green-600 bg-green-100 hover:bg-green-200 disabled:opacity-50 p-2 rounded-md text-sm font-semibold"
-                            onClick={() => handleClockIn(day)}
+                            onClick={() => handleClockIn()}
                             disabled={isMutating || !isCurrentMonth}
                           >
                             <LogIn className="w-4 h-4" /> Clock In

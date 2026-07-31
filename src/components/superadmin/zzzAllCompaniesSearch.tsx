@@ -99,7 +99,8 @@ const AllCompaniesSearch = () => {
         prev.map((c) => (c.id === id ? { ...c, ...updated } : c))
       );
       setEditableCompanyData((prev) => {
-        const { [id]: _, ...rest } = prev;
+        const rest = { ...prev };
+        delete rest[id];
         return rest;
       });
       setEditingCompanyId(null);

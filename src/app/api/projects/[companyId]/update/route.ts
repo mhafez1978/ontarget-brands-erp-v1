@@ -1,39 +1,25 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
-import { format } from "path";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
   const { companyId } = await params;
 
-  if (!session || !session.user || !companyId) {
-    return NextResponse.json(
-      { error: "Unauthorized request." },
-      { status: 401 }
-    );
-  }
+  // requireCompanyAccess covers both cases the old check tried to express, but
+  // scoped to THIS company: the previous role test passed for an admin of any
+  // other tenant.
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
 
-  const userId = session.user.id;
-  const isAdmin = ["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(
-    session.user.role
-  );
-  const company = await prisma.company.findUnique({
-    where: { id: companyId },
-    select: { ownerId: true },
-  });
-
-  const isOwner = company?.ownerId === userId;
-
-  if (!isAdmin && !isOwner) {
-    return NextResponse.json(
-      { error: "You are not authorized to update projects." },
-      { status: 403 }
-    );
-  }
+  const userId = authz.user.id;
 
   try {
     const body = await req.json();

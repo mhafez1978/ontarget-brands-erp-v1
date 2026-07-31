@@ -1,37 +1,24 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
   const { companyId } = await params;
 
-  if (!session || !session.user || !companyId) {
-    return NextResponse.json(
-      { error: "Unauthorized request." },
-      { status: 401 }
-    );
-  }
+  // The previous role test used "SUPERADMIN", which is not a member of the Role
+  // enum, so it never matched; access is now scoped to this company explicitly.
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
 
-  const userId = session.user.id;
-
-  // Check if user is ADMIN, SUPERADMIN, or company owner
-  const isAdmin = ["ADMIN", "SUPERADMIN"].includes(session.user.role);
-  const company = await prisma.company.findUnique({
-    where: { id: companyId },
-    select: { ownerId: true },
-  });
-  const isOwner = company?.ownerId === userId;
-
-  if (!isAdmin && !isOwner) {
-    return NextResponse.json(
-      { error: "You're unauthorized to create projects." },
-      { status: 403 }
-    );
-  }
+  const userId = authz.user.id;
 
   try {
     const body = await req.json();

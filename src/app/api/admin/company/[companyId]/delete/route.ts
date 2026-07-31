@@ -65,22 +65,15 @@
 //   }
 // }
 
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
   const { companyId } = await params;
-  const session = await auth();
-  //console.log(session);
-
-  if (!session || !session.user) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
 
   if (!companyId) {
     return new Response(JSON.stringify({ error: "Company ID is required" }), {
@@ -88,11 +81,12 @@ export async function DELETE(
     });
   }
 
-  if (!["ADMIN", "SUPER_ADMIN", "ERP_CUSTOMER"].includes(session.user.role)) {
-    return new Response(JSON.stringify({ error: "Forbidden" }), {
-      status: 403,
-    });
-  }
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.ERP_CUSTOMER,
+  ]);
+  if (!authz.ok) return authz.response;
 
   try {
     const company = await prisma.company.findUnique({

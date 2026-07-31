@@ -10,7 +10,6 @@ const InventoryPage = async () => {
   }
   //console.log(session);
   const userRole = session.user.role;
-  const subscriptionPlan = session.user.company?.subscriptionPlan;
   const companies = session.user.ownedCompanies || [];
 
   if (

@@ -5,6 +5,7 @@ import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import { allCountries } from "country-region-data";
 import type { CountryData } from "country-region-data";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { showToast } from "@/hooks/toast";
-import { tr } from "@faker-js/faker";
 
 countries.registerLocale(enLocale);
 
@@ -39,13 +39,32 @@ const countryList = (allCountries as CountryData[]).map(
   })
 );
 
+interface StaffFormData {
+  name: string;
+  email: string;
+  phone: string;
+  image: string;
+  birthDate: string;
+  password: string;
+  repeatPassword: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  companyId: string;
+  isActive: string | boolean;
+  role: string;
+}
+
 interface CompanyStaffProps {
   companyId: string;
 }
 
 export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
   const [reload, setReload] = useState(false);
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<StaffFormData>({
     name: "",
     email: "",
     phone: "",
@@ -64,15 +83,11 @@ export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
     role: "",
   });
 
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
-
-  useEffect(() => {
-    const selected = countryList.find((c) => c.label === formData.country);
-    setStates(selected?.regions || []);
-  }, [formData.country]);
+  const states =
+    countryList.find((c) => c.label === formData.country)?.regions ?? [];
 
   const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev: any) => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -127,7 +142,6 @@ export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
         isActive: false,
         role: "",
       });
-      setStates([]);
       //console.log("New hire created:", newHire);
       close(); // Assuming you have a close function to hide the form
       setReload(true);
@@ -145,7 +159,6 @@ export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
   useEffect(() => {
     if (reload) {
       window.location.reload(); // Reload the page to reflect changes
-      setReload(false); // Reset reload state
     }
   }, [reload]);
   // Optionally, you can trigger a refresh of the parent component or data fetching here
@@ -267,9 +280,11 @@ export const CreateCompanyStaff = ({ companyId }: CompanyStaffProps) => {
               {countryList.map((c) => (
                 <SelectItem key={c.value} value={c.value}>
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                       alt={c.label}
+                      width={20}
+                      height={16}
                       className="w-5 h-4 rounded-sm border"
                     />
                     {c.label}

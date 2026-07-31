@@ -32,13 +32,13 @@ export const SuperAdminModelsManager = () => {
               formName="Create Subscription Plan"
               buttonText={"Define A Subscription Plan"}
             >
-              {(close) => <CreatePlanForm />}
+              {() => <CreatePlanForm />}
             </OffCanvasBtn>
             <OffCanvasBtn
               formName="Reset Password Form"
               buttonText={"Reset user password"}
             >
-              {(close) => <UserPasswordResetManager />}
+              {() => <UserPasswordResetManager />}
             </OffCanvasBtn>
           </div>
           <div className="flex flex-1 gap-4">

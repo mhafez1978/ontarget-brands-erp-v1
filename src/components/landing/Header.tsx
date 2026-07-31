@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Menu, Target, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Header = () => {

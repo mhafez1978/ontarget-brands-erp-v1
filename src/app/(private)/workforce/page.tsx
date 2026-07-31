@@ -1,7 +1,7 @@
 import { UsersManagement } from "@/components/erp/UsersManagement";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
 const UsersManagementPage = async () => {

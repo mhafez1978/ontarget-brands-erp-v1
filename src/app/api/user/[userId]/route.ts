@@ -47,7 +47,7 @@ export async function GET(
     }
     //console.log("User profile fetched successfully:", user);
     return Response.json(user);
-  } catch (error) {
+  } catch {
     //console.error("Failed to fetch user:", error);
     return new Response("Internal Server Error", { status: 500 });
   }

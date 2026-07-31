@@ -2,24 +2,38 @@ import { Role } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import {
+  requireCompanyAccess,
+  canAssignRole,
+  SAFE_USER_SELECT,
+} from "@/lib/authz";
 
 export const POST = async (
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) => {
-  const session = await auth();
   const { companyId } = await params;
 
-  if (
-    !session ||
-    !session.user ||
-    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
 
   const body = await req.json();
+
+  const requestedRole = body.role?.toUpperCase() as Role | undefined;
+  if (!requestedRole || !(requestedRole in Role)) {
+    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+  }
+  if (!canAssignRole(authz.user, requestedRole)) {
+    return NextResponse.json(
+      { error: "Cannot assign a role above your own" },
+      { status: 403 }
+    );
+  }
+
   const payload = {
     name: body.name.trim(),
     email: body.email.trim().toLowerCase(),
@@ -36,7 +50,7 @@ export const POST = async (
     country: body.country?.trim() || null,
     companyId: companyId,
     dateOfBirth: body.birthDate ? new Date(body.birthDate) : null,
-    role: body.role?.toUpperCase(),
+    role: requestedRole,
     isActive: body.isActive === "true",
   };
 
@@ -62,7 +76,8 @@ export const POST = async (
           connect: [{ id: companyId }],
         },
       },
-      include: {
+      select: {
+        ...SAFE_USER_SELECT,
         company: {
           select: {
             id: true,
@@ -81,11 +96,10 @@ export const POST = async (
     }
     return NextResponse.json(staff);
   } catch (error) {
-    const errorMessage =
-      typeof error === "object" && error !== null && "message" in error
-        ? (error as { message?: string }).message
-        : "Failed to create new hire";
-
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.error("Staff creation failed:", error);
+    return NextResponse.json(
+      { error: "Failed to create new hire" },
+      { status: 500 }
+    );
   }
 };

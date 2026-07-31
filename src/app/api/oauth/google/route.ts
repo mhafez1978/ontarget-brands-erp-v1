@@ -1,11 +1,14 @@
 // /api/oauth/google/route.ts
 import { google } from "googleapis";
+import { googleOAuthRedirectUri } from "./redirect-uri";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const origin = new URL(req.url).origin;
+
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID!,
     process.env.GOOGLE_CLIENT_SECRET!,
-    "/api/oauth/google/callback" // must match Google Console
+    googleOAuthRedirectUri(origin) // must match Google Console
   );
 
   const authUrl = oauth2Client.generateAuthUrl({

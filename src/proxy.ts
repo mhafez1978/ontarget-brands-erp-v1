@@ -14,13 +14,18 @@ export default auth(async (request: NextRequest) => {
 
   const subdomain = hostname.split(".")[0];
   const isRootDomainOnly = allowedDomains.includes(hostname);
+  const isLocalhost =
+    hostname.startsWith("localhost") || hostname.startsWith("127.0.0.1");
 
-  if (isRootDomainOnly) return NextResponse.next();
+  if (isRootDomainOnly || isLocalhost) return NextResponse.next();
 
   let valid = false;
 
   try {
-    const res = await fetch(`/api/${subdomain}/validate`);
+    // fetch() in the proxy runtime requires an absolute URL
+    const res = await fetch(
+      new URL(`/api/${subdomain}/validate`, request.nextUrl.origin)
+    );
     const data = await res.json();
     valid = data.valid;
   } catch (err) {

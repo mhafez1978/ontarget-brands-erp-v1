@@ -2,24 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import {
-  Settings as SettingsIcon,
-  Bell,
-  Shield,
-  Database,
-  Mail,
-  Globe,
-  CreditCard,
-  Users,
-  Package,
-} from "lucide-react";
-
 import { useSession } from "next-auth/react";
 // import { redirect } from "next/navigation";
 // import { OffCanvasMenu } from "../ui/OffCanvasMenu";
@@ -28,47 +14,14 @@ import { showToast } from "@/hooks/toast";
 import { MFASetupForm } from "../forms/MFASetupForm";
 
 export const Settings = () => {
-  const [isMFAEnabled, setIsMFAEnabled] = useState(false);
+  const [mfaOverride, setMfaOverride] = useState<boolean | null>(null);
   const [isOffCanvasMenuOpen, setIsOffCanvasMenuOpen] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
-  const [validationPin, setValidationPin] = useState<string>("");
   const [isLoadingQR, setIsLoadingQR] = useState(false);
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValidationPin(e.target.value);
-  };
-
-  const validateMFAPin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("/api/mfa/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: validationPin }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Invalid MFA code.");
-      }
-
-      const result = await res.json();
-
-      // You can now refetch session or redirect
-      setIsMFAEnabled(true);
-      showToast("success", "MFA is enabled now ...");
-      setIsOffCanvasMenuOpen(false);
-    } catch (error) {
-      if (error instanceof Error) {
-        alert("Failed to verify OTP: " + error.message);
-        showToast("error", "Failed to verify OTP: " + error.message);
-      } else {
-        alert("Failed to verify OTP: An unknown error occurred.");
-        showToast("error", "Failed to verify OTP: An unknown error occurred");
-      }
-    }
-  };
+  const isMFAEnabled = mfaOverride ?? session?.user?.mfaEnabled === true;
 
   const disableMFA = async () => {
     try {
@@ -79,7 +32,7 @@ export const Settings = () => {
         showToast("error", "sorry could not disable MFA ...");
       }
       showToast("success", "MFA has been disabled");
-      setIsMFAEnabled(false);
+      setMfaOverride(false);
     } catch (error) {
       showToast("error", "Failed to disable MFA: " + (error as Error).message);
     }
@@ -90,12 +43,6 @@ export const Settings = () => {
       router.push("/auth");
     }
   }, [session, router]);
-
-  useEffect(() => {
-    if (session && session.user.mfaEnabled === true) {
-      setIsMFAEnabled(true);
-    }
-  }, [session]);
 
   useEffect(() => {
     const fetchQRCode = async () => {
@@ -212,12 +159,12 @@ export const Settings = () => {
           open={isOffCanvasMenuOpen}
           onClose={() => setIsOffCanvasMenuOpen(false)}
         >
-          {(close) => (
+          {() => (
             <MFASetupForm
               qrCodeUrl={qrCodeUrl}
               isLoadingQR={isLoadingQR}
               onClose={() => setIsOffCanvasMenuOpen(false)}
-              onSuccess={() => setIsMFAEnabled(true)}
+              onSuccess={() => setMfaOverride(true)}
             />
           )}
         </OffCanvas>

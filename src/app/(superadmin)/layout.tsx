@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -25,7 +26,6 @@ import {
   ShieldUser,
   Clock,
   Target,
-  ChevronDown,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/ui/MenuItem";
@@ -226,11 +226,17 @@ export default function RootLayout({
         {session.user.name && (
           <div className="flex items-center gap-2">
             <span className="text-sm">{session.user.name}</span>
-            <img
+            {/* unoptimized: the avatar URL is user-supplied, so it must not be
+                proxied through the image optimizer (which would also require
+                allowlisting arbitrary remote hosts). */}
+            <Image
               src={
                 session.user.image || `https://robohash.org/${session.user.id}`
               }
               alt="User Avatar"
+              width={32}
+              height={32}
+              unoptimized
               className="w-8 h-8 rounded-full"
             />
           </div>

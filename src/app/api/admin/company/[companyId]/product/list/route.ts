@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCompanyAccess } from "@/lib/authz";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
+  const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
+
   try {
-    const { companyId } = await params;
 
     const products = await prisma.product.findMany({
       where: {

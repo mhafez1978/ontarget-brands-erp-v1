@@ -3,7 +3,7 @@
 import { useState, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { CircleXIcon, Pencil, Plus } from "lucide-react";
+import { CircleXIcon, Pencil } from "lucide-react";
 
 interface OffCanvasMenuProps {
   formName: string;

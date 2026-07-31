@@ -1,11 +1,8 @@
 import { google } from "googleapis";
 import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
-
-// Define EmailProvider enum if not imported from elsewhere
-enum EmailProvider {
-  GMAIL = "GMAIL",
-}
+import { EmailProviders } from "@/generated/prisma";
+import { googleOAuthRedirectUri } from "../redirect-uri";
 
 const secret = process.env.AUTH_SECRET!;
 
@@ -18,14 +15,12 @@ export async function GET(req: Request) {
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID!,
     process.env.GOOGLE_CLIENT_SECRET!,
-    "/api/oauth/google/callback"
+    googleOAuthRedirectUri(url.origin)
   );
 
   // 1. Exchange code for tokens
-  let tokens;
   try {
-    const response = await oauth2Client.getToken(code);
-    tokens = response.tokens;
+    await oauth2Client.getToken(code);
   } catch (error) {
     console.error("❌ Token exchange failed:", error);
     return new Response("OAuth token exchange failed", { status: 400 });
@@ -40,8 +35,8 @@ export async function GET(req: Request) {
 
   const userId = sessionToken.id as string;
 
+  // 3. Find the company this user owns
   let company;
-
   try {
     company = await prisma.company.findFirst({
       where: {
@@ -49,13 +44,8 @@ export async function GET(req: Request) {
         deletedAt: null,
         isActive: true,
       },
+      select: { id: true },
     });
-    if (!company || !company.id) {
-      console.error("❌ No valid company found for user ID", userId);
-      return new Response("Company not found for this user", { status: 404 });
-    }
-    //console.log("✅ Company found:", company.id);
-    return new Response("Company found", { status: 200 });
   } catch (err) {
     console.error("❌ Error fetching company:", err);
     return new Response("Database error during company lookup", {
@@ -63,21 +53,30 @@ export async function GET(req: Request) {
     });
   }
 
-  // 4. Update company with OAuth token
+  if (!company) {
+    console.error("❌ No valid company found for user ID", userId);
+    return new Response("Company not found for this user", { status: 404 });
+  }
+
+  // 4. Record the connection.
+  //
+  // NOTE: the access/refresh tokens are intentionally NOT persisted — the
+  // Company model has no column to store them. Sending mail on the company's
+  // behalf therefore still needs a schema migration adding encrypted token
+  // storage. This route previously returned before reaching this point, so the
+  // flag was never written at all.
   try {
     await prisma.company.update({
       where: { id: company.id },
       data: {
-        emailProvider: EmailProvider.GMAIL,
+        emailProvider: EmailProviders.GMAIL,
         gmailConnected: true,
       },
     });
-
-    return new Response("Sucess Gmail connected....", {
-      status: 302,
-    });
   } catch (err) {
-    console.error("❌ Failed to update company with token:", err);
+    console.error("❌ Failed to update company:", err);
     return new Response("Database error during update", { status: 500 });
   }
+
+  return Response.redirect(new URL("/settings", url.origin), 302);
 }

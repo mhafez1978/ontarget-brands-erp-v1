@@ -11,7 +11,7 @@ import { ConfigureDomainForm } from "../forms/ConfigureDomainForm";
 import { DomainInstructions } from "./DomainInstructions";
 
 export const WebsiteManagement = () => {
-  const [isDisabled, setIsDisabled] = React.useState(true);
+  const isDisabled = true;
   return (
     <div className="p-8 space-y-10">
       {/* Header */}
@@ -43,7 +43,7 @@ export const WebsiteManagement = () => {
           buttonText="Edit Landing Page Content"
           formName="Landing Page Content"
         >
-          {(close) => (
+          {() => (
             <>
               <CreateCustomerLandingContent />
             </>

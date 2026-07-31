@@ -184,7 +184,7 @@ export const Dashboard = ({ session }: DashboardProps) => {
                 <YAxis />
                 <Tooltip
                   formatter={(value) => [
-                    `$${value.toLocaleString()}`,
+                    `$${(value ?? 0).toLocaleString()}`,
                     "Revenue",
                   ]}
                 />

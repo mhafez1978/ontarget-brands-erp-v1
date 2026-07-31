@@ -5,7 +5,6 @@ import { useState } from "react";
 import { CreateCompanyForm } from "../forms/CreateCompanyForm";
 import { UserCompaniesList } from "../admin/UserCompaniesList";
 import { OffCanvasBtn } from "../OffCanvasBtn";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -14,7 +13,6 @@ interface Props {
 
 export const CompanyManagementWrapper = ({ userId }: Props) => {
   const [refreshSignal, setRefreshSignal] = useState(0);
-  const { data: session } = useSession();
 
   if (!userId) {
     return redirect("/auth");

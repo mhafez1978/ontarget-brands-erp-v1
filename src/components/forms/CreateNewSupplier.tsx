@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Supplier } from "@/generated/prisma";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import { allCountries } from "country-region-data";
@@ -36,7 +36,6 @@ interface CreateNewSupplierProps {
 }
 
 export const CreateNewSupplier = ({ companies }: CreateNewSupplierProps) => {
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     tagline: "",
@@ -57,10 +56,8 @@ export const CreateNewSupplier = ({ companies }: CreateNewSupplierProps) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  useEffect(() => {
-    const selected = countryList.find((c) => c.label === formData.country);
-    setStates(selected?.regions || []);
-  }, [formData.country]);
+  const states =
+    countryList.find((c) => c.label === formData.country)?.regions ?? [];
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -78,7 +75,6 @@ export const CreateNewSupplier = ({ companies }: CreateNewSupplierProps) => {
       console.error("Error creating supplier:", errorData);
       return;
     }
-    const newSupplier: Supplier = await res.json();
     showToast("success", "Supplier created successfully!");
     //console.log("Supplier created successfully:", newSupplier);
     // Optionally, reset form or show success message
@@ -181,9 +177,11 @@ export const CreateNewSupplier = ({ companies }: CreateNewSupplierProps) => {
               {countryList.map((c) => (
                 <SelectItem key={c.value} value={c.value}>
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                       alt={c.label}
+                      width={20}
+                      height={16}
                       className="w-5 h-4 rounded-sm border"
                     />
                     {c.label}

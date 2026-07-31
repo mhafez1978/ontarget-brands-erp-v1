@@ -1,32 +1,40 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { requireCompanyAccess } from "@/lib/authz";
+
+// Only the identity fields the response mapping below actually uses. Selecting
+// the whole user would pull password and mfaSecret out of the database.
+const PROJECT_USER_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  image: true,
+  role: true,
+} as const;
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
   const { companyId } = await params;
 
-  if (!session || !session.user || !companyId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
 
   try {
     const projects = await prisma.project.findMany({
       where: { companyId },
       orderBy: { createdAt: "desc" },
       include: {
-        manager: true,
+        manager: { select: PROJECT_USER_SELECT },
         customer: {
           include: {
-            user: true,
+            user: { select: PROJECT_USER_SELECT },
           },
         },
         staff: {
           include: {
-            user: true,
+            user: { select: PROJECT_USER_SELECT },
           },
         },
       },

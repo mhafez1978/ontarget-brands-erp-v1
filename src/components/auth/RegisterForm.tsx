@@ -53,8 +53,10 @@ const RegisterForm = () => {
       // Optionally redirect or show success
       showToast("success", "Your account was created successfully ...");
       //showToast("success", "you can now login");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to register"
+      );
     } finally {
       setIsSubmitting(false);
     }

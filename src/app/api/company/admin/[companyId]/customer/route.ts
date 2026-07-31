@@ -1,23 +1,25 @@
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 import { Role } from "@/generated/prisma"; // Adjust to your output path
 import { hash } from "bcryptjs";
+import { requireCompanyAccess, SAFE_USER_SELECT } from "@/lib/authz";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
   const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
+
   const body = await req.json();
-  if (
-    !companyId ||
-    !session ||
-    !body ||
-    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
-  ) {
-    return new Response(JSON.stringify({ error: "Company ID is required" }), {
+  if (!body) {
+    return new Response(JSON.stringify({ error: "Request body is required" }), {
       status: 400,
     });
   }
@@ -41,8 +43,9 @@ export async function POST(
         isActive: body.isActive,
         role: "COMPANY_CUSTOMER" as Role,
       },
-      include: {
-        company: true,
+      select: {
+        ...SAFE_USER_SELECT,
+        company: { select: { id: true, name: true } },
       },
     });
     if (!newCustomer) {

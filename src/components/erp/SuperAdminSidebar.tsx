@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, redirect } from "next/navigation";
@@ -72,14 +73,11 @@ const menuItems = [
 
 export const SuperAdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>(null);
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const active = menuItems.find((item) => item.url === pathname);
-    if (active) setActiveSection(active.id);
-  }, [pathname]);
+  const activeSection =
+    menuItems.find((item) => item.url === pathname)?.id ?? null;
 
   if (!session?.user) {
     return redirect("/auth");
@@ -119,13 +117,18 @@ export const SuperAdminSidebar = () => {
             >
               <div className="flex items-center gap-4">
                 <div className="h-16 w-16 rounded-full border-4 border-white overflow-hidden">
-                  <img
+                  {/* unoptimized: session.user.image is user-supplied, so it
+                      must not be proxied through the image optimizer. */}
+                  <Image
                     className="object-cover w-full h-full"
                     src={
                       session.user.image ||
                       "https://robohash.org/testuser?size=300x300&set=set3&bgset=bg2"
                     }
                     alt="avatar"
+                    width={64}
+                    height={64}
+                    unoptimized
                   />
                 </div>
                 <div className="flex-1">

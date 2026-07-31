@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { allCountries } from "country-region-data";
 import type { CountryData } from "country-region-data";
+import Image from "next/image";
 import { showToast } from "@/hooks/toast";
 
 // Define lightweight form model (not full Prisma User)
@@ -67,8 +68,8 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedRole, setSelectedRole] = useState("STAFF");
-  const [states, setStates] = useState<{ name: string }[]>([]);
-  const [selectedCompanyId, setSelectedCompanyId] = useState(companyId);
+  const states =
+    countryOptions.find((c) => c.value === selectedCountry)?.regions ?? [];
   const { data: session } = useSession();
 
   if (
@@ -158,7 +159,7 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
 
     const payload = {
       ...formData,
-      companyId: selectedCompanyId,
+      companyId: companyId,
       state: selectedState,
       country: selectedCountry,
       role: Array.isArray(formData.role)
@@ -202,7 +203,6 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
         isActive: false,
         role: [],
       });
-      setStates([]);
       showToast("success", "Staff member added successfully ...");
       window.location.reload();
       return newHire;
@@ -215,19 +215,6 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
       return;
     }
   };
-
-  const handleCompanyChange = (
-    e: React.FormEvent<HTMLSelectElement>,
-    companyId: string
-  ) => {
-    setSelectedCompanyId(companyId);
-  };
-
-  useEffect(() => {
-    const country = countryOptions.find((c) => c.value === selectedCountry);
-    setStates(country?.regions ?? []);
-    setSelectedState(""); // Reset on country change
-  }, [selectedCountry]);
 
   return (
     <div className="w-full px-4 bg-white top-0 bottom-0 right-0 pb-14">
@@ -354,7 +341,13 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
 
         <div className="flex flex-col gap-2">
           <Label className="">Country</Label>
-          <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+          <Select
+            value={selectedCountry}
+            onValueChange={(value) => {
+              setSelectedCountry(value);
+              setSelectedState(""); // Reset on country change
+            }}
+          >
             <SelectTrigger className="h-9 w-full">
               <SelectValue placeholder="Select Country" />
             </SelectTrigger>
@@ -362,9 +355,11 @@ export const AddNewStaff = ({ companyId }: { companyId: string }) => {
               {countryOptions.map((c) => (
                 <SelectItem key={c.value} value={c.value}>
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                       alt={c.label}
+                      width={20}
+                      height={16}
                       className="w-5 h-4 rounded-sm border"
                     />
                     {c.label}

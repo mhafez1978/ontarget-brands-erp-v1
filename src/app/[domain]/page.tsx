@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import subdomains from "@/subdomains.json";
 
 export default async function DomainPage({
@@ -30,12 +31,12 @@ export default async function DomainPage({
             company slogan from db and/or taglines go here.
           </p>
           <div className="mt-6 flex justify-center gap-4">
-            <a
+            <Link
               href="/signup"
               className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800"
             >
               Call to Action 1
-            </a>
+            </Link>
             <a
               href="#features"
               className="px-6 py-3 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-100"
@@ -144,12 +145,12 @@ export default async function DomainPage({
                     <li key={f}>✓ {f}</li>
                   ))}
                 </ul>
-                <a
+                <Link
                   href="/signup"
                   className="inline-block px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
                 >
                   Choose Plan
-                </a>
+                </Link>
               </div>
             ))}
           </div>

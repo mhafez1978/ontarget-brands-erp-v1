@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
+import { requireSession } from "@/lib/authz";
 
 export async function POST(req: NextRequest) {
+  const authz = await requireSession();
+  if (!authz.ok) return authz.response;
+
   try {
     const body = await req.json();
     const {
@@ -22,18 +26,17 @@ export async function POST(req: NextRequest) {
       zipCode,
       country,
       subscriptionPlanId,
-      ownerId,
-      users,
     } = body;
+
+    // The creator always becomes the owner. Taking ownerId from the body would
+    // let a caller create a company owned by — and promote to ADMIN — anyone.
+    const ownerId = authz.user.id;
 
     //console.log("########### Fired API to create company ...");
 
-    if (!name || !subscriptionPlanId || !ownerId) {
+    if (!name || !subscriptionPlanId) {
       return NextResponse.json(
-        {
-          error:
-            "Missing required fields: name, subscriptionPlanId, or ownerId",
-        },
+        { error: "Missing required fields: name or subscriptionPlanId" },
         { status: 400 }
       );
     }
@@ -91,9 +94,9 @@ export async function POST(req: NextRequest) {
         country: country || null,
         owner: { connect: { id: ownerId } },
         subscriptionPlan: { connect: { id: subscriptionPlanId } },
-        users: users?.length
-          ? { connect: users }
-          : { connect: [{ id: ownerId }] },
+        // Only the creator is linked. Accepting a caller-supplied user list
+        // would let anyone pull other users into their own tenant.
+        users: { connect: [{ id: ownerId }] },
       },
     });
 
@@ -104,7 +107,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const addSubdomain = await prisma.companySubdomain.create({
+    await prisma.companySubdomain.create({
       data: {
         subdomain: newCompany.domain,
         company: {

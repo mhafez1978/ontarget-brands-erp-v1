@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
+import Image from "next/image";
 import { CompanyCategory, BusinessType } from "@/generated/prisma";
 
 import { Input } from "@/components/ui/input";
@@ -79,7 +80,6 @@ const countryList = (allCountries as CountryData[]).map(
 );
 
 export const CreateCompanyForm = ({ userId, onSuccess, close }: Props) => {
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
   const { data: session, update } = useSession();
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -102,9 +102,10 @@ export const CreateCompanyForm = ({ userId, onSuccess, close }: Props) => {
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
-    null
-  );
+  const selectedPlan =
+    subscriptionPlans.find((p) => p.id === formData.subscriptionPlanId) ?? null;
+  const states =
+    countryList.find((c) => c.label === formData.country)?.regions ?? [];
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -164,9 +165,11 @@ export const CreateCompanyForm = ({ userId, onSuccess, close }: Props) => {
       if (session && session.user) {
         await update();
       }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred");
-      showToast("error", err.message || "An unexpected error occurred");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(message);
+      showToast("error", message);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,18 +187,6 @@ export const CreateCompanyForm = ({ userId, onSuccess, close }: Props) => {
     };
     fetchPlans();
   }, []);
-
-  useEffect(() => {
-    const plan = subscriptionPlans.find(
-      (p) => p.id === formData.subscriptionPlanId
-    );
-    setSelectedPlan(plan || null);
-  }, [formData.subscriptionPlanId, subscriptionPlans]);
-
-  useEffect(() => {
-    const selected = countryList.find((c) => c.label === formData.country);
-    setStates(selected?.regions || []);
-  }, [formData.country]);
 
   return (
     <form
@@ -329,9 +320,11 @@ export const CreateCompanyForm = ({ userId, onSuccess, close }: Props) => {
               {countryList.map((c) => (
                 <SelectItem key={c.value} value={c.value}>
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                       alt={c.label}
+                      width={20}
+                      height={16}
                       className="w-5 h-4 rounded-sm border"
                     />
                     {c.label}

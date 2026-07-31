@@ -1,23 +1,24 @@
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
-
-  if (
-    !session ||
-    !["SUPER_ADMIN", "ADMIN", "MANAGER"].includes(session.user.role)
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
   const { companyId } = await params;
   if (!companyId) {
     return NextResponse.json({ error: "Missing companyId" }, { status: 400 });
   }
+
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
+
   try {
     const suppliers = await prisma.supplier.findMany({
       where: { companyId },

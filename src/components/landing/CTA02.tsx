@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
 
@@ -48,9 +49,11 @@ const CTA02 = () => {
           </div>
 
           <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=600&fit=crop"
               alt="OnTarget ERP Dashboard"
+              width={1200}
+              height={600}
               className="w-full rounded-lg shadow-lg"
             />
           </div>

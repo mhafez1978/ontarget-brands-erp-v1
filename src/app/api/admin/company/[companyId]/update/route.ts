@@ -1,17 +1,24 @@
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
-  const session = await auth();
   const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+  ]);
+  if (!authz.ok) return authz.response;
+
   const body = await req.json();
 
   try {
-    const res = await prisma.company.update({
+    await prisma.company.update({
       where: { id: companyId },
       data: {
         name: body.name,
@@ -32,8 +39,9 @@ export async function PATCH(
         isActive: body.isActive,
         gmailConnected: body.gmailConnected,
         office365Connected: body.office365Connected,
-        ownerId: body.ownerId,
-        subscriptionPlanId: body.subscriptionPlanId,
+        // ownerId and subscriptionPlanId are deliberately not accepted here:
+        // ownership transfer and plan changes are privileged operations and
+        // must not be settable through a general profile update.
       },
     });
 
@@ -42,9 +50,8 @@ export async function PATCH(
       { status: 200 }
     );
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "An unknown error occurred";
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    console.error("Company update failed:", error);
+    return new Response(JSON.stringify({ error: "Failed to update company" }), {
       status: 500,
     });
   }

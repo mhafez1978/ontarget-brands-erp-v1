@@ -1,20 +1,22 @@
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { requireCompanyAccess } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string; customerId: string }> }
 ) {
-  const session = await auth();
   const { companyId, customerId } = await params;
 
-  if (
-    !companyId ||
-    !customerId ||
-    !session ||
-    !["ADMIN", "MANAGER", "SUPER_ADMIN"].includes(session.user.role)
-  ) {
+  const authz = await requireCompanyAccess(companyId, [
+    Role.SUPER_ADMIN,
+    Role.ADMIN,
+    Role.MANAGER,
+  ]);
+  if (!authz.ok) return authz.response;
+
+  if (!customerId) {
     return new Response(
       JSON.stringify({
         error: "You don't have permissions to delete this customer",

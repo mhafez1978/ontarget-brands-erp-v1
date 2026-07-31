@@ -2,12 +2,16 @@
 
 import { prisma } from "@/lib/prisma"; // adjust path to your prisma instance
 import { NextResponse } from "next/server";
+import { requireCompanyAccess } from "@/lib/authz";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
   const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
 
   try {
     const projects = await prisma.project.findMany({
@@ -51,7 +55,7 @@ export async function GET(
     });
     //console.log(projects);
     return NextResponse.json(projects);
-  } catch (error) {
+  } catch {
     //console.error("[GET_PROJECTS_BY_COMPANY]", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }

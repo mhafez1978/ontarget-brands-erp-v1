@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@/generated/prisma";
+import { SAFE_USER_SELECT } from "@/lib/authz";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
         password: hashedPassword as string,
         role: Role.ERP_CUSTOMER,
       },
+      select: SAFE_USER_SELECT,
     });
 
     return NextResponse.json({

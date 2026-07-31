@@ -24,10 +24,6 @@ import {
   Search,
   Edit,
   Eye,
-  Clock,
-  CheckSquare,
-  DollarSign,
-  Calendar,
   User,
 } from "lucide-react";
 
@@ -70,13 +66,12 @@ interface Project {
 
 export const ProjectsManagement = () => {
   const { data: session } = useSession();
-  if (!session || !session.user) return redirect("/auth");
 
-  const managerId = session.user.id;
+  // Hooks must all run before any early return, so the signed-out redirect
+  // happens below. The data effect already no-ops without a managerId.
+  const managerId = session?.user?.id;
   const [companyId, setCompanyId] = useState("");
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [editProjectForm, setEditProjectForm] = useState(false);
@@ -91,8 +86,6 @@ export const ProjectsManagement = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        setLoading(true);
-
         const companyRes = await fetch(
           `/api/company/find/${managerId}/company`
         );
@@ -119,16 +112,15 @@ export const ProjectsManagement = () => {
         setProjects(projectsData.projects || []);
         setStaff(staffData.users || []);
         setCustomers(customersData.customers || []);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error loading data:", err);
-        setError(err.message || "Unexpected error");
-      } finally {
-        setLoading(false);
       }
     };
 
     if (managerId) fetchInitialData();
   }, [managerId]);
+
+  if (!session || !session.user) return redirect("/auth");
 
   const handleProjectEdit = (project: Project) => {
     setProjectBeingEdited(project);
@@ -173,7 +165,7 @@ export const ProjectsManagement = () => {
           {(close) => (
             <CreateProjectForm
               companyId={companyId}
-              managerId={managerId}
+              managerId={session.user.id}
               close={close} // ✅ Actually closes the drawer
               onSuccess={fetchProjects} // ✅ Refreshes the table
               staff={staff}
@@ -312,7 +304,7 @@ export const ProjectsManagement = () => {
       {editProjectForm && projectBeingEdited && (
         <EditProjectForm
           companyId={companyId}
-          managerId={managerId}
+          managerId={session.user.id}
           staff={staff}
           customers={customers}
           project={{

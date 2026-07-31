@@ -1,0 +1,18 @@
+# Build settings live here rather than in the Netlify UI so they stay in sync
+# with the repo.
+#
+# This project uses npm (see the "packageManager" field in package.json and
+# package-lock.json). The UI was previously set to `pnpm install && pnpm run
+# build`, which failed: pnpm-lock.yaml is stale — it still pins next 15.x while
+# package.json requires 16.2.12 — so pnpm aborts on the outdated lockfile.
+
+[build]
+  command = "npm ci && npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires Node >= 20.9.
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

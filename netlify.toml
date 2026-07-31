@@ -1,10 +1,10 @@
 # Build settings live here rather than in the Netlify UI so they stay in sync
 # with the repo.
 #
-# This project uses npm (see the "packageManager" field in package.json and
-# package-lock.json). The UI was previously set to `pnpm install && pnpm run
-# build`, which failed: pnpm-lock.yaml is stale — it still pins next 15.x while
-# package.json requires 16.2.12 — so pnpm aborts on the outdated lockfile.
+# This project uses npm, and only npm: package.json pins "packageManager" to
+# npm and package-lock.json is the committed lockfile. A stale pnpm-lock.yaml
+# used to sit alongside it and broke this build (it pinned next 15.x against a
+# package.json requiring 16.2.12); it has been removed.
 
 [build]
   command = "npm ci && npm run build"

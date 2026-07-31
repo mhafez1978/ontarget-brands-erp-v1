@@ -64,8 +64,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-const STAFF_ROLES = ["ADMIN", "MANAGER", "STAFF", "GUEST"] as const;
+import { requireCompanyAccess } from "@/lib/authz";
 
 export async function GET(
   req: NextRequest,
@@ -76,6 +75,9 @@ export async function GET(
   if (!companyId) {
     return NextResponse.json({ error: "Missing companyId" }, { status: 400 });
   }
+
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
 
   try {
     const staff = await prisma.company.findUnique({

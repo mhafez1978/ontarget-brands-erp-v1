@@ -83,8 +83,8 @@ export default function CustomerRegisterForm() {
         zipCode: "",
         country: "",
       });
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setSubmitting(false);
     }
@@ -123,7 +123,7 @@ export default function CustomerRegisterForm() {
                   id={name}
                   name={name}
                   type={type}
-                  value={(form as any)[name]}
+                  value={form[name as keyof typeof form]}
                   onChange={handleChange}
                   required={[
                     "name",

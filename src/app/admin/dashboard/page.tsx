@@ -1,16 +1,4 @@
 import { auth } from "@/auth";
-import { OffCanvasBtn } from "@/components/OffCanvasBtn";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import { Search, Filter, Table, Badge, Eye } from "lucide-react";
 
 const AdminDashboardPage = async () => {
   const session = await auth();

@@ -2,13 +2,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ProductCategory } from "@/generated/prisma";
+import { requireCompanyAccess } from "@/lib/authz";
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
+  const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
+
   try {
-    const { companyId } = await params;
     const body = await req.json();
 
     const {

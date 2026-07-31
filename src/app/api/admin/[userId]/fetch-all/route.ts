@@ -1,13 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { SAFE_USER_SELECT } from "@/lib/authz";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-) {
+export async function GET() {
   const session = await auth();
-  const { userId } = await params;
 
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -42,7 +39,7 @@ export async function GET(
         gmailConnected: true,
         office365Connected: true,
         subscriptionPlan: true,
-        users: true,
+        users: { select: SAFE_USER_SELECT },
         isActive: true,
         createdAt: true,
         updatedAt: true,

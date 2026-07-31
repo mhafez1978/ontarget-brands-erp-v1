@@ -9,7 +9,7 @@ export default function MfaPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
 
   // 🔄 Redirect if already verified
   useEffect(() => {
@@ -65,8 +65,8 @@ export default function MfaPage() {
         const msg = await res.text();
         throw new Error(msg || "Failed to verify code");
       }
-    } catch (err: any) {
-      setError(err.message || "Error verifying code");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error verifying code");
     } finally {
       setLoading(false);
     }

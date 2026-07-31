@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, Edit, Trash2, Users, ShoppingCart } from "lucide-react";
+import { Search, Edit, Trash2, Users, ShoppingCart } from "lucide-react";
 import { OffCanvasBtn } from "../OffCanvasBtn";
 
 interface Service {
@@ -112,7 +112,7 @@ export const ServicesManagement = () => {
           buttonText={"Add New Service"}
           formName={"Add New Service"}
         >
-          {(close) => (
+          {() => (
             <>
               <form>
                 <input

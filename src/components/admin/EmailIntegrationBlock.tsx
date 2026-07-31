@@ -36,19 +36,46 @@ interface Props {
   userId: string;
 }
 
+const IntegrationButton = ({
+  label,
+  href,
+  connected,
+  showSuccess,
+}: {
+  label: string;
+  href: string;
+  connected?: boolean;
+  showSuccess: boolean;
+}) => (
+  <div className="flex items-center gap-4">
+    <button
+      onClick={() => (window.location.href = href)}
+      className="w-[220px] px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+    >
+      {label}
+    </button>
+    <span
+      className={`inline-block w-8 h-8 rounded-full shadow-2xl ${
+        connected ? "bg-green-600" : "bg-red-600"
+      }`}
+    />
+    {showSuccess && (
+      <span className="text-sm text-green-700 bg-green-100 px-3 py-1 rounded">
+        ✅ Email account connected successfully!
+      </span>
+    )}
+  </div>
+);
+
 export const EmailIntegrationBlock = ({ userId }: Props) => {
   const [company, setCompany] = useState<Company | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
   const params = useSearchParams();
   const { data: session } = useSession();
 
   const effectiveUserId = session?.user.id || userId;
 
-  useEffect(() => {
-    if (params.get("emailConnected") === "true") {
-      setShowSuccess(true);
-    }
-  }, [params]);
+  // Derived straight from the URL during render — no state mirror needed.
+  const showSuccess = params.get("emailConnected") === "true";
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -65,36 +92,7 @@ export const EmailIntegrationBlock = ({ userId }: Props) => {
     if (effectiveUserId) {
       fetchCompany();
     }
-  }, [effectiveUserId]);
-
-  const IntegrationButton = ({
-    label,
-    href,
-    connected,
-  }: {
-    label: string;
-    href: string;
-    connected?: boolean;
-  }) => (
-    <div className="flex items-center gap-4">
-      <button
-        onClick={() => (window.location.href = href)}
-        className="w-[220px] px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-      >
-        {label}
-      </button>
-      <span
-        className={`inline-block w-8 h-8 rounded-full shadow-2xl ${
-          connected ? "bg-green-600" : "bg-red-600"
-        }`}
-      />
-      {showSuccess && (
-        <span className="text-sm text-green-700 bg-green-100 px-3 py-1 rounded">
-          ✅ Email account connected successfully!
-        </span>
-      )}
-    </div>
-  );
+  }, [effectiveUserId, userId]);
 
   return (
     <div className="w-full space-y-4">
@@ -102,11 +100,13 @@ export const EmailIntegrationBlock = ({ userId }: Props) => {
         label="Connect Gmail"
         href="/api/oauth/google"
         connected={company?.gmailConnected}
+        showSuccess={showSuccess}
       />
       <IntegrationButton
         label="Connect Office365"
         href="/api/oauth/office"
         connected={company?.office365Connected}
+        showSuccess={showSuccess}
       />
     </div>
   );

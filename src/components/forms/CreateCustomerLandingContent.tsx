@@ -27,15 +27,15 @@ export const CreateCustomerLandingContent = () => {
     },
   });
 
-  const handleChange = (path: string[], value: any) => {
+  const handleChange = (path: string[], value: unknown) => {
     setFormData((prev) => {
-      const updated = { ...prev };
-      let ref: any = updated;
+      const updated: Record<string, unknown> = { ...prev };
+      let ref: Record<string, unknown> = updated;
       for (let i = 0; i < path.length - 1; i++) {
-        ref = ref[path[i]];
+        ref = ref[path[i]] as Record<string, unknown>;
       }
       ref[path[path.length - 1]] = value;
-      return updated;
+      return updated as typeof prev;
     });
   };
 

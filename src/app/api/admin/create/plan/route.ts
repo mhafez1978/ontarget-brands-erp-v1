@@ -1,6 +1,8 @@
 import { BillingCycle } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { requireSession, hasRole } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 const VALID_BILLING_CYCLES: BillingCycle[] = [
   "ONE_TIME",
@@ -12,6 +14,13 @@ const VALID_BILLING_CYCLES: BillingCycle[] = [
 ];
 
 export async function POST(req: NextRequest) {
+  // Subscription plans are platform-level pricing, not tenant data.
+  const authz = await requireSession();
+  if (!authz.ok) return authz.response;
+  if (!hasRole(authz.user, [Role.SUPER_ADMIN])) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await req.json();
 
@@ -90,10 +99,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating plan:", error);
     return NextResponse.json(
-      {
-        error: "Internal Server Error",
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

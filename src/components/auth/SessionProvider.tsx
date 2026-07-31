@@ -1,8 +1,9 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
 interface SessionProviderProps {
   children: React.ReactNode;
-  session?: any;
+  session?: Session | null;
 }
 export const MySessionProvider = ({
   children,

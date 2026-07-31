@@ -28,12 +28,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Filter, Mail, Phone, MapPin, Star } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { OffCanvasBtn } from "@/components/OffCanvasBtn";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import Image from "next/image";
 
 countries.registerLocale(enLocale);
+
+// Derived from a static import, so it is built once at module load rather than
+// on every render.
+const countryList = (allCountries as CountryData[]).map(
+  ([name, code, regions]) => ({
+    label: name,
+    value: code,
+    regions: regions.map(([regionName]) => ({ name: regionName })),
+  })
+);
 
 interface CustomerData {
   id: string;
@@ -60,11 +70,11 @@ interface CustomerData {
 
 export const CustomersManagement = ({ companyId }: { companyId: string }) => {
   const { data: session } = useSession();
-  if (!session || !session.user || !session.user.company?.id) {
-    return redirect("/auth");
-  }
+
+  // The signed-out guard lives below, after every hook has run. Returning here
+  // changed the number of hooks between renders, which breaks React's rules of
+  // hooks and can crash on sign-out.
   const [searchTerm, setSearchTerm] = useState("");
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [customersByCompany, setCustomersByCompany] = useState<
     Record<string, CustomerData[]>
@@ -104,24 +114,16 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
     return phoneNumber ? phoneNumber.formatInternational() : raw;
   };
 
-  const countryList = (allCountries as CountryData[]).map(
-    ([name, code, regions]) => ({
-      label: name,
-      value: code,
-      regions: regions.map(([regionName]) => ({ name: regionName })),
-    })
-  );
-
-  useEffect(() => {
-    const selected = countryList.find((c) => c.label === formData.country);
-    setStates(selected?.regions || []);
-  }, [formData.country]);
+  // Derived straight from the selected country instead of being mirrored into
+  // state by an effect, which rendered once with stale values on every change.
+  const states =
+    countryList.find((c) => c.label === formData.country)?.regions ?? [];
 
   useEffect(() => {
     const fetchAllCustomers = async () => {
       if (!session?.user?.ownedCompanies) return;
       const results = await Promise.all(
-        session.user.ownedCompanies.map(async (company: any) => {
+        session.user.ownedCompanies.map(async (company) => {
           const res = await fetch(`/api/customers/${company.id}/list`);
           const data = await res.json();
           return { companyId: company.id, customers: data.customers ?? [] };
@@ -132,9 +134,11 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
         map[companyId] = customers;
       });
       setCustomersByCompany(map);
-      if (!selectedCompanyId && results.length > 0) {
-        setSelectedCompanyId(results[0].companyId);
-      }
+      // Functional update so the effect does not need to read (and re-run on)
+      // selectedCompanyId.
+      setSelectedCompanyId((prev) =>
+        prev ?? (results.length > 0 ? results[0].companyId : null)
+      );
     };
     fetchAllCustomers();
   }, [session]);
@@ -254,7 +258,7 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
                       className="w-full hidden"
                       key={key}
                       value={val as string}
-                      //onChange={(e) => handleChange(key as any, e.target.value)}
+                      //onChange={(e) => handleChange(key as keyof typeof formData, e.target.value)}
                       placeholder={key}
                       type="text"
                       disabled={true}
@@ -267,7 +271,7 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
                       className="w-full hidden"
                       key={key}
                       value={val as string}
-                      //onChange={(e) => handleChange(key as any, e.target.value)}
+                      //onChange={(e) => handleChange(key as keyof typeof formData, e.target.value)}
                       placeholder={key}
                       type="text"
                       disabled={true}
@@ -280,7 +284,7 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
                       className="w-full flex flex-row justify-between"
                       key={key}
                       value={val as string}
-                      onChange={(e) => handleChange(key as any, e.target.value)}
+                      onChange={(e) => handleChange(key as keyof typeof formData, e.target.value)}
                       placeholder={key}
                       type="date"
                     />
@@ -291,7 +295,7 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
                     key={key}
                     name={key}
                     value={val as string}
-                    onChange={(e) => handleChange(key as any, e.target.value)}
+                    onChange={(e) => handleChange(key as keyof typeof formData, e.target.value)}
                     placeholder={key}
                     type={key.includes("password") ? "password" : "text"}
                   />
@@ -329,9 +333,11 @@ export const CustomersManagement = ({ companyId }: { companyId: string }) => {
                   {countryList.map((c) => (
                     <SelectItem key={c.value} value={c.value}>
                       <span className="flex items-center gap-2">
-                        <img
+                        <Image
                           src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                           alt={c.label}
+                          width={20}
+                          height={16}
                           className="w-5 h-4 rounded-sm border"
                         />
                         {c.label}

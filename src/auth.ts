@@ -232,7 +232,7 @@
 //     return token;
 //   },
 
-//     async session({ session, token }: any) {
+//     async session({ session, token }: { session: Session; token: JWT }) {
 //       session.user.id = token.id as string;
 //       session.user.name = token.name ?? "";
 //       session.user.email = token.email ?? "";
@@ -262,10 +262,17 @@
 // });
 
 import NextAuth from "next-auth";
+import type { Session, User } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { headers } from "next/headers";
+import {
+  MFA_COOKIE_NAME,
+  readCookie,
+  verifyMfaCookieValue,
+} from "@/lib/mfa-cookie";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -377,7 +384,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           data: { lastLogin: new Date() },
         });
 
-        const { password: _password, ...userWithoutPassword } = user;
+        // Strip the password hash before the object is handed to the JWT
+        // callback; it must never reach the token or the client session.
+        const userWithoutPassword = { ...user, password: undefined };
+        delete userWithoutPassword.password;
 
         const companyWithFullPlan = user.company
           ? {
@@ -436,7 +446,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async jwt({ token, user }: { token: any; user?: any }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         // First login
         token.id = user.id;
@@ -454,15 +464,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.updatedAt = user.updatedAt ?? null;
         token.lastLogin = user.lastLogin ?? null;
         token.mfaEnabled = user.mfaEnabled ?? false;
-        token.mfaSecret = user.mfaSecret ?? null;
+        // mfaSecret is deliberately NOT stored on the token: the token is
+        // readable by the client via /api/auth/session, which would hand out
+        // the TOTP seed. MFA routes read the secret from the database instead.
         token.mfaPending = user.mfaPending ?? false;
-      } else {
-        // Re-check for MFA cookie
+      } else if (token.mfaPending) {
+        // Clear the pending flag only for a signed, unexpired proof issued to
+        // this same user by /api/mfa/verify-login.
         const headersObj = await headers();
         const cookieHeader = headersObj.get("cookie") || "";
-        const mfaVerified = cookieHeader.includes("mfa-verified=true");
+        const proof = readCookie(cookieHeader, MFA_COOKIE_NAME);
 
-        if (mfaVerified && token.mfaPending) {
+        if (await verifyMfaCookieValue(proof, String(token.id))) {
           token.mfaPending = false;
         }
       }
@@ -470,7 +483,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
 
-    async session({ session, token }: any) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       session.user.id = token.id;
       session.user.name = token.name ?? "";
       session.user.email = token.email ?? "";
@@ -486,7 +499,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.updatedAt = token.updatedAt ?? null;
       session.user.lastLogin = token.lastLogin ?? null;
       session.user.mfaEnabled = token.mfaEnabled ?? false;
-      session.user.mfaSecret = token.mfaSecret ?? null;
 
       // ✅ Key for frontend to redirect to /auth/otp
       session.mfaPending = token.mfaPending ?? false;

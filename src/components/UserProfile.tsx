@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { showToast } from "@/hooks/toast";
 import { User } from "@/generated/prisma";
@@ -36,7 +37,6 @@ export const UserProfile = () => {
   const { data: session, status } = useSession();
   const [formData, setFormData] = useState<User | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
 
   useEffect(() => {
     if (status === "unauthenticated") redirect("/auth");
@@ -48,13 +48,12 @@ export const UserProfile = () => {
     }
   }, [session?.user?.id, status]);
 
-  useEffect(() => {
-    if (!formData?.country) return;
-    const selected = countryList.find(
-      (c) => c.value === formData.country || c.label === formData.country
-    );
-    setStates(selected?.regions || []);
-  }, [formData?.country]);
+  // Derived from formData during render — no effect/state mirror needed.
+  const states: { name: string; code?: string }[] = formData?.country
+    ? countryList.find(
+        (c) => c.value === formData.country || c.label === formData.country
+      )?.regions || []
+    : [];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -141,9 +140,15 @@ export const UserProfile = () => {
         <div className="w-40 h-40 rounded-full overflow-hidden">
           {formData.image ? (
             <label htmlFor="dropzone-file" className="cursor-pointer">
-              <img
+              {/* unoptimized: this URL is user-supplied, so it must not be
+                  fetched and proxied by the image optimizer, and its host
+                  cannot be known ahead of time for remotePatterns. */}
+              <Image
                 src={formData.image}
                 alt="User Avatar"
+                width={160}
+                height={160}
+                unoptimized
                 className="w-40 h-40 rounded-full border-2 border-sky-300 drop-shadow-sky-600"
               />
               <input
@@ -155,12 +160,15 @@ export const UserProfile = () => {
               />
             </label>
           ) : (
-            <img
+            <Image
               className="object-cover w-40 h-40 rounded-full"
               src={`https://robohash.org/${
                 session?.user.name || session?.user.id
               }`}
               alt="Default Avatar"
+              width={160}
+              height={160}
+              unoptimized
             />
           )}
         </div>
@@ -315,7 +323,6 @@ export const UserProfile = () => {
               const selected = countryList.find((c) => c.value === code);
               if (selected) {
                 handleSelectChange("country", selected.value);
-                setStates(selected.regions);
                 handleSelectChange("state", ""); // reset state
               }
             }}
@@ -327,9 +334,11 @@ export const UserProfile = () => {
               {countryList.map((c) => (
                 <SelectItem key={c.value} value={c.value}>
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                       alt={c.label}
+                      width={20}
+                      height={16}
                       className="w-5 h-4 rounded-sm border"
                     />
                     {c.label}

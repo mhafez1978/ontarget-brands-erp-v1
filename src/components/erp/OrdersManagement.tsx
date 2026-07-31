@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,7 +163,7 @@ export const OrdersManagement = () => {
           buttonText={"Create New Order"}
           formName={"Create New Order"}
         >
-          {(close) => (
+          {() => (
             <>
               <h2 className="mb-4">Create New Order</h2>
               <form className="space-y-4">

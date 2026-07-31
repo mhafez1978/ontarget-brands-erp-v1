@@ -977,7 +977,7 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { User } from "@/generated/prisma";
 import { allCountries } from "country-region-data";
@@ -992,7 +992,6 @@ import {
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { showToast } from "@/hooks/toast";
-import { useSession } from "next-auth/react";
 import { CircleX } from "lucide-react";
 
 const getFlagEmoji = (code: string): string =>
@@ -1009,10 +1008,7 @@ const countryOptions = (allCountries as CountryData[]).map(
 );
 
 export const EditStaffForm = ({ user }: { user: User }) => {
-  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(user.country || "");
-  const [states, setStates] = useState<{ name: string }[]>([]);
 
   const [formData, setFormData] = useState({
     name: user.name || "",
@@ -1023,7 +1019,11 @@ export const EditStaffForm = ({ user }: { user: User }) => {
     addressLine1: user.addressLine1 || "",
     addressLine2: user.addressLine2 || "",
     city: user.city || "",
-    state: user.state || "",
+    state: countryOptions
+      .find((c) => c.value === user.country)
+      ?.regions.some((r) => r.name === user.state)
+      ? user.state || ""
+      : "",
     zipCode: user.zipCode || "",
     country: user.country || "",
     role: (user.role as User["role"]) || "GUEST",
@@ -1031,6 +1031,9 @@ export const EditStaffForm = ({ user }: { user: User }) => {
     password: "",
     repeatPassword: "",
   });
+
+  const states =
+    countryOptions.find((c) => c.value === formData.country)?.regions ?? [];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -1069,36 +1072,6 @@ export const EditStaffForm = ({ user }: { user: User }) => {
     setLoading(false);
     window.location.reload();
   };
-
-  useEffect(() => {
-    const country = countryOptions.find((c) => c.value === selectedCountry);
-    setStates(country?.regions ?? []);
-    setFormData((prev) => ({
-      ...prev,
-      country: selectedCountry,
-      state: "",
-    }));
-  }, [selectedCountry]);
-
-  useEffect(() => {
-    if (user.country) {
-      const country = countryOptions.find((c) => c.value === user.country);
-      if (country) {
-        setStates(country.regions);
-
-        // ✅ Ensure formData.state is retained only if valid
-        const validState = country.regions.some((r) => r.name === user.state)
-          ? user.state
-          : "";
-
-        setFormData((prev) => ({
-          ...prev,
-          country: user.country || "",
-          state: validState || "",
-        }));
-      }
-    }
-  }, [user.country, user.state]);
 
   return (
     <div className="absolute w-1/3 top-0 right-0 bottom-0 bg-white py-4 px-10 overflow-scroll z-50">
@@ -1198,7 +1171,9 @@ export const EditStaffForm = ({ user }: { user: User }) => {
           </Label>
           <Select
             value={formData.country}
-            onValueChange={(value) => setSelectedCountry(value)}
+            onValueChange={(value) =>
+              setFormData((prev) => ({ ...prev, country: value, state: "" }))
+            }
           >
             <SelectTrigger id="country" className="w-full">
               <SelectValue placeholder="Select Country" />

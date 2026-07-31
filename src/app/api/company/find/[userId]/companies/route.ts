@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // GET: /api/companies/user/[userId]
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await auth();
 
   try {
@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
     }
     //console.log(companies);
     return NextResponse.json(companies);
-  } catch (error) {
+  } catch {
     //console.error("Error fetching company:", error);
     return NextResponse.json(
       { message: "Internal server error." },

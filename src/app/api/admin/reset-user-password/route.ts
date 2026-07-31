@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth"; // Adjust path if necessary
 import bcrypt from "bcryptjs";
+import { requireSession, hasRole } from "@/lib/authz";
+import { Role } from "@/generated/prisma";
 
 export async function PATCH(req: NextRequest) {
-  const session = await auth();
+  const authz = await requireSession();
+  if (!authz.ok) return authz.response;
 
-  if (!session?.user || session.user.role !== "SUPER_ADMIN") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!hasRole(authz.user, [Role.SUPER_ADMIN])) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const { email, newPassword } = await req.json();

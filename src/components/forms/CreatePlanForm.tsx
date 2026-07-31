@@ -195,13 +195,19 @@ export const CreatePlanForm = () => {
       </label>
 
       <div className="grid grid-cols-2 gap-4">
-        {[
-          { label: "Max Users", name: "maxUsers" },
-          { label: "Max Admins", name: "maxAdmins" },
-          { label: "Max Managers", name: "maxManagers" },
-          { label: "Storage Limit (MB)", name: "storageLimitMB" },
-          { label: "Max Projects", name: "maxProjects", full: true },
-        ].map(({ label, name, full }) => (
+        {(
+          [
+            { label: "Max Users", name: "maxUsers" },
+            { label: "Max Admins", name: "maxAdmins" },
+            { label: "Max Managers", name: "maxManagers" },
+            { label: "Storage Limit (MB)", name: "storageLimitMB" },
+            { label: "Max Projects", name: "maxProjects", full: true },
+          ] as {
+            label: string;
+            name: "maxUsers" | "maxAdmins" | "maxManagers" | "storageLimitMB" | "maxProjects";
+            full?: boolean;
+          }[]
+        ).map(({ label, name, full }) => (
           <label
             key={name}
             className={`flex flex-col ${full ? "col-span-2" : ""}`}
@@ -210,7 +216,7 @@ export const CreatePlanForm = () => {
             <Input
               type="number"
               name={name}
-              value={(form as any)[name]}
+              value={form[name]}
               onChange={handleChange}
               min="0"
             />

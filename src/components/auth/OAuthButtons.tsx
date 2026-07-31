@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Chrome, Github } from "lucide-react";
 import Image from "next/image";
 
 interface OAuthButtonsProps {
@@ -7,16 +6,11 @@ interface OAuthButtonsProps {
 }
 
 export const OAuthButtons = ({ isRegister }: OAuthButtonsProps) => {
-  const handleOAuthLogin = (provider: string) => {
-    //console.log(`${isRegister ? "Register" : "Login"} with ${provider}`);
-  };
-
   return (
     <div className="space-y-3">
       <Button
         type="button"
         variant="outline"
-        onClick={() => handleOAuthLogin("Google")}
         className="w-full h-12 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
       >
         <span className="w-1/3 flex justify-end">
@@ -36,7 +30,6 @@ export const OAuthButtons = ({ isRegister }: OAuthButtonsProps) => {
       <Button
         type="button"
         variant="outline"
-        onClick={() => handleOAuthLogin("Microsoft")}
         className="w-full h-12 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
       >
         <span className="w-1/3 flex justify-end">

@@ -1,9 +1,8 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { Pencil, Trash2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { EditCompanyForm } from "../forms/EditCompanyForm";
 import { Company as PrismaCompany } from "@/generated/prisma";
 import Link from "next/link";
@@ -28,10 +27,38 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
-  const [companyId2Edit, setCompanyId2Edit] = useState("");
   const { data: session } = useSession();
 
+  // Bumped whenever a child asks for a fresh list.
+  const [reloadTick, setReloadTick] = useState(0);
+  const reloadCompanies = () => setReloadTick((tick) => tick + 1);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchCompanies = async () => {
+      try {
+        const res = await fetch(`/api/company/find/${userId}/companies`);
+        if (!res.ok) throw new Error("Failed to fetch companies");
+        const data = await res.json();
+        if (!cancelled) setCompanies(data);
+      } catch (err) {
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, refreshSignal, reloadTick]);
+
+  // Placed after every hook: an early return here would change the hook count
+  // between renders and break React's rules of hooks.
   if (
     !session ||
     !session.user ||
@@ -42,30 +69,6 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
     // Access denied
     return redirect("/auth");
   }
-
-  const fetchCompanies = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/company/find/${userId}/companies`);
-      if (!res.ok) throw new Error("Failed to fetch companies");
-      const data = await res.json();
-      setCompanies(data);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCompanies();
-  }, [userId, refreshSignal]);
-
-  const handleEdit = (company: Company) => {
-    setSelectedCompany(company);
-    setCompanyId2Edit(company.id);
-    //console.log("#########" + companyId2Edit);
-  };
 
   const handleDelete = async (company: Company) => {
     //console.log("Deleting company...", company);
@@ -88,10 +91,6 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
     } catch (err) {
       console.error("Error deleting company:", err);
     }
-  };
-
-  const handleClose = () => {
-    setSelectedCompany(null);
   };
 
   if (loading)
@@ -118,7 +117,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
               formName={"Create New Company"}
               buttonText={"Create Company"}
             >
-              {(close) => <CreateCompanyForm userId={session.user.id} />}
+              {() => <CreateCompanyForm userId={session.user.id} />}
             </OffCanvasBtn>
           </div>
         </div>
@@ -149,8 +148,7 @@ export const UserCompaniesList = ({ userId, refreshSignal }: Props) => {
                       companyId={company.id}
                       company={company}
                       onSuccess={() => {
-                        setSelectedCompany(null);
-                        fetchCompanies();
+                        reloadCompanies();
                         close();
                       }}
                       userId={userId}

@@ -20,8 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
 import { showToast } from "@/hooks/toast";
-import { json } from "stream/consumers";
 
 // Initialize i18n-iso-countries
 countries.registerLocale(enLocale);
@@ -57,9 +57,11 @@ interface Props {
   onSuccess?: () => void;
 }
 
-const normalizeNullableStrings = (obj: Record<string, any>) =>
+const normalizeNullableStrings = (
+  obj: Record<string, unknown>
+): Record<string, string> =>
   Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [k, v === null ? "" : v])
+    Object.entries(obj).map(([k, v]) => [k, v === null ? "" : (v as string)])
   );
 
 interface Feature {
@@ -88,24 +90,6 @@ interface Props {
   close: () => void;
 }
 
-interface FormData {
-  name: string;
-  slogan: string;
-  domain: string;
-  phone: string;
-  supportEmail: string;
-  salesEmail: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-  category: CompanyCategory | "";
-  type: BusinessType | "";
-  subscriptionPlanId: string;
-}
-
 const countryList = (allCountries as CountryData[]).map(
   ([name, code, regions]) => ({
     label: name,
@@ -121,10 +105,8 @@ export const EditCompanyForm = ({
   company,
   onSuccess,
   companyId,
-  userId,
 }: Props) => {
   //  const router = useRouter();
-  const [states, setStates] = useState<{ name: string; code?: string }[]>([]);
   const [formData, setFormData] = useState(() =>
     normalizeNullableStrings({ ...company })
   );
@@ -132,9 +114,11 @@ export const EditCompanyForm = ({
   const [subscriptionPlans, setSubscriptionPlans] = useState<
     SubscriptionPlan[]
   >([]);
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(
-    null
-  );
+  const selectedPlan =
+    subscriptionPlans.find((p) => p.id === formData.subscriptionPlanId) ?? null;
+  const states =
+    countryList.find((c) => c.label === formData.country)?.regions ?? [];
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -153,18 +137,6 @@ export const EditCompanyForm = ({
   }, []);
 
   useEffect(() => {
-    const plan = subscriptionPlans.find(
-      (p) => p.id === formData.subscriptionPlanId
-    );
-    setSelectedPlan(plan || null);
-  }, [formData.subscriptionPlanId, subscriptionPlans]);
-
-  useEffect(() => {
-    const selected = countryList.find((c) => c.label === formData.country);
-    setStates(selected?.regions || []);
-  }, [formData.country]);
-
-  useEffect(() => {
     const fetchPlans = async () => {
       try {
         const res = await fetch("/api/subscription-plans");
@@ -176,13 +148,6 @@ export const EditCompanyForm = ({
     };
     fetchPlans();
   }, []);
-
-  useEffect(() => {
-    const plan = subscriptionPlans.find(
-      (p) => p.id === formData.subscriptionPlanId
-    );
-    setSelectedPlan(plan || null);
-  }, [formData.subscriptionPlanId, subscriptionPlans]);
 
   const handleChange = (key: keyof PrismaCompany, value: string) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -215,9 +180,11 @@ export const EditCompanyForm = ({
       setSuccess("Company updated successfully");
       showToast("success", "Company updated successfully");
       onSuccess?.();
-    } catch (err: any) {
-      setError(err.message);
-      showToast("error", err.message || "An unexpected error occurred");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(message);
+      showToast("error", message);
     } finally {
       setIsSubmitting(false);
     }
@@ -225,8 +192,8 @@ export const EditCompanyForm = ({
 
   return (
     <>
-      {/* {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-      {success && <p className="text-green-600 text-sm mb-4">{success}</p>} */}
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+      {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
       <form onSubmit={handleSubmit} className="w-full">
         <div className="w-full flex flex-col">
@@ -315,9 +282,11 @@ export const EditCompanyForm = ({
                 {countryList.map((c) => (
                   <SelectItem key={c.value} value={c.value}>
                     <span className="flex items-center gap-2">
-                      <img
+                      <Image
                         src={`https://flagcdn.com/w40/${c.value.toLowerCase()}.png`}
                         alt={c.label}
+                        width={20}
+                        height={16}
                         className="w-5 h-4 rounded-sm border"
                       />
                       {c.label}

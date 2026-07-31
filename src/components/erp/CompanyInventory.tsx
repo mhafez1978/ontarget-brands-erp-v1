@@ -19,6 +19,16 @@ import { Search, Package, AlertTriangle, CheckCircle } from "lucide-react";
 import { OffCanvasBtn } from "../OffCanvasBtn";
 import { CreateNewProduct } from "../forms/CreateNewProduct";
 
+interface InventoryItem {
+  id: string;
+  name: string;
+  sku: string;
+  categories?: string[];
+  quantity?: number;
+  price?: number;
+  status: string;
+}
+
 interface CompanyInventoryProps {
   companyId: string;
   searchTerm: string;
@@ -34,7 +44,7 @@ export const CompanyInventory = ({
   selectedCategory,
   setSelectedCategory,
 }: CompanyInventoryProps) => {
-  const [inventoryData, setInventoryData] = useState<any[]>([]);
+  const [inventoryData, setInventoryData] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -101,7 +111,7 @@ export const CompanyInventory = ({
           </p>
         </div>
         <OffCanvasBtn buttonText="Add Product" formName="Add New Product">
-          {(close) => (
+          {() => (
             <CreateNewProduct
               companyId={companyId}
               companies={[]} // TODO: Replace with actual companies data

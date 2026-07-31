@@ -128,8 +128,7 @@
 
 // // //   const renderCompanyTabContent = (companyId: string) => {
 // // //     const products = productsByCompany[companyId] || [];
-// // //     const suppliers = suppliersByCompany[companyId] || [];
-
+// // // 
 // // //     const filtered = products.filter((item) => {
 // // //       const matchesSearch =
 // // //         item.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -148,7 +147,7 @@
 // // //     const categories = [
 // // //       "all",
 // // //       ...Array.from(
-// // //         new Set(products.flatMap((item: any) => item.categories || []))
+// // //         new Set(products.flatMap((item) => item.categories ?? []))
 // // //       ),
 // // //     ];
 
@@ -279,7 +278,7 @@
 // // //                     </TableHeader>
 
 // // //                     <TableBody>
-// // //                       {filtered.map((item: any) => (
+// // //                       {filtered.map((item) => (
 // // //                         <TableRow key={item.id}>
 // // //                           <TableCell>{item.name}</TableCell>
 // // //                           <TableCell className="max-w-[150px] truncate">
@@ -340,16 +339,16 @@
 // // //             buttonText="Add Product Category"
 // // //             formName="Add Product Category"
 // // //           >
-// // //             {(close) => <CreateNewSupplier companies={companies} />}
+// // //             {() => <CreateNewSupplier companies={companies} />}
 // // //           </OffCanvasBtn>
 // // //           <OffCanvasBtn
 // // //             buttonText="Add New Supplier"
 // // //             formName="Add New Supplier"
 // // //           >
-// // //             {(close) => <CreateNewSupplier companies={companies} />}
+// // //             {() => <CreateNewSupplier companies={companies} />}
 // // //           </OffCanvasBtn>
 // // //           <OffCanvasBtn buttonText="Add New Product" formName="Add New Product">
-// // //             {(close) => (
+// // //             {() => (
 // // //               <CreateNewProduct
 // // //                 companies={companies}
 // // //                 suppliers={suppliersByCompany[activeCompanyId ?? ""] || []}
@@ -700,7 +699,7 @@
 // //       <div className="flex justify-between mb-6">
 // //         <h1 className="text-3xl font-bold">Product Inventory</h1>
 // //         <OffCanvasBtn buttonText="Add Product" formName="Add Product">
-// //           {(close) => (
+// //           {() => (
 // //             <CreateNewProduct
 // //               companies={companies}
 // //               suppliers={suppliersByCompany[activeCompanyId ?? ""] || []}
@@ -709,7 +708,7 @@
 // //           )}
 // //         </OffCanvasBtn>
 // //       </div>
-// //       <Tabs value={activeCompanyId ?? ""} onValueChange={setActiveCompanyId}>
+// //       <Tabs value={activeCompanyId ?? ""} onValueChange={setSelectedCompanyId}>
 // //         <TabsList>
 // //           {companies.map((company) => (
 // //             <TabsTrigger key={company.id} value={company.id}>
@@ -1015,13 +1014,13 @@
 //             buttonText="Add Product Category"
 //             formName="Add Product Category"
 //           >
-//             {(close) => <CreateNewSupplier companies={companies} />}
+//             {() => <CreateNewSupplier companies={companies} />}
 //           </OffCanvasBtn>
 //           <OffCanvasBtn buttonText="Add Supplier" formName="Add Supplier">
-//             {(close) => <CreateNewSupplier companies={companies} />}
+//             {() => <CreateNewSupplier companies={companies} />}
 //           </OffCanvasBtn>
 //           <OffCanvasBtn buttonText="Add Product" formName="Add Product">
-//             {(close) => (
+//             {() => (
 //               <CreateNewProduct
 //                 companies={companies}
 //                 suppliers={suppliersByCompany[activeCompanyId ?? ""] || []}
@@ -1052,7 +1051,7 @@
 // Full inline edit and delete support for products
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -1069,8 +1068,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Search,
-  Filter,
   CheckCircle,
   AlertTriangle,
   Package,
@@ -1085,17 +1082,22 @@ import { CreateNewSupplier } from "../forms/CreateNewSupplier";
 import { Product, Supplier } from "@/generated/prisma";
 import { CreateProductCategory } from "../forms/CreateProductCategory";
 
+type ProductWithRelations = Product & {
+  supplier?: { name: string } | null;
+  categories?: string[];
+};
+
 export const InventoryManagement = ({
   companies,
 }: {
   companies: { id: string; name: string }[];
 }) => {
   const { data: session } = useSession();
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeCompanyId, setActiveCompanyId] = useState<string | null>(null);
-  const [companyList, setCompanyList] = useState(companies);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
   const [productsByCompany, setProductsByCompany] = useState<
-    Record<string, Product[]>
+    Record<string, ProductWithRelations[]>
   >({});
   const [suppliersByCompany, setSuppliersByCompany] = useState<
     Record<string, Supplier[]>
@@ -1104,16 +1106,15 @@ export const InventoryManagement = ({
   const [category, setCategory] = useState("all");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedProduct, setEditedProduct] = useState<Partial<Product>>({});
+  const fetchedCompanyIds = useRef<Set<string>>(new Set());
+
+  const activeCompanyId =
+    selectedCompanyId ?? session?.user?.ownedCompanies?.[0]?.id ?? null;
 
   useEffect(() => {
-    if (!session || !session.user?.ownedCompanies?.length) return;
-    const owned = session.user.ownedCompanies;
-    setCompanyList(owned);
-    setActiveCompanyId(owned[0].id);
-  }, [session]);
-
-  useEffect(() => {
-    if (!activeCompanyId || productsByCompany[activeCompanyId]) return;
+    if (!activeCompanyId || fetchedCompanyIds.current.has(activeCompanyId))
+      return;
+    fetchedCompanyIds.current.add(activeCompanyId);
 
     const fetchProducts = async () => {
       try {
@@ -1141,7 +1142,6 @@ export const InventoryManagement = ({
 
     fetchProducts();
     fetchSuppliers();
-    setIsLoading(false);
   }, [activeCompanyId]);
 
   if (
@@ -1212,7 +1212,7 @@ export const InventoryManagement = ({
     }
   };
 
-  const renderCell = (item: any, field: keyof Product) => {
+  const renderCell = (item: ProductWithRelations, field: keyof Product) => {
     return editingId === item.id ? (
       <Input
         value={editedProduct[field]?.toString() ?? ""}
@@ -1221,23 +1221,19 @@ export const InventoryManagement = ({
         }
       />
     ) : (
-      <>{item[field]}</>
+      <>{String(item[field] ?? "")}</>
     );
   };
 
   const renderCompanyTabContent = (companyId: string) => {
     const products = productsByCompany[companyId] || [];
-    const suppliers = suppliersByCompany[companyId] || [];
     const filtered = products.filter((item) => {
       const matchesSearch =
         item.name?.toLowerCase().includes(search.toLowerCase()) ||
         item.sku?.toLowerCase().includes(search.toLowerCase());
       const matchesCategory =
         category === "all" ||
-        (Array.isArray((item as any).categories)
-          ? (item as any).categories
-          : []
-        ).some((cat: string) =>
+        (Array.isArray(item.categories) ? item.categories : []).some((cat) =>
           cat.toLowerCase().includes(category.toLowerCase())
         );
       return matchesSearch && matchesCategory;
@@ -1245,7 +1241,7 @@ export const InventoryManagement = ({
     const categories = [
       "all",
       ...Array.from(
-        new Set(products.flatMap((item: any) => item.categories || []))
+        new Set(products.flatMap((item) => item.categories ?? []))
       ),
     ];
 
@@ -1298,7 +1294,7 @@ export const InventoryManagement = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((item: any) => (
+              {filtered.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>{renderCell(item, "name")}</TableCell>
                   <TableCell>{renderCell(item, "description")}</TableCell>
@@ -1369,7 +1365,7 @@ export const InventoryManagement = ({
             buttonText="Add Product Category"
             formName="Add Product Category"
           >
-            {(close) => (
+            {() => (
               <CreateProductCategory
                 companies={companies}
                 products={(productsByCompany[activeCompanyId ?? ""] || []).map(
@@ -1382,10 +1378,10 @@ export const InventoryManagement = ({
             )}
           </OffCanvasBtn>
           <OffCanvasBtn buttonText="Add Supplier" formName="Add Supplier">
-            {(close) => <CreateNewSupplier companies={companies} />}
+            {() => <CreateNewSupplier companies={companies} />}
           </OffCanvasBtn>
           <OffCanvasBtn buttonText="Add Product" formName="Add Product">
-            {(close) => (
+            {() => (
               <CreateNewProduct
                 companies={companies}
                 suppliers={suppliersByCompany[activeCompanyId ?? ""] || []}
@@ -1395,7 +1391,7 @@ export const InventoryManagement = ({
           </OffCanvasBtn>
         </div>
       </div>
-      <Tabs value={activeCompanyId ?? ""} onValueChange={setActiveCompanyId}>
+      <Tabs value={activeCompanyId ?? ""} onValueChange={setSelectedCompanyId}>
         <TabsList>
           {companies.map((company) => (
             <TabsTrigger key={company.id} value={company.id}>

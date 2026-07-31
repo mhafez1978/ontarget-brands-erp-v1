@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -141,7 +141,7 @@ const templates: Template[] = [
 ];
 
 export const WebsiteTemplates = () => {
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const selectedTemplateRef = useRef<string | null>(null);
   const [activeTemplate, setActiveTemplate] = useState<string>("modern-store");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -168,15 +168,11 @@ export const WebsiteTemplates = () => {
 
   const handleSelectTemplate = (templateId: string) => {
     setActiveTemplate(templateId);
-    const template = templates.find((t) => t.id === templateId);
-    //console.log("Selected Template:", template);
   };
 
   const handleCustomizeTemplate = (templateId: string) => {
-    setSelectedTemplate(templateId);
+    selectedTemplateRef.current = templateId;
   };
-
-  //console.log("Selected Template:", selectedTemplate);
 
   return (
     <div className="p-6 space-y-6">

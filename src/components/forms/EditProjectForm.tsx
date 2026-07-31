@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,39 +57,26 @@ export const EditProjectForm = ({
 }: Props) => {
   const router = useRouter();
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-    status: "PLANNING",
-    startDate: "",
-    endDate: "",
-    budget: "",
-    progress: 0,
-    isActive: false,
-  });
+  const [form, setForm] = useState(() => ({
+    name: project?.name || "",
+    description: project?.description || "",
+    status: project?.status || "PLANNING",
+    startDate: project?.startDate?.split("T")[0] || "",
+    endDate: project?.endDate?.split("T")[0] || "",
+    budget: project?.budget?.toString() || "",
+    progress: project?.progress ?? 0,
+    isActive: project?.isActive || false,
+  }));
 
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const [noChanges, setNoChanges] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
-  const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (project) {
-      setForm({
-        name: project.name || "",
-        description: project.description || "",
-        status: project.status || "PLANNING",
-        startDate: project.startDate?.split("T")[0] || "",
-        endDate: project.endDate?.split("T")[0] || "",
-        budget: project.budget?.toString() || "",
-        progress: project.progress ?? 0,
-        isActive: project.isActive || false,
-      });
-      setSelectedStaff(project.assignedStaffIds || []);
-      setSelectedCustomers(project.customerIds || []);
-    }
-  }, [project]);
+  const [selectedStaff, setSelectedStaff] = useState<string[]>(
+    () => project?.assignedStaffIds || []
+  );
+  const [selectedCustomers, setSelectedCustomers] = useState<string[]>(
+    () => project?.customerIds || []
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

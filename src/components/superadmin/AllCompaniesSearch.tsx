@@ -42,11 +42,21 @@ interface Company {
   country?: string;
   subscriptionPlanId?: string;
   ownerId?: string;
-  users?: any;
+  users?: unknown;
   subscriptionPlan?: { name?: string };
   isActive: boolean;
   owner?: User;
 }
+
+// Editable fields are typed as strings once touched; anything else (e.g. the
+// raw `users` relation) is shown as an empty input rather than "[object …]".
+const fieldEditValue = (
+  data: Partial<Company> | undefined,
+  key: keyof Company
+) => {
+  const value = data?.[key];
+  return typeof value === "string" ? value : "";
+};
 
 const AllCompaniesSearch = () => {
   const { data: session } = useSession();
@@ -61,6 +71,10 @@ const AllCompaniesSearch = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  // Refs mirror the two flags so the paging effect can guard on their latest
+  // values without re-running every time they change.
+  const hasMoreRef = useRef(true);
+  const loadingRef = useRef(false);
 
   const searchTerm = companySearch.toLowerCase();
   const filteredCompanies = companyList.filter(
@@ -80,16 +94,20 @@ const AllCompaniesSearch = () => {
   );
 
   useEffect(() => {
-    if (!session?.user?.id || !hasMore || loading) return;
+    if (!session?.user?.id || !hasMoreRef.current || loadingRef.current) return;
     const getCompanies = async () => {
       try {
+        loadingRef.current = true;
         setLoading(true);
         const res = await fetch(
           `/api/admin/${session.user.id}/fetch-all?page=${page}`
         );
         if (!res.ok) throw new Error("Failed to fetch companies");
         const data = await res.json();
-        if (data.length === 0) setHasMore(false);
+        if (data.length === 0) {
+          hasMoreRef.current = false;
+          setHasMore(false);
+        }
         setCompanyList((prev) => [
           ...prev,
           ...data.filter(
@@ -97,9 +115,11 @@ const AllCompaniesSearch = () => {
               !prev.find((existing) => existing.id === newItem.id)
           ),
         ]);
+        loadingRef.current = false;
         setLoading(false);
       } catch (err) {
         console.error("Error fetching companies:", err);
+        loadingRef.current = false;
         setLoading(false);
       }
     };
@@ -143,7 +163,8 @@ const AllCompaniesSearch = () => {
         prev.map((c) => (c.id === id ? { ...c, ...updated } : c))
       );
       setEditableCompanyData((prev) => {
-        const { [id]: _, ...rest } = prev;
+        const rest = { ...prev };
+        delete rest[id];
         return rest;
       });
       setEditingCompanyId(null);
@@ -320,9 +341,10 @@ const AllCompaniesSearch = () => {
                 <Input
                   key={key}
                   placeholder={label}
-                  value={
-                    (editableCompanyData[editingCompanyId] as any)?.[key] ?? ""
-                  }
+                  value={fieldEditValue(
+                    editableCompanyData[editingCompanyId],
+                    key as keyof Company
+                  )}
                   onChange={(e) =>
                     handleEditChange(
                       editingCompanyId,

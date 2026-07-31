@@ -18,7 +18,6 @@ interface CreateNewProductProps {
 }
 
 export const CreateNewProduct = ({
-  companyId,
   companies,
   suppliers,
 }: CreateNewProductProps) => {
@@ -81,8 +80,6 @@ export const CreateNewProduct = ({
         return;
       }
       showToast("success", "Product created successfully!");
-      const data = await response.json();
-      //console.log("Product created successfully:", data);
 
       // Optionally reset form or show success message
       setFormData({

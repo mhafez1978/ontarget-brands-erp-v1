@@ -3,10 +3,11 @@
 // // import bcrypt from "bcryptjs";
 // // import { NextResponse } from "next/server";
 
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { requireSession, hasRole, canAssignRole } from "@/lib/authz";
+import { Prisma, Role } from "@/generated/prisma";
 
 // // export async function PATCH(
 // //   req: Request,
@@ -155,7 +156,7 @@ import { NextResponse } from "next/server";
 //     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
 //   }
 
-//   const updateData: any = {};
+//   const updateData: Record<string, unknown> = {};
 
 //   // Only assign defined fields
 //   const allowedFields = [
@@ -216,14 +217,16 @@ export async function PATCH(
   { params }: { params: Promise<{ userId: string }> }
 ) {
   const { userId } = await params;
-  const session = await auth();
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
-  if (!session || !["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  const authz = await requireSession();
+  if (!authz.ok) return authz.response;
+
+  if (!hasRole(authz.user, [Role.SUPER_ADMIN, Role.ADMIN])) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const body = await req.json();
@@ -239,14 +242,20 @@ export async function PATCH(
     );
   }
 
-  if (
-    body.role &&
-    !["ADMIN", "MANAGER", "SUPER_ADMIN", "STAFF", "GUEST"].includes(body.role)
-  ) {
-    return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+  if (body.role) {
+    if (!(body.role in Role)) {
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
+    // Previously an ADMIN could promote anyone to SUPER_ADMIN.
+    if (!canAssignRole(authz.user, body.role as Role)) {
+      return NextResponse.json(
+        { error: "Cannot assign a role above your own" },
+        { status: 403 }
+      );
+    }
   }
 
-  const updateData: any = {};
+  const updateData: Record<string, unknown> = {};
   const allowedFields = [
     "name",
     "email",
@@ -275,7 +284,7 @@ export async function PATCH(
 
   const updatedUser = await prisma.user.update({
     where: { id: userId },
-    data: updateData,
+    data: updateData as Prisma.UserUpdateInput,
     select: {
       id: true,
       name: true,

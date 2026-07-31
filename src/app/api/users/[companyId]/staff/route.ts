@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireCompanyAccess } from "@/lib/authz";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ companyId: string }> }
 ) {
   const { companyId } = await params;
+
+  const authz = await requireCompanyAccess(companyId);
+  if (!authz.ok) return authz.response;
 
   try {
     const users = await prisma.user.findMany({

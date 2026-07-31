@@ -53,6 +53,11 @@ import { NextResponse } from "next/server";
 import speakeasy from "speakeasy";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import {
+  MFA_COOKIE_NAME,
+  MFA_COOKIE_MAX_AGE,
+  createMfaCookieValue,
+} from "@/lib/mfa-cookie";
 
 export async function POST(req: Request) {
   try {
@@ -83,19 +88,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid OTP" }, { status: 403 });
     }
 
-    // ✅ Set cookie and redirect
+    // ✅ Set signed proof cookie and redirect
     const res = NextResponse.redirect(new URL("/dashboard", req.url));
-    res.cookies.set("mfa-verified", "true", {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 60 * 5, // 5 minutes (adjust as needed)
-    });
+    res.cookies.set(
+      MFA_COOKIE_NAME,
+      await createMfaCookieValue(session.user.id),
+      {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: MFA_COOKIE_MAX_AGE,
+      }
+    );
 
     return res;
-  } catch (err: any) {
-    console.error("MFA verification error:", err);
+  } catch (err) {
+    console.error(
+      "MFA verification error:",
+      err instanceof Error ? err.message : err
+    );
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

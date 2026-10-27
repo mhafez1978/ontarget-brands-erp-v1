@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ProductCategory } from "@/generated/prisma";
 import { requireCompanyAccess } from "@/lib/authz";
+import { requireCompanyFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 export async function POST(
   req: Request,
@@ -13,6 +15,11 @@ export async function POST(
   const authz = await requireCompanyAccess(companyId);
   if (!authz.ok) return authz.response;
 
+  const featureDenied = await requireCompanyFeature(
+    companyId,
+    FEATURE_KEYS.inventory
+  );
+  if (featureDenied) return featureDenied;
   try {
     const body = await req.json();
 

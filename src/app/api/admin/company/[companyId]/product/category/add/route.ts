@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCompanyAccess } from "@/lib/authz";
+import { requireCompanyFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 import { Role } from "@/generated/prisma";
 
 export async function POST(
@@ -20,6 +22,12 @@ export async function POST(
     Role.MANAGER,
   ]);
   if (!authz.ok) return authz.response;
+
+  const featureDenied = await requireCompanyFeature(
+    companyId,
+    FEATURE_KEYS.inventory
+  );
+  if (featureDenied) return featureDenied;
 
   try {
     const body = await req.json();

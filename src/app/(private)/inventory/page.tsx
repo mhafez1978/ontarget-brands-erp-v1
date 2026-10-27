@@ -1,5 +1,7 @@
 import { auth } from "@/auth";
 import { InventoryManagement } from "@/components/erp/InventoryManagement";
+import { companyHasFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 import { redirect } from "next/navigation";
 
@@ -8,14 +10,19 @@ const InventoryPage = async () => {
   if (!session || !session.user) {
     return redirect("/auth");
   }
-  //console.log(session);
+
   const userRole = session.user.role;
   const companies = session.user.ownedCompanies || [];
+  const companyId = session.user.company?.id ?? companies[0]?.id;
 
-  if (
-    !userRole ||
-    !["ADMIN", "SUPER_ADMIN", "MANAGER", "ERP_CUSTOMER"].includes(userRole)
-  ) {
+  const allowed =
+    ["ADMIN", "SUPER_ADMIN", "MANAGER", "ERP_CUSTOMER"].includes(
+      userRole ?? ""
+    ) &&
+    !!companyId &&
+    (await companyHasFeature(companyId, FEATURE_KEYS.inventory));
+
+  if (!allowed) {
     // Access denied
     return (
       <>

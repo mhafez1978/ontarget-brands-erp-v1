@@ -29,6 +29,12 @@ import {
 } from "lucide-react";
 
 import { MenuItem } from "@/components/ui/MenuItem";
+import {
+  FEATURE_KEYS,
+  planHasFeature,
+  type FeatureKey,
+  type PlanWithFeatures,
+} from "@/lib/feature-catalog";
 
 // Icon mapping
 const allMenuIcons: Record<string, React.ElementType> = {
@@ -106,6 +112,7 @@ const baseMenuConfig: Record<string, string[]> = {
     "Profile",
     "Customers",
     "Orders",
+    "Invoices",
     "Manager Menu",
     "Settings",
   ],
@@ -158,27 +165,41 @@ const baseMenuConfig: Record<string, string[]> = {
   ],
 };
 
-// Optional plan-based extensions
-const planExtensions: Record<string, Partial<Record<string, string[]>>> = {
-  ADMIN: {
-    standard: ["Website", "Ai Optimize", "Reports"],
-    premium: ["Website", "Ai Optimize", "Reports", "Projects"],
-  },
-  MANAGER: {
-    standard: ["Projects", "Invoices", "Reports"],
-    premium: ["Projects", "Invoices", "Reports"],
-  },
-  ERP_CUSTOMER: {
-    standard: ["Website"],
-    premium: ["Website", "Ai Optimize"],
-  },
+// Menu items that exist only when the company's plan includes the feature.
+// Anything not listed here is part of the core menu and always shown.
+const menuFeatureKeys: Record<string, FeatureKey> = {
+  Projects: FEATURE_KEYS.projects,
+  Products: FEATURE_KEYS.inventory,
+  "Clock In/Out": FEATURE_KEYS.timeTracking,
+  Reports: FEATURE_KEYS.accounting,
+  "Ai Optimize": FEATURE_KEYS.aiContent,
+  Website: FEATURE_KEYS.website,
 };
 
-const getMenuForUser = (role: string, plan?: string): string[] => {
+// Feature-gated modules that are not part of a role's base menu; they appear
+// when the plan includes the matching feature.
+const planMenuItems: Record<string, string[]> = {
+  ADMIN: ["Website", "Ai Optimize", "Reports", "Projects"],
+  MANAGER: ["Projects", "Reports"],
+  ERP_CUSTOMER: ["Website", "Ai Optimize"],
+};
+
+const getMenuForUser = (
+  role: string,
+  plan: PlanWithFeatures
+): string[] => {
   const base = baseMenuConfig[role] || ["Dashboard", "Profile"];
-  const planKey = plan?.toLowerCase() || "starter";
-  const extras = planExtensions[role]?.[planKey] || [];
-  return [...new Set([...base, ...extras, "Signout"])];
+  const candidates = [
+    ...new Set([...base, ...(planMenuItems[role] ?? []), "Signout"]),
+  ];
+  return candidates.filter((label) => {
+    const feature = menuFeatureKeys[label];
+    if (!feature) return true;
+    // A user with no plan object at all sees only the core menu. A plan with
+    // no features configured predates gating and is treated as unmetered.
+    if (!plan) return false;
+    return planHasFeature(plan, feature);
+  });
 };
 
 const getIcon = (label: string) =>
@@ -209,9 +230,8 @@ export default function RootLayout({
   }
 
   const role = session.user.role || "GUEST";
-  const rawKey = session.user.company?.subscriptionPlan?.key || "";
-  const match = rawKey.toLowerCase().match(/starter|standard|premium/);
-  const plan = match?.[0] || "starter";
+  const plan =
+    session.user.company?.subscriptionPlan ?? session.user.subscriptionPlan;
 
   const menuItems = getMenuForUser(role, plan);
 

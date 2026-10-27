@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireCompanyAccess, requireSession } from "@/lib/authz";
+import { requireCompanyFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 /**
  * Resolves the entry's owning company and authorizes the caller against it.
@@ -26,7 +28,18 @@ async function authorizeEntry(id: string) {
     };
   }
 
-  return requireCompanyAccess(entry.companyId);
+  const authz = await requireCompanyAccess(entry.companyId);
+  if (!authz.ok) return authz;
+
+  const featureDenied = await requireCompanyFeature(
+    entry.companyId,
+    FEATURE_KEYS.timeTracking
+  );
+  if (featureDenied) {
+    return { ok: false as const, response: featureDenied };
+  }
+
+  return authz;
 }
 
 export async function PATCH(

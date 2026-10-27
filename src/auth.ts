@@ -340,6 +340,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     name: true,
                     billingCycle: true,
                     pricePerMonth: true,
+                    features: {
+                      where: { isActive: true, deletedAt: null },
+                      select: { key: true, label: true },
+                    },
                   },
                 },
                 createdAt: true,
@@ -375,6 +379,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name: true,
               billingCycle: true,
               pricePerMonth: true,
+              features: {
+                where: { isActive: true, deletedAt: null },
+                select: { key: true, label: true },
+              },
             },
           });
         }
@@ -395,6 +403,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               subscriptionPlan: user.company.subscriptionPlan
                 ? {
                     ...user.company.subscriptionPlan,
+                    features:
+                      planDetails?.features ??
+                      user.company.subscriptionPlan.features,
                     billingCycle:
                       planDetails?.billingCycle ??
                       user.company.subscriptionPlan.billingCycle,

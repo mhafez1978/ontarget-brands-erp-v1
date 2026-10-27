@@ -1,23 +1,23 @@
-// src/app/projects/page.tsx (or similar)
-
 import { ProjectsManagement } from "@/components/erp/ProjectsManagement";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation"; // Correct import for Server Components
+import { companyHasFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 const ProjectsPage = async () => {
   const session = await auth();
   if (!session || !session.user) {
     return redirect("/auth");
   }
-  //const userId = session.user.id;
+
   const userRole = session.user.role;
-  const subscriptionPlan = session.user.subscriptionPlan;
-  if (
-    !userRole ||
-    !["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(userRole) ||
-    !subscriptionPlan ||
-    subscriptionPlan.key.toLowerCase() !== "premium"
-  ) {
+  const companyId = session.user.company?.id;
+  const allowed =
+    ["ADMIN", "SUPER_ADMIN", "MANAGER"].includes(userRole ?? "") &&
+    !!companyId &&
+    (await companyHasFeature(companyId, FEATURE_KEYS.projects));
+
+  if (!allowed) {
     // Access denied
     return (
       <>
@@ -27,7 +27,7 @@ const ProjectsPage = async () => {
             You do not have this feature enabled in your plan.
           </p>
           <p className="text-sm text-gray-500 italic">
-            Please upgrade your plan to access Inventory Management.
+            Please upgrade your plan to access Projects.
           </p>
         </div>
       </>

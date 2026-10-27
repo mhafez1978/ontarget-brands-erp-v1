@@ -9,6 +9,7 @@
  */
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient, Role, BillingCycle } from "../src/generated/prisma/index.js";
+import { FEATURE_DEFINITIONS } from "../src/lib/feature-catalog.js";
 import bcrypt from "bcryptjs";
 
 const url = process.env.DATABASE_URL ?? "";
@@ -28,9 +29,21 @@ const ADMIN_PASSWORD = "Admin123!";
 const prisma = new PrismaClient({ adapter: new PrismaMariaDb(url) });
 
 async function main() {
+  // Canonical feature catalog. The dev plan gets every feature so local
+  // tenants exercise real gating instead of the legacy unmetered fallback.
+  for (const feature of FEATURE_DEFINITIONS) {
+    await prisma.feature.upsert({
+      where: { key: feature.key },
+      update: { label: feature.label, isActive: true },
+      create: { key: feature.key, label: feature.label },
+    });
+  }
+
   const plan = await prisma.subscriptionPlan.upsert({
     where: { key: "dev" },
-    update: {},
+    update: {
+      features: { set: FEATURE_DEFINITIONS.map((f) => ({ key: f.key })) },
+    },
     create: {
       key: "dev",
       name: "Development Plan",
@@ -43,6 +56,7 @@ async function main() {
       maxCustomers: 500,
       storageLimitMB: 10000,
       maxProjects: 100,
+      features: { connect: FEATURE_DEFINITIONS.map((f) => ({ key: f.key })) },
     },
   });
 

@@ -7,6 +7,7 @@ interface SubscriptionPlan {
   name: string;
   billingCycle: string;
   pricePerMonth: number;
+  features: { key: string; label: string }[];
 }
 
 interface Company {

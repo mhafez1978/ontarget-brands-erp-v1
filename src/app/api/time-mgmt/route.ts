@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"; // Adjust to your project
 import { requireCompanyAccess } from "@/lib/authz";
+import { requireCompanyFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -13,6 +15,12 @@ export async function POST(req: NextRequest) {
 
   const authz = await requireCompanyAccess(companyId);
   if (!authz.ok) return authz.response;
+
+  const featureDenied = await requireCompanyFeature(
+    companyId,
+    FEATURE_KEYS.timeTracking
+  );
+  if (featureDenied) return featureDenied;
 
   // Users log their own time; the caller cannot book hours against someone else.
   const userId = authz.user.id;
@@ -50,6 +58,12 @@ export async function GET(req: NextRequest) {
 
   const authz = await requireCompanyAccess(companyId);
   if (!authz.ok) return authz.response;
+
+  const featureDenied = await requireCompanyFeature(
+    companyId,
+    FEATURE_KEYS.timeTracking
+  );
+  if (featureDenied) return featureDenied;
 
   const [year, mon] = month.split("-").map(Number);
   const start = new Date(year, mon - 1, 1);

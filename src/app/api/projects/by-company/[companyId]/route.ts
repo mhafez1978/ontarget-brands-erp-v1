@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma"; // adjust path to your prisma instance
 import { NextResponse } from "next/server";
 import { requireCompanyAccess } from "@/lib/authz";
+import { requireCompanyFeature } from "@/lib/features";
+import { FEATURE_KEYS } from "@/lib/feature-catalog";
 
 export async function GET(
   req: Request,
@@ -12,6 +14,12 @@ export async function GET(
 
   const authz = await requireCompanyAccess(companyId);
   if (!authz.ok) return authz.response;
+
+  const featureDenied = await requireCompanyFeature(
+    companyId,
+    FEATURE_KEYS.projects
+  );
+  if (featureDenied) return featureDenied;
 
   try {
     const projects = await prisma.project.findMany({
